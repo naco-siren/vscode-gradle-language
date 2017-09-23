@@ -27,7 +27,16 @@
             "extensions": [ ".gradle" ],
             "aliases": [ "Gradle", "gradle" ],
             "configuration": "./language-gradle-configuration.json"
-        }]
+        }],
+        "grammars": [{
+			"language": "gradle",
+			"scopeName": "source.gradle",
+			"path": "./syntaxes/gradle.tmLanguage.json"
+		}],
+		"snippets": [{
+			"language": "gradle",
+			"path": "./snippets/gradle.json"
+		}]
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
