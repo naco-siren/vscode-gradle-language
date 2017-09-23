@@ -11,7 +11,8 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onCommand:extension.sayHello",
+        "onLanguage:gradle"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -20,7 +21,13 @@
                 "command": "extension.sayHello",
                 "title": "Hello World"
             }
-        ]
+        ],
+        "languages": [{
+            "id": "gradle",
+            "extensions": [ ".gradle" ],
+            "aliases": [ "Gradle", "gradle" ],
+            "configuration": "./language-gradle-configuration.json"
+        }]
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
