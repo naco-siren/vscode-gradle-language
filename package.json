@@ -32,11 +32,6 @@
         ],
         "grammars": [
             {
-			    "language": "gradle",
-			    "scopeName": "source.gradle",
-			    "path": "./syntaxes/gradle.tmLanguage.json"
-            },
-            {
                 "language": "gradle",
 			    "scopeName": "source.groovy",
 			    "path": "./syntaxes/groovy.tmLanguage.json"
@@ -45,11 +40,6 @@
 		"snippets": [{
 			"language": "gradle",
 			"path": "./snippets/gradle.json"
-        }],
-        "themes": [{
-                "label": "gradle-dark",
-                "uiTheme": "vs-dark",
-                "path": "./themes/GradleDark.json"
         }]
     },
     "scripts": {
