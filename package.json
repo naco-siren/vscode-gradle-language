@@ -7,8 +7,8 @@
 	"version": "0.0.1",
 	"publisher": "Han Yin",
 	"engines": {
-        "vscode": "^1.16.0"
-    },
+		"vscode": "^1.16.0"
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/nacosiren"

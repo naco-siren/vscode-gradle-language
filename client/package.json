@@ -13,11 +13,11 @@
 		"vscode": "^1.16.0"
 	},
 	"categories": [
-        "Languages",
-        "Snippets",
-        "Linters",
-        "Formatters"
-    ],
+		"Languages",
+		"Snippets",
+		"Linters",
+		"Formatters"
+	],
 	"activationEvents": [
 		"onLanguage:gradle"
 	],
