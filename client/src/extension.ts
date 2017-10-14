@@ -32,7 +32,7 @@ export function activate(context: ExtensionContext) {
 		documentSelector: [{scheme: 'file', language: 'gradle'}],
 		synchronize: {
 			// Synchronize the setting section 'languageServerExample' to the server
-			configurationSection: 'gradleLang',
+			configurationSection: 'settings',
 			// Notify the server about file changes to '.clientrc files contain in the workspace
 			fileEvents: workspace.createFileSystemWatcher('**/.clientrc')
 		}

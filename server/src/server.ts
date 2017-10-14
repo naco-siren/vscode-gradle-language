@@ -31,8 +31,10 @@ connection.onInitialize((params): InitializeResult => {
 			textDocumentSync: documents.syncKind,
 			// Tell the client that the server support code complete
 			completionProvider: {
-				resolveProvider: true
+				resolveProvider: true,
+				triggerCharacters: ['', '.']
 			}
+			// ,hoverProvider : true
 		}
 	}
 });
@@ -45,11 +47,10 @@ documents.onDidChangeContent((change) => {
 
 // The settings interface describe the server relevant settings part
 interface Settings {
-	gradleLang: ExampleSettings;
+	settings: ExampleSettings;
 }
 
-// These are the example settings we defined in the client's package.json
-// file
+// These are the example settings we defined in the client's package.json file
 interface ExampleSettings {
 	maxNumberOfProblems: number;
 }
@@ -60,7 +61,7 @@ let maxNumberOfProblems: number;
 // as well.
 connection.onDidChangeConfiguration((change) => {
 	let settings = <Settings>change.settings;
-	maxNumberOfProblems = settings.gradleLang.maxNumberOfProblems || 100;
+	maxNumberOfProblems = settings.settings.maxNumberOfProblems || 100;
 	// Revalidate any open text documents
 	documents.all().forEach(validateTextDocument);
 });
@@ -97,6 +98,46 @@ connection.onDidChangeWatchedFiles((_change) => {
 
 // This handler provides the initial list of the completion items.
 connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
+	console.log("[" + _textDocumentPosition.position.line + ", " + _textDocumentPosition.position.character + "]");
+	
+	let textDocument : TextDocument = documents.get(_textDocumentPosition.textDocument.uri);
+	let pos = textDocument.offsetAt(_textDocumentPosition.position);
+	let doc = textDocument.getText();
+	
+	// Find which scope current position is in
+	var stack = [];
+	var i = pos;
+	for (; i >= 0; i--) {
+		let ch = doc.charAt(i);
+		if (ch == '}') {
+			stack.push(i);
+		} else if (ch == '{') {
+			if (stack.length == 0) {
+				break;
+			} else {
+				stack.pop();
+			}
+		}
+	}
+
+	var j = i - 1;
+	var inWord = false;
+	for (; j >= 0; j--) {
+		let ch = doc.charAt(j);
+		if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r') {
+			if (inWord)
+				break;
+		} else {
+			if (!inWord)
+				inWord = true;
+		}
+	}
+
+	let token = doc.substring(j + 1, i);
+	console.log(token);
+	
+
+
 	// The pass parameter contains the position of the text document in 
 	// which code complete got requested. For the example we ignore this
 	// info and always provide the same completion items.
