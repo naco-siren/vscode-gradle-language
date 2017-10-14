@@ -5,6 +5,7 @@
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_languageserver_1 = require("vscode-languageserver");
+const parser_1 = require("./parser");
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection = vscode_languageserver_1.createConnection(new vscode_languageserver_1.IPCMessageReader(process), new vscode_languageserver_1.IPCMessageWriter(process));
 // Create a simple text document manager. The text document manager
@@ -79,38 +80,9 @@ connection.onCompletion((_textDocumentPosition) => {
     let textDocument = documents.get(_textDocumentPosition.textDocument.uri);
     let pos = textDocument.offsetAt(_textDocumentPosition.position);
     let doc = textDocument.getText();
-    // Find which scope current position is in
-    var stack = [];
-    var i = pos;
-    for (; i >= 0; i--) {
-        let ch = doc.charAt(i);
-        if (ch == '}') {
-            stack.push(i);
-        }
-        else if (ch == '{') {
-            if (stack.length == 0) {
-                break;
-            }
-            else {
-                stack.pop();
-            }
-        }
-    }
-    var j = i - 1;
-    var inWord = false;
-    for (; j >= 0; j--) {
-        let ch = doc.charAt(j);
-        if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r') {
-            if (inWord)
-                break;
-        }
-        else {
-            if (!inWord)
-                inWord = true;
-        }
-    }
-    let token = doc.substring(j + 1, i);
-    console.log(token);
+    // Get current scope's subject
+    let subject = parser_1.getClosureSubject(doc, pos);
+    console.log(subject);
     // The pass parameter contains the position of the text document in 
     // which code complete got requested. For the example we ignore this
     // info and always provide the same completion items.

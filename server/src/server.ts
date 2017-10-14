@@ -10,6 +10,8 @@ import {
 	CompletionItemKind
 } from 'vscode-languageserver';
 
+import {getClosureSubject} from './parser'
+
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
 
@@ -104,37 +106,9 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	let pos = textDocument.offsetAt(_textDocumentPosition.position);
 	let doc = textDocument.getText();
 	
-	// Find which scope current position is in
-	var stack = [];
-	var i = pos;
-	for (; i >= 0; i--) {
-		let ch = doc.charAt(i);
-		if (ch == '}') {
-			stack.push(i);
-		} else if (ch == '{') {
-			if (stack.length == 0) {
-				break;
-			} else {
-				stack.pop();
-			}
-		}
-	}
-
-	var j = i - 1;
-	var inWord = false;
-	for (; j >= 0; j--) {
-		let ch = doc.charAt(j);
-		if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r') {
-			if (inWord)
-				break;
-		} else {
-			if (!inWord)
-				inWord = true;
-		}
-	}
-
-	let token = doc.substring(j + 1, i);
-	console.log(token);
+	// Get current scope's subject
+	let subject = getClosureSubject(doc, pos);
+	console.log(subject);
 	
 
 

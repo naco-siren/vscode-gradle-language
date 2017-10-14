@@ -20,8 +20,7 @@ apply plugin: 'me.tatarka.retrolambda'
 
 android {
 
-    if (project.hasProperty("SIGN_PROPS")
-            && new File(project.property("SIGN_PROPS").toString()).exists()) {
+    if (project.hasProperty("SIGN_PROPS") && new File(project.property("SIGN_PROPS").toString()).exists()) {
         Properties props = new Properties()
         props.load(new FileInputStream(file(project.property("SIGN_PROPS"))))
         signingConfigs {
