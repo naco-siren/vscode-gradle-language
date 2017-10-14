@@ -1,0 +1,154 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url "http://ves-ebi-de:8081/artifactory/gradle" }
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.sonarqube.gradle:gradle-sonarqube-plugin:1.1")
+        classpath 'org.hidetake:gradle-ssh-plugin:1.1.3'
+	classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
+    }
+}
+
+apply plugin: 'io.codearte.nexus-staging'
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'maven'
+apply plugin: 'idea'
+apply plugin: 'signing'
+
+group = 'uk.ac.ebi.ena.sra'
+version = '1.1.2'
+archivesBaseName = 'checklist-field-grammar'
+
+project.ext.grammarpackage = "uk/ac/ebi/ena/sra/validation/checklist/condition"
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+repositories {
+    maven { url artifactory_url }
+    mavenCentral()
+}
+
+task generateGrammarSource(type: JavaExec) {
+    description = 'Generates Java sources from Antlr4 grammars.'
+
+    ext.destinationDir = "src/main/java"
+    def antlrSource = 'src/main/resources'
+
+    inputs.dir file(antlrSource)
+    outputs.dir file(destinationDir)
+
+    def grammars = fileTree(antlrSource).include('**/*.g4')
+
+    main = 'org.antlr.v4.Tool'
+    classpath = configurations.runtime
+    args = ["-o", "${destinationDir}/${project.ext.grammarpackage}", grammars.files].flatten()
+}
+
+task evaluateGrammarExpression(type: JavaExec) {
+    description = 'Testing Antlr4 grammars.'
+    main = 'org.antlr.v4.runtime.misc.TestRig'
+    classpath = sourceSets.main.runtimeClasspath
+    args = ["uk.ac.ebi.ena.sra.validation.checklist.condition.ChecklistCondition", "condition", "-gui"]
+}
+
+compileJava {
+    dependsOn generateGrammarSource
+    source generateGrammarSource.destinationDir
+}
+task cleanAntlr << {
+    delete generateGrammarSource.destinationDir
+}
+clean.dependsOn cleanAntlr
+
+dependencies {
+    compile(group: 'org.antlr', name: 'antlr4', version: '4.5.1')
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.21'
+//    compile(group: 'org.apache.logging.log4j', name: 'log4j', version: '2.6.2')
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.2'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives javadocJar
+    archives jar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
+install {
+    configuration = configurations.runtime
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name archivesBaseName
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'Antlr conditional grammar'
+                url 'http://www.ebi.ac.uk/ena'
+
+                scm {
+                    url 'https://github.com/enasequence/checklist-field-grammar'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'neilg'
+                        name 'Neil Goodgame'
+                        email 'neilg@ebi.ac.uk'
+                    }
+                }
+            }
+        }
+    }
+}
+
+nexusStaging {
+    packageGroup = "uk.ac.ebi.ena.sra"
+}
+
+
+
+

@@ -22,21 +22,35 @@
                 "title": "Hello World"
             }
         ],
-        "languages": [{
-            "id": "gradle",
-            "extensions": [ ".gradle" ],
-            "aliases": [ "Gradle", "gradle" ],
-            "configuration": "./language-gradle-configuration.json"
-        }],
-        "grammars": [{
-			"language": "gradle",
-			"scopeName": "source.gradle",
-			"path": "./syntaxes/gradle.tmLanguage.json"
-		}],
+        "languages": [
+            {
+                "id": "gradle",
+                "extensions": [ ".gradle" ],
+                "aliases": [ "Gradle", "gradle" ],
+                "configuration": "./language-gradle-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+			    "language": "gradle",
+			    "scopeName": "source.gradle",
+			    "path": "./syntaxes/gradle.tmLanguage.json"
+            },
+            {
+                "language": "gradle",
+			    "scopeName": "source.groovy",
+			    "path": "./syntaxes/groovy.tmLanguage.json"
+            }
+        ],
 		"snippets": [{
 			"language": "gradle",
 			"path": "./snippets/gradle.json"
-		}]
+        }],
+        "themes": [{
+                "label": "gradle-dark",
+                "uiTheme": "vs-dark",
+                "path": "./themes/GradleDark.json"
+        }]
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
