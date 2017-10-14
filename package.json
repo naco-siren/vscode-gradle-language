@@ -1,59 +1,29 @@
 {
-    "name": "gradle-language",
-    "displayName": "gradle-language",
-    "description": "Add gradle language support for Visual Studio Code",
-    "version": "0.0.1",
-    "publisher": "NacoSiren",
-    "engines": {
+	"name": "gradle-language",
+	"displayName": "gradle-language",
+	"description": "Add gradle language support for Visual Studio Code",
+	"author": "Han Yin",
+	"license": "MIT",
+	"version": "0.0.1",
+	"publisher": "Han Yin",
+	"engines": {
         "vscode": "^1.16.0"
     },
-    "categories": [
-        "Other"
-    ],
-    "activationEvents": [
-        "onCommand:extension.sayHello",
-        "onLanguage:gradle"
-    ],
-    "main": "./out/src/extension",
-    "contributes": {
-        "commands": [
-            {
-                "command": "extension.sayHello",
-                "title": "Hello World"
-            }
-        ],
-        "languages": [
-            {
-                "id": "gradle",
-                "extensions": [ ".gradle" ],
-                "aliases": [ "Gradle", "gradle" ],
-                "configuration": "./language-gradle-configuration.json"
-            }
-        ],
-        "grammars": [
-            {
-                "language": "gradle",
-			    "scopeName": "source.groovy",
-			    "path": "./syntaxes/groovy.tmLanguage.json"
-            }
-        ],
-		"snippets": [{
-			"language": "gradle",
-			"path": "./snippets/gradle.json"
-        }]
-    },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
-        "test": "npm run compile && node ./node_modules/vscode/bin/test"
-    },
-    "devDependencies": {
-        "typescript": "^2.5.2",
-        "vscode": "^1.1.5",
-        "mocha": "^3.5.0",
-        "@types/node": "^7.0.43",
-        "@types/mocha": "^2.2.42"
-    }
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/nacosiren"
+	},
+	"scripts": {
+		"postinstall": "cd server && npm install && cd ../client && npm install && cd ..",
+		"compile": "tsc -p client/tsconfig.json && cd server && npm run installServer && cd .. && tsc -p server/tsconfig.json",
+		"compile:client": "tsc -p client/tsconfig.json",
+		"watch:client": "tsc -w -p client/tsconfig.json",
+		"compile:server": "cd server && npm run installServer && cd .. && tsc -p server/tsconfig.json",
+		"watch:server": "cd server && npm run installServer && cd .. && tsc -w -p server/tsconfig.json"
+	},
+	"devDependencies": {
+		"@types/mocha": "^2.2.42",
+		"@types/node": "^6.0.88",
+		"typescript": "^2.5.2"
+	}
 }
