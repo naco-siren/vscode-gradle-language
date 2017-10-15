@@ -6,11 +6,11 @@
 
 import {
 	IPCMessageReader, IPCMessageWriter, createConnection, IConnection, TextDocuments, TextDocument, 
-	Diagnostic, DiagnosticSeverity, InitializeResult, TextDocumentPositionParams, CompletionItem, 
-	CompletionItemKind
+	Diagnostic, DiagnosticSeverity, InitializeResult, TextDocumentPositionParams, CompletionItem
 } from 'vscode-languageserver';
 
-import {getClosureSubject} from './parser'
+import {getClosureHeading} from './parser'
+import {getChildren} from './advisor'
 
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
@@ -100,33 +100,15 @@ connection.onDidChangeWatchedFiles((_change) => {
 
 // This handler provides the initial list of the completion items.
 connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
-	console.log("[" + _textDocumentPosition.position.line + ", " + _textDocumentPosition.position.character + "]");
-	
 	let textDocument : TextDocument = documents.get(_textDocumentPosition.textDocument.uri);
 	let pos = textDocument.offsetAt(_textDocumentPosition.position);
 	let doc = textDocument.getText();
 	
 	// Get current scope's subject
-	let subject = getClosureSubject(doc, pos);
-	console.log(subject);
+	let heading = getClosureHeading(doc, pos);
+	console.log(heading);
 	
-
-
-	// The pass parameter contains the position of the text document in 
-	// which code complete got requested. For the example we ignore this
-	// info and always provide the same completion items.
-	return [
-		{
-			label: 'TypeScript',
-			kind: CompletionItemKind.Text,
-			data: 1
-		},
-		{
-			label: 'JavaScript',
-			kind: CompletionItemKind.Text,
-			data: 2
-		}
-	]
+	return getChildren(heading);
 });
 
 // This handler resolve additional information for the item selected in

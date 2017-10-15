@@ -1,11 +1,11 @@
 /**
- * Return the scope's subject of the closure containing the cursor
+ * Return the scope's heading of the closure containing the cursor
  * 
  * @param doc the TextDocument that is being edited
  * @param pos the zero-based index of the cursor's position
  */
-export function getClosureSubject(doc: string, pos: number) : string {
-    /* Find the opening curly bracket of current scope */
+export function getClosureHeading(doc: string, pos: number) : string {
+    /* Find the opening curly bracket of current closure */
     var stack = [];
 	var i = pos - 1;
 	for (; i >= 0; i--) {
@@ -21,7 +21,7 @@ export function getClosureSubject(doc: string, pos: number) : string {
 		}
 	}
 
-    /* Find the name of this scope */
+    /* Find the heading of this closure */
 	var start = i - 1, end = i - 1;
 	var inWords = false;
 	for (; start >= 0; start--) {
@@ -46,7 +46,12 @@ export function getClosureSubject(doc: string, pos: number) : string {
         }
 	}
 
-    /* Process and return the token */
-    let subject = doc.substring(start, end + 1).trim();
-    return subject;
+    /* Process and return the subject */
+    let heading = doc.substring(start, end + 1).trim();
+    return heading;
 }
+
+
+// export function parseClosureHeading(heading: string) : string[] {
+
+// }

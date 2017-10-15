@@ -6,6 +6,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_languageserver_1 = require("vscode-languageserver");
 const parser_1 = require("./parser");
+const advisor_1 = require("./advisor");
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection = vscode_languageserver_1.createConnection(new vscode_languageserver_1.IPCMessageReader(process), new vscode_languageserver_1.IPCMessageWriter(process));
 // Create a simple text document manager. The text document manager
@@ -76,28 +77,13 @@ connection.onDidChangeWatchedFiles((_change) => {
 });
 // This handler provides the initial list of the completion items.
 connection.onCompletion((_textDocumentPosition) => {
-    console.log("[" + _textDocumentPosition.position.line + ", " + _textDocumentPosition.position.character + "]");
     let textDocument = documents.get(_textDocumentPosition.textDocument.uri);
     let pos = textDocument.offsetAt(_textDocumentPosition.position);
     let doc = textDocument.getText();
     // Get current scope's subject
-    let subject = parser_1.getClosureSubject(doc, pos);
-    console.log(subject);
-    // The pass parameter contains the position of the text document in 
-    // which code complete got requested. For the example we ignore this
-    // info and always provide the same completion items.
-    return [
-        {
-            label: 'TypeScript',
-            kind: vscode_languageserver_1.CompletionItemKind.Text,
-            data: 1
-        },
-        {
-            label: 'JavaScript',
-            kind: vscode_languageserver_1.CompletionItemKind.Text,
-            data: 2
-        }
-    ];
+    let heading = parser_1.getClosureHeading(doc, pos);
+    console.log(heading);
+    return advisor_1.getChildren(heading);
 });
 // This handler resolve additional information for the item selected in
 // the completion list.

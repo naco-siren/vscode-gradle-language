@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * Return the scope's subject of the closure containing the cursor
+ * Return the scope's heading of the closure containing the cursor
  *
  * @param doc the TextDocument that is being edited
  * @param pos the zero-based index of the cursor's position
  */
-function getClosureSubject(doc, pos) {
-    /* Find the opening curly bracket of current scope */
+function getClosureHeading(doc, pos) {
+    /* Find the opening curly bracket of current closure */
     var stack = [];
     var i = pos - 1;
     for (; i >= 0; i--) {
@@ -24,7 +24,7 @@ function getClosureSubject(doc, pos) {
             }
         }
     }
-    /* Find the name of this scope */
+    /* Find the heading of this closure */
     var start = i - 1, end = i - 1;
     var inWords = false;
     for (; start >= 0; start--) {
@@ -50,9 +50,11 @@ function getClosureSubject(doc, pos) {
             }
         }
     }
-    /* Process and return the token */
-    let subject = doc.substring(start, end + 1).trim();
-    return subject;
+    /* Process and return the subject */
+    let heading = doc.substring(start, end + 1).trim();
+    return heading;
 }
-exports.getClosureSubject = getClosureSubject;
+exports.getClosureHeading = getClosureHeading;
+// export function parseClosureHeading(heading: string) : string[] {
+// } 
 //# sourceMappingURL=parser.js.map
