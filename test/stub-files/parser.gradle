@@ -1,0 +1,72 @@
+/* 
+ * 1. Gradle's own impletation of AST transformation: 
+ *    See: https://github.com/gradle/gradle/blob/master/subprojects/core/src/main/java/org/gradle/groovy/scripts/internal/TaskDefinitionScriptTransformer.java)
+ */
+
+task taskA {
+
+}
+
+task "taskB" {
+
+}
+
+task task1 (type: Zip) {
+
+}
+
+task "task2" (type: Zip, dependsOn: 'task1') {
+
+}
+
+/* 
+ * 2.a Call a method (of an object) with bracket(s) for parameters,
+ *    then assign its return value to a variable:
+ */
+
+repositories({ println "Foo bar" })
+
+repositories() {
+    println "Foo bar"
+}
+
+task("task1") {
+    doLast {
+        println "Foo bar"
+    }
+}
+
+into('libs') { from configurations.runtime }
+
+Task ref1 = task("myTask7") {
+	doLast {
+		println "Hello from task #6"
+	}
+}
+    
+/* 
+ * 2.b Call a method (of an object) without brackets for parameters, 
+ *    then assign its return value to a variable:
+ */      
+ 
+repositories {
+    jcenter()
+}
+ 
+taskA.doFirst { println "Foo bar" }
+taskA.leftShift { println "Foo bar" }
+
+4.times {
+    println "Foo bar"
+}
+
+configurations.runtime.each {  }
+
+collection.collect { relativePath(it) }.sort().each { 
+    println it 
+}
+ 
+collection = files { srcDir.listFiles() }
+
+FileTree filtered = tree.matching { include 'org/gradle/api/**' }     
+

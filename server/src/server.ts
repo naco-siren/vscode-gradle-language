@@ -104,13 +104,12 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	let pos = textDocument.offsetAt(_textDocumentPosition.position);
 	let doc = textDocument.getText();
 	
-	// Get current scope's subject
-	// let heading = parser.getClosureHeading(doc, pos);
-	// console.log(heading);
-	// return advisor.getChildren(heading);
-	
-	let closure = parser.parseCurrentClosure(doc, pos); 
-	return advisor.getChildren(closure.heading);
+	// Get current closure
+	let closure = parser.getCurrentClosure(doc, pos);
+
+	parser.parseClosureMethod(closure.methodStr);
+
+	return advisor.getChildren(closure.methodStr);
 });
 
 // This handler resolve additional information for the item selected in
