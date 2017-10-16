@@ -9,8 +9,8 @@ import {
 	Diagnostic, DiagnosticSeverity, InitializeResult, TextDocumentPositionParams, CompletionItem
 } from 'vscode-languageserver';
 
-import {getClosureHeading} from './parser'
-import {getChildren} from './advisor'
+import * as parser from './parser'
+import * as advisor from './advisor'
 
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
@@ -105,10 +105,12 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	let doc = textDocument.getText();
 	
 	// Get current scope's subject
-	let heading = getClosureHeading(doc, pos);
-	console.log(heading);
+	// let heading = parser.getClosureHeading(doc, pos);
+	// console.log(heading);
+	// return advisor.getChildren(heading);
 	
-	return getChildren(heading);
+	let closure = parser.parseCurrentClosure(doc, pos); 
+	return advisor.getChildren(closure.heading);
 });
 
 // This handler resolve additional information for the item selected in

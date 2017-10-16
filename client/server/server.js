@@ -5,8 +5,8 @@
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_languageserver_1 = require("vscode-languageserver");
-const parser_1 = require("./parser");
-const advisor_1 = require("./advisor");
+const parser = require("./parser");
+const advisor = require("./advisor");
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection = vscode_languageserver_1.createConnection(new vscode_languageserver_1.IPCMessageReader(process), new vscode_languageserver_1.IPCMessageWriter(process));
 // Create a simple text document manager. The text document manager
@@ -81,9 +81,11 @@ connection.onCompletion((_textDocumentPosition) => {
     let pos = textDocument.offsetAt(_textDocumentPosition.position);
     let doc = textDocument.getText();
     // Get current scope's subject
-    let heading = parser_1.getClosureHeading(doc, pos);
-    console.log(heading);
-    return advisor_1.getChildren(heading);
+    // let heading = parser.getClosureHeading(doc, pos);
+    // console.log(heading);
+    // return advisor.getChildren(heading);
+    let closure = parser.parseCurrentClosure(doc, pos);
+    return advisor.getChildren(closure.heading);
 });
 // This handler resolve additional information for the item selected in
 // the completion list.
