@@ -9,14 +9,14 @@
  * ================================================================
  * Situations that are handled:
  * 
- * 1. Gradle's own impletation of AST transformation:
+ * 1. Gradle's own impletation of AST transformation for Task type:
  *    (See: https://github.com/gradle/gradle/blob/master/subprojects/core/src/main/java/org/gradle/groovy/scripts/internal/TaskDefinitionScriptTransformer.java)
  * 
  *      task taskA {}
  *      task "taskB" {}
  * 
- *      task task1 (type: Zip) {}
- *      task "task2" (type: Zip, dependsOn: 'task1') {}
+ *      task task1(type: Zip) {}
+ *      task "task2"(type: Zip, dependsOn: 'task1') {}
  * 
  * 2.a Call a method (of an object) with bracket(s) for parameters,
  *    then assign its return value to a variable:
@@ -158,12 +158,46 @@ export function parseClosureMethod(methodStr: string) {
         method: "task"
     };
 
-    methodStr.split("\s|\(|\)");
+    // Initiate methodName as undefined for later condition checks
+    let methodName = undefined;
+
+    /* 
+     * Situation 1: 
+     * Gradle's own impletation of AST transformation for Task type.
+     */
+    let firstBlankIdx = methodStr.indexOf(" ");
+    if (methodStr.substring(0, firstBlankIdx) == "task") {
+        methodName = "task";
+        
+        // Check if parameters are specified in the brackets
+        let paramStr = methodStr.substring(firstBlankIdx + 1).trim();
+        let leftBracketIdx = paramStr.indexOf("(");
+        // let rightBracketIdx = paramStr.indexOf(")"); 
+        // let params = paramStr.substring(leftBracketIdx + 1, rightBracketIdx);
+        
+        // Parse task's name
+        let taskName = leftBracketIdx == -1 ? paramStr.trim() : paramStr.substr(0, leftBracketIdx).trim();
+        let [l, r] = [taskName.charAt(0), taskName.charAt(taskName.length-1)];
+        if ( (l == '\"' && r == '\"') || (l == '\'' && r == '\'') ) taskName = taskName.substring(1, taskName.length - 1);
+
+        console.log("Situation 1: task name: " + taskName);
+    }
+
     
-    
+
+    /* 
+     * Situation 2: 
+     * Call a method (of an object) w/ or w/o bracket(s) for parameters,
+     * then assign its return value to a variable.
+     */
+    if (methodName == undefined) {
+        
+    }
+
+
     method["name"] = "myTask1";
     method["type"] = "Zip";
 
-    console.log(method);
-    console.log(method["type"]);
+    // console.log(method);
+    // console.log(method["type"]);
 }
