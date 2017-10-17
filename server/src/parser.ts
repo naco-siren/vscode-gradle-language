@@ -37,7 +37,6 @@
  *      taskA.doFirst {}
  *      taskA.leftShift {}
  *      
- * 
  *      4.times {}
  *      configurations.runtime.each {}
  *      collection.collect { relativePath(it) }.sort().each { println it }
@@ -153,12 +152,9 @@ export function getCurrentClosure(doc: string, pos: number) : Closure {
  * 
  * @param methodStr the intermediate output of closure's parsing
  */
-export function parseClosureMethod(methodStr: string) {
-    let method : Method = {
-        method: "task"
-    };
-
+export function parseClosureMethod(methodStr: string) : Method {
     // Initiate methodName as undefined for later condition checks
+    let method : Method = undefined;
     let methodName = undefined;
 
     /* 
@@ -180,10 +176,12 @@ export function parseClosureMethod(methodStr: string) {
         let [l, r] = [taskName.charAt(0), taskName.charAt(taskName.length-1)];
         if ( (l == '\"' && r == '\"') || (l == '\'' && r == '\'') ) taskName = taskName.substring(1, taskName.length - 1);
 
-        console.log("Situation 1: task name: " + taskName);
+        // Create Method object
+        method = {
+            method: "task"
+        };
+        method["name"] = taskName;
     }
-
-    
 
     /* 
      * Situation 2: 
@@ -191,13 +189,39 @@ export function parseClosureMethod(methodStr: string) {
      * then assign its return value to a variable.
      */
     if (methodName == undefined) {
+        // Exclude the assignment part
+        let firstEqualIdx = methodStr.indexOf("=");
+        if (firstEqualIdx != -1) 
+            methodStr = methodStr.substring(firstEqualIdx + 1).trim();
+            
+        // Extract the method name before brackets
+        let leftBracketIdx = methodStr.lastIndexOf("(");
+        let lastDotIdx = methodStr.lastIndexOf(".");
         
+        if (leftBracketIdx != -1 && leftBracketIdx > lastDotIdx + 1)
+            methodName = methodStr.substring(0, leftBracketIdx).trim();
+        else
+            methodName = methodStr.trim();
+
+        if (lastDotIdx != -1)
+            methodName = methodName.substring(lastDotIdx + 1);
+        
+        // Create Method object
+        method = {
+            method: methodName
+        };
+
+        // Handle corner case
+        if (methodName == "task") {
+            let rightBracketIdx = methodStr.indexOf(")");
+            let taskName = methodStr.substr(leftBracketIdx + 1, rightBracketIdx).trim();
+            let [l, r] = [taskName.charAt(0), taskName.charAt(taskName.length-1)];
+            if ( (l == '\"' && r == '\"') || (l == '\'' && r == '\'') ) 
+                taskName = taskName.substring(1, taskName.length - 1);
+            method["name"] = taskName;
+        }
     }
 
-
-    method["name"] = "myTask1";
-    method["type"] = "Zip";
-
-    // console.log(method);
-    // console.log(method["type"]);
+    console.log("Method: " + method.method + ", len: " + method.method.length);
+    return method;
 }
