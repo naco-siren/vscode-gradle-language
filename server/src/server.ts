@@ -10,7 +10,7 @@ import {
 } from 'vscode-languageserver';
 
 import * as parser from './parser'
-import * as advisor from './advisor'
+import {PluginConf, getKeywordsRoot, getKeywords} from './advisor'
 
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
@@ -104,12 +104,53 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	let pos = textDocument.offsetAt(_textDocumentPosition.position);
 	let doc = textDocument.getText();
 	
-	// Get current closure
+	// Get current closure and parse its method
 	let closure = parser.getCurrentClosure(doc, pos);
-
 	parser.parseClosureMethod(closure.methodStr);
 
-	return advisor.getChildren(closure.methodStr);
+	// Collect plugins used
+	let pluginConf: PluginConf = {};
+	let lines = textDocument.getText().split(/\r?\n/g);
+	for (var i = 0; i < lines.length; i++) {
+		let line = lines[i];
+
+		// Prune 'apply\s*plugin\s*:\s*'
+		let applyIdx = line.indexOf('apply');
+		if (applyIdx < 0) continue;
+		line = line.substring(applyIdx + 6);
+
+		let pluginIdx = line.indexOf('plugin');
+		if (pluginIdx < 0) continue;
+		line = line.substring(pluginIdx + 6);
+
+		let colonIdx = line.indexOf(':');
+		if (colonIdx < 0) continue;
+
+		// Confirm plugin type
+		if (line.indexOf('java') >= 0)
+			pluginConf['java'] = true;
+
+		if (line.indexOf('java-library') >= 0)
+			pluginConf['java-library'] = true;
+
+		if (line.indexOf('com.android.application') >= 0)
+			pluginConf['com.android.application'] = true;
+	
+	}
+	
+	
+	// Return completion items
+	if (closure.methodStr == "") {
+		return getKeywordsRoot(pluginConf);
+
+	} else if (closure.methodStr == "android") {
+		return getKeywords("android");
+
+	// } else if (closure.methodStr == "ext") {
+		
+	} else {
+		return [];
+	}
 });
 
 // This handler resolve additional information for the item selected in
