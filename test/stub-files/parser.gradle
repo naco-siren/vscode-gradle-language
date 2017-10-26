@@ -68,5 +68,5 @@ collection.collect { relativePath(it) }.sort().each {
  
 collection = files { srcDir.listFiles() }
 
-FileTree filtered = tree.matching { include 'org/gradle/api/**' }     
+FileTree filtered = tree.matching { include 'org/gradle/api/**' }
 

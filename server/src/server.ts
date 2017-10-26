@@ -3,14 +3,14 @@
  * Licensed under the MIT License. See License.txt in the project root for license information.
  * ------------------------------------------------------------------------------------------ */
 'use strict';
-
+import * as path from 'path';
 import {
 	IPCMessageReader, IPCMessageWriter, createConnection, IConnection, TextDocuments, TextDocument, 
 	Diagnostic, DiagnosticSeverity, InitializeResult, TextDocumentPositionParams, CompletionItem
 } from 'vscode-languageserver';
 
 import * as parser from './parser'
-import {PluginConf, getKeywordsRoot, getKeywords} from './advisor'
+import {PluginConf, getRootKeywords, getKeywords} from './advisor'
 
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
@@ -101,14 +101,15 @@ connection.onDidChangeWatchedFiles((_change) => {
 // This handler provides the initial list of the completion items.
 connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
 	let textDocument : TextDocument = documents.get(_textDocumentPosition.textDocument.uri);
-	let pos = textDocument.offsetAt(_textDocumentPosition.position);
+	var fileName = path.basename(_textDocumentPosition.textDocument.uri);
 	let doc = textDocument.getText();
-	
+	let pos = textDocument.offsetAt(_textDocumentPosition.position);
+
 	// Get current closure and parse its method
 	let closure = parser.getCurrentClosure(doc, pos);
-	parser.parseClosureMethod(closure.methodStr);
-
-	// Collect plugins used
+	let method = parser.parseClosureMethod(closure.methodStr);
+	
+	// Collect plugins used for root closure
 	let pluginConf: PluginConf = {};
 	let lines = textDocument.getText().split(/\r?\n/g);
 	for (var i = 0; i < lines.length; i++) {
@@ -135,21 +136,17 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 
 		if (line.indexOf('com.android.application') >= 0)
 			pluginConf['com.android.application'] = true;
-	
 	}
-	
-	
+
 	// Return completion items
-	if (closure.methodStr == "") {
-		return getKeywordsRoot(pluginConf);
-
-	} else if (closure.methodStr == "android") {
-		return getKeywords("android");
-
-	// } else if (closure.methodStr == "ext") {
-		
-	} else {
+	if (method.method == undefined) {
 		return [];
+
+	} else if (method.method == "") {
+		return getRootKeywords(fileName, pluginConf);
+
+	} else {
+		return getKeywords(method.method, pluginConf);
 	}
 });
 

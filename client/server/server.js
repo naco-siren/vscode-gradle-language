@@ -4,6 +4,7 @@
  * ------------------------------------------------------------------------------------------ */
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
+const path = require("path");
 const vscode_languageserver_1 = require("vscode-languageserver");
 const parser = require("./parser");
 const advisor_1 = require("./advisor");
@@ -78,12 +79,13 @@ connection.onDidChangeWatchedFiles((_change) => {
 // This handler provides the initial list of the completion items.
 connection.onCompletion((_textDocumentPosition) => {
     let textDocument = documents.get(_textDocumentPosition.textDocument.uri);
-    let pos = textDocument.offsetAt(_textDocumentPosition.position);
+    var fileName = path.basename(_textDocumentPosition.textDocument.uri);
     let doc = textDocument.getText();
+    let pos = textDocument.offsetAt(_textDocumentPosition.position);
     // Get current closure and parse its method
     let closure = parser.getCurrentClosure(doc, pos);
-    parser.parseClosureMethod(closure.methodStr);
-    // Collect plugins used
+    let method = parser.parseClosureMethod(closure.methodStr);
+    // Collect plugins used for root closure
     let pluginConf = {};
     let lines = textDocument.getText().split(/\r?\n/g);
     for (var i = 0; i < lines.length; i++) {
@@ -109,15 +111,14 @@ connection.onCompletion((_textDocumentPosition) => {
             pluginConf['com.android.application'] = true;
     }
     // Return completion items
-    if (closure.methodStr == "") {
-        return advisor_1.getKeywordsRoot(pluginConf);
+    if (method.method == undefined) {
+        return [];
     }
-    else if (closure.methodStr == "android") {
-        return advisor_1.getKeywords("android");
-        // } else if (closure.methodStr == "ext") {
+    else if (method.method == "") {
+        return advisor_1.getRootKeywords(fileName, pluginConf);
     }
     else {
-        return [];
+        return advisor_1.getKeywords(method.method, pluginConf);
     }
 });
 // This handler resolve additional information for the item selected in

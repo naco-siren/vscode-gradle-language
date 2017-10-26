@@ -11,7 +11,7 @@ import { workspace, ExtensionContext } from 'vscode';
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from 'vscode-languageclient';
 
 export function activate(context: ExtensionContext) {
-	console.log("Congratulations! Your client is active!");
+	console.log("=== Gradle language client is active! ===");
 	// vscode.window.showInformationMessage('Hello World!');
 
 	// The server is implemented in node
