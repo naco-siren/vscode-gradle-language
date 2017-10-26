@@ -935,6 +935,11 @@ export function getAndroidKeywords(method: string) : CompletionItem[] {
                 documentation: 'Adb options.'
             },
             {
+                label: 'applicationVariants',
+                kind: CompletionItemKind.Property,
+                documentation: 'Returns a collection of build variants that the app project includes.'
+            },
+            {
                 label: 'buildToolsVersion',
                 kind: CompletionItemKind.Property,
                 documentation: 'Required. Version of the build tools to use.'
@@ -1045,14 +1050,39 @@ export function getAndroidKeywords(method: string) : CompletionItem[] {
                 documentation: 'APK splits options.'
             },
             {
+                label: 'testBuildType',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies the build type that the plugin should use to test the module.'
+            },
+            {
                 label: 'testOptions',
                 kind: CompletionItemKind.Property,
                 documentation: 'Options for running tests.'
             },
             {
+                label: 'testVariants',
+                kind: CompletionItemKind.Property,
+                documentation: 'Returns a collection of Android test build variants.'
+            },
+            {
+                label: 'unitTestVariants',
+                kind: CompletionItemKind.Property,
+                documentation: 'Returns a collection of Android unit test build variants.'
+            },
+            {
                 label: 'variantFilter',
                 kind: CompletionItemKind.Property,
                 documentation: 'Callback to control which variants should be excluded.'
+            },
+            {
+                label: 'flavorDimensions',
+                kind: CompletionItemKind.Method,
+                documentation: 'Specifies the names of product flavor dimensions for this project.'
+            },
+            {
+                label: 'useLibrary',
+                kind: CompletionItemKind.Method,
+                documentation: 'Includes the specified library to the classpath.'
             }
         ],
 
@@ -1777,21 +1807,375 @@ export function getAndroidKeywords(method: string) : CompletionItem[] {
         // Encapsulates all product flavors properties for this project.
         'productFlavors' : [
             { 
-                label: '',
+                label: 'applicationId',
                 kind: CompletionItemKind.Property,
-                documentation: ''
+                documentation: 'The application ID.'
             },
+            { 
+                label: 'applicationIdSuffix',
+                kind: CompletionItemKind.Property,
+                documentation: 'Application id suffix. It is appended to the "base" application id when calculating the final application id for a variant.'
+            },
+            { 
+                label: 'consumerProguardFiles',
+                kind: CompletionItemKind.Property,
+                documentation: 'ProGuard rule files to be included in the published AAR.'
+            },
+            { 
+                label: 'dimension',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies the flavor dimension that this product flavor belongs to.'
+            },
+            { 
+                label: 'externalNativeBuild',
+                kind: CompletionItemKind.Property,
+                documentation: 'Encapsulates per-variant CMake and ndk-build configurations for your external native build.'
+            },
+            { 
+                label: 'javaCompileOptions',
+                kind: CompletionItemKind.Property,
+                documentation: 'Options for configuration Java compilation.'
+            },
+            { 
+                label: 'manifestPlaceholders',
+                kind: CompletionItemKind.Property,
+                documentation: 'The manifest placeholders.'
+            },
+            { 
+                label: 'matchingFallbacks',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies a sorted list of product flavors that the plugin should try to use when a direct variant match with a local module dependency is not possible.'
+            },
+            { 
+                label: 'multiDexEnabled',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether Multi-Dex is enabled for this variant.'
+            },
+            { 
+                label: 'multiDexKeepFile',
+                kind: CompletionItemKind.Property,
+                documentation: 'Text file that specifies additional classes that will be compiled into the main dex file.'
+            },
+            { 
+                label: 'multiDexKeepProguard',
+                kind: CompletionItemKind.Property,
+                documentation: 'Text file with additional ProGuard rules to be used to determine which classes are compiled into the main dex file.'
+            },
+            { 
+                label: 'ndk',
+                kind: CompletionItemKind.Property,
+                documentation: 'Encapsulates per-variant configurations for the NDK, such as ABI filters.'
+            },
+            { 
+                label: 'proguardFiles',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies the ProGuard configuration files that the plugin should use.'
+            },
+            { 
+                label: 'signingConfig',
+                kind: CompletionItemKind.Property,
+                documentation: 'Signing config used by this product flavor.'
+            },
+            { 
+                label: 'testApplicationId',
+                kind: CompletionItemKind.Property,
+                documentation: 'Test application ID.'
+            },
+            { 
+                label: 'testFunctionalTest',
+                kind: CompletionItemKind.Property
+            },
+            { 
+                label: 'testHandleProfiling',
+                kind: CompletionItemKind.Property
+            },
+            { 
+                label: 'testInstrumentationRunner',
+                kind: CompletionItemKind.Property,
+                documentation: 'Test instrumentation runner class name.'
+            },
+            { 
+                label: 'testInstrumentationRunnerArguments',
+                kind: CompletionItemKind.Property,
+                documentation: 'Test instrumentation runner custom arguments.'
+            },
+            { 
+                label: 'vectorDrawables',
+                kind: CompletionItemKind.Property,
+                documentation: 'Options to configure the build-time support for vector drawables.'
+            },
+            { 
+                label: 'versionCode',
+                kind: CompletionItemKind.Property,
+                documentation: 'Version code.'
+            },
+            { 
+                label: 'versionName',
+                kind: CompletionItemKind.Property,
+                documentation: 'Version name.'
+            },
+            { 
+                label: 'versionNameSuffix',
+                kind: CompletionItemKind.Property,
+                documentation: 'Version name suffix. It is appended to the "base" version name when calculating the final version name for a variant.'
+            },
+            { 
+                label: 'wearAppUnbundled',
+                kind: CompletionItemKind.Property,
+                documentation: 'Returns whether to enable unbundling mode for embedded wear app. If true, this enables the app to transition from an embedded wear app to one distributed by the play store directly.'
+            },
+            { 
+                label: 'buildConfigField',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a new field to the generated BuildConfig class.'
+            },
+            { 
+                label: 'consumerProguardFile',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a proguard rule file to be included in the published AAR.'
+            },
+            { 
+                label: 'consumerProguardFiles',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds proguard rule files to be included in the published AAR.'
+            },
+            { 
+                label: 'maxSdkVersion',
+                kind: CompletionItemKind.Method,
+                documentation: 'Sets the maximum SDK version to the given value.'
+            },
+            { 
+                label: 'missingDimensionStrategy',
+                kind: CompletionItemKind.Method,
+                documentation: 'Specifies a flavor that the plugin should try to use from a given dimension in a dependency.'
+            },
+            { 
+                label: 'proguardFile',
+                kind: CompletionItemKind.Method,
+                documentation: 'Specifies a ProGuard configuration file that the plugin should use.'
+            },
+            { 
+                label: 'proguardFiles',
+                kind: CompletionItemKind.Method,
+                documentation: 'Specifies ProGuard configuration files that the plugin should use.'
+            },
+            { 
+                label: 'resConfig',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a resource configuration filter.'
+            },
+            { 
+                label: 'resConfigs',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds several resource configuration filters.'
+            },
+            { 
+                label: 'resValue',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a new generated resource.'
+            },
+            { 
+                label: 'setConsumerProguardFiles',
+                kind: CompletionItemKind.Method,
+                documentation: 'Specifies a proguard rule file to be included in the published AAR.'
+            },
+            { 
+                label: 'setProguardFiles',
+                kind: CompletionItemKind.Method,
+                documentation: 'Sets the ProGuard configuration files.'
+            },
+            { 
+                label: 'setTestProguardFiles',
+                kind: CompletionItemKind.Method,
+                documentation: 'Specifies proguard rule files to be used when processing test code.'
+            },
+            { 
+                label: 'targetSdkVersion',
+                kind: CompletionItemKind.Method,
+                documentation: 'Sets the target SDK version to the given value.'
+            },
+            { 
+                label: 'testInstrumentationRunnerArgument',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a custom argument to the test instrumentation runner'
+            },
+            { 
+                label: 'testInstrumentationRunnerArguments',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds custom arguments to the test instrumentation runner'
+            },
+            { 
+                label: 'testProguardFile',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a proguard rule file to be used when processing test code.'
+            },
+            { 
+                label: 'testProguardFiles',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds proguard rule files to be used when processing test code.'
+            }
         ],
 
-        // 
-        '' : [
+        // DSL object for configuring signing configs.
+        'signingConfigs' : [
             { 
-                label: '',
-                kind: CompletionItemKind.Method,
-                documentation: ''
+                label: 'keyAlias',
+                kind: CompletionItemKind.Property,
+                documentation: 'Key alias used when signing.'
             },
-        ]
+            { 
+                label: 'keyPassword',
+                kind: CompletionItemKind.Property,
+                documentation: 'Key password used when signing.'
+            },
+            { 
+                label: 'storeFile',
+                kind: CompletionItemKind.Property,
+                documentation: 'Store file used when signing.'
+            },
+            { 
+                label: 'storePassword',
+                kind: CompletionItemKind.Property,
+                documentation: 'Store password used when signing.'
+            },
+            { 
+                label: 'storeType',
+                kind: CompletionItemKind.Property,
+                documentation: 'Store type used when signing.'
+            },
+            { 
+                label: 'v1SigningEnabled',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether signing using JAR Signature Scheme (aka v1 signing) is enabled.'
+            },
+            { 
+                label: 'v2SigningEnabled',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether signing using APK Signature Scheme v2 (aka v2 signing) is enabled.'
+            }
+        ],
 
+        // An AndroidSourceSet represents a logical group of Java, aidl and RenderScript sources as well as Android and non-Android (Java-style) resources.
+        'sourceSets' : [
+            { 
+                label: 'aidl',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Android AIDL source directory for this source set.'
+            },
+            { 
+                label: 'assets',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Android Assets directory for this source set.'
+            },
+            { 
+                label: 'java',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Java source which is to be compiled by the Java compiler into the class output directory.'
+            },
+            { 
+                label: 'jni',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Android JNI source directory for this source set.'
+            },
+            { 
+                label: 'jniLibs',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Android JNI libs directory for this source set.'
+            },
+            { 
+                label: 'manifest',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Android Manifest file for this source set.'
+            },
+            { 
+                label: 'name',
+                kind: CompletionItemKind.Property,
+                documentation: 'The name of this source set.'
+            },
+            { 
+                label: 'renderscript',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Android RenderScript source directory for this source set.'
+            },
+            { 
+                label: 'res',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Android Resources directory for this source set.'
+            },
+            { 
+                label: 'resources',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Java resources which are to be copied into the javaResources output directory.'
+            },
+            { 
+                label: 'setRoot',
+                kind: CompletionItemKind.Method,
+                documentation: 'Sets the root of the source sets to a given path. All entries of the source set are located under this root directory.'
+            }
+        ],
+        
+        // DSL object for configuring APK Splits options.
+        'splits' : [
+            { 
+                label: 'abi',
+                kind: CompletionItemKind.Property,
+                documentation: 'ABI settings.'
+            },
+            { 
+                label: 'abiFilters',
+                kind: CompletionItemKind.Property,
+                documentation: 'The list of ABI filters used for multi-apk.'
+            },
+            { 
+                label: 'density',
+                kind: CompletionItemKind.Property,
+                documentation: 'Density settings.'
+            },
+            { 
+                label: 'densityFilters',
+                kind: CompletionItemKind.Property,
+                documentation: 'The list of Density filters used for multi-apk.'
+            },
+            { 
+                label: 'language',
+                kind: CompletionItemKind.Property,
+                documentation: 'Language settings.'
+            },
+            { 
+                label: 'languageFilters',
+                kind: CompletionItemKind.Property,
+                documentation: 'The list of language filters used for multi-apk.'
+            }
+        ],
+        
+        // Options for running tests.
+        'testOptions' : [
+            { 
+                label: 'animationsDisabled',
+                kind: CompletionItemKind.Property,
+                documentation: 'Disables animations during instrumented tests.'
+            },
+            { 
+                label: 'execution',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies whether to use on-device test orchestration.'
+            },
+            { 
+                label: 'reportDir',
+                kind: CompletionItemKind.Property,
+                documentation: 'Name of the reports directory.'
+            },
+            { 
+                label: 'resultsDir',
+                kind: CompletionItemKind.Property,
+                documentation: 'Name of the results directory.'
+            },
+            { 
+                label: 'unitTests',
+                kind: CompletionItemKind.Property,
+                documentation: 'Configures unit test options.'
+            }
+        ]
     };
     
     return map[method];
