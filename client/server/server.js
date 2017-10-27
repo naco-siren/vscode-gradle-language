@@ -78,6 +78,7 @@ connection.onDidChangeWatchedFiles((_change) => {
 });
 // This handler provides the initial list of the completion items.
 connection.onCompletion((_textDocumentPosition) => {
+    console.log();
     let textDocument = documents.get(_textDocumentPosition.textDocument.uri);
     var fileName = path.basename(_textDocumentPosition.textDocument.uri);
     let doc = textDocument.getText();
@@ -111,15 +112,32 @@ connection.onCompletion((_textDocumentPosition) => {
             pluginConf['com.android.application'] = true;
     }
     // Return completion items
-    if (method.method == undefined) {
+    if (method.method == undefined)
         return [];
-    }
-    else if (method.method == "") {
-        return advisor_1.getRootKeywords(fileName, pluginConf);
+    let retval = [];
+    if (method.method == "") {
+        retval = advisor_1.getRootKeywords(fileName, pluginConf);
     }
     else {
-        return advisor_1.getKeywords(method.method, pluginConf);
+        retval = advisor_1.getKeywords(method.method, pluginConf);
     }
+    if (retval.length != 0) {
+        return retval;
+    }
+    // If method not in mapping, try parent closure's method 
+    console.log("=== Try parent closure ===");
+    let parentClosure = parser.getCurrentClosure(doc, closure.methodStartPos);
+    let parentMethod = parser.parseClosureMethod(parentClosure.methodStr);
+    console.log();
+    if (parentMethod.method == undefined)
+        return [];
+    if (parentMethod.method != "") {
+        retval = advisor_1.getNestedKeywords(parentMethod.method, pluginConf);
+    }
+    if (retval.length > 0)
+        return retval;
+    else
+        return [];
 });
 // This handler resolve additional information for the item selected in
 // the completion list.

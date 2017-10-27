@@ -5,9 +5,16 @@ export interface PluginConf {
     [param: string]: boolean;
 }
 
+// additionalTextEdits: [{
+            //     range: {start: {line: pos.line, character: pos.character + 10}, end: {line: pos.line, character: pos.character + 10}},
+            //     newText: "{}",
+            // }]
+
 export function getRootKeywords(fileName: string, pluginConf: PluginConf) : CompletionItem[] {
-    // Initialize the default keywords as Script's keywords
-    let keywords: CompletionItem[] = getScriptRootKeywords();
+    // Initialize the default keywords as core type and Script's keywords
+    let keywords: CompletionItem[] = [];
+    keywords = keywords.concat(getScriptRootKeywords());
+    keywords = keywords.concat(getCoreTypeKeywords());
 
     // Add delegate's keywords
     if (fileName == "build.gradle") {
@@ -25,22 +32,35 @@ export function getRootKeywords(fileName: string, pluginConf: PluginConf) : Comp
 
     // Add Java plugin's keywords
     if (pluginConf['java']) {
-        console.log(">>> Plugin 'java' detected!")
+        console.log("> Plugin 'java' detected!")
         keywords = keywords.concat(getJavaRootKeywords());
     } 
     
     // Add Java-Library plugin's keywords
     if (pluginConf['java-library']) {
-        console.log(">>> Plugin 'java-library' detected!")
+        console.log("> Plugin 'java-library' detected!")
     }
     
     // Add Android plugin's keywords
     if (pluginConf['com.android.application']) {
-        console.log(">>> Plugin 'com.android.application' detected!")
+        console.log("> Plugin 'com.android.application' detected!")
         keywords = keywords.concat(getAndroidRootKeywords());
     }
 
     return keywords;
+}
+
+/**
+ * Core type keywords
+ */
+export function getCoreTypeKeywords() : CompletionItem[] {
+    return [
+        {
+            label: 'task',
+            kind: CompletionItemKind.Property,
+            documentation: 'A Task represents a single atomic piece of work for a build, such as compiling classes or generating javadoc.'
+        }
+    ]
 }
 
 /**
@@ -148,13 +168,52 @@ export function getProjectRootKeywords() : CompletionItem[] {
     /* [PROJECT] ROOT => Build script structure */
     return [
         {
+            label: 'project',
+            kind: CompletionItemKind.Property,
+            documentation: 'The Project instance'
+        },
+        {
+            label: 'name',
+            kind: CompletionItemKind.Property,
+            documentation: 'The name of the project directory.'
+        },
+        {
+            label: 'path',
+            kind: CompletionItemKind.Property,
+            documentation: 'The absolute path of the project.'
+        },
+        {
+            label: 'description',
+            kind: CompletionItemKind.Property,
+            documentation: 'A description for the project.'
+        },
+        {
+            label: 'projectDir',
+            kind: CompletionItemKind.Property,
+            documentation: 'The directory containing the build script.'
+        },
+        {
+            label: 'buildDir',
+            kind: CompletionItemKind.Property,
+            documentation: 'projectDir/build'
+        },
+        {
+            label: 'group',
+            kind: CompletionItemKind.Property
+        },
+        {
+            label: 'version',
+            kind: CompletionItemKind.Property
+        },
+        {
+            label: 'ant',
+            kind: CompletionItemKind.Property,
+            documentation: 'An AntBuilder instance'
+        },	
+        {
             label: 'allprojects',
             kind: CompletionItemKind.Method,
             documentation: 'Configures this project and each of its sub-projects.'
-            // additionalTextEdits: [{
-            //     range: {start: {line: pos.line, character: pos.character + 10}, end: {line: pos.line, character: pos.character + 10}},
-            //     newText: "{}",
-            // }]
         },
         {
             label: 'artifacts',
@@ -654,7 +713,11 @@ export function getAndroidRootKeywords() : CompletionItem[] {
     ]
 }
 
-
+/**
+ * Return the keywords of current method name
+ * @param method 
+ * @param pluginConf 
+ */
 export function getKeywords(method: string, pluginConf: PluginConf) : CompletionItem[] {
     // Initialize the default keywords as Script's keywords
     let keywords: CompletionItem[] = [];
@@ -662,18 +725,18 @@ export function getKeywords(method: string, pluginConf: PluginConf) : Completion
 
     // Add Java plugin's keywords
     if (pluginConf['java']) {
-        console.log(">>> Plugin 'java' detected!")
+        console.log("> Plugin 'java' detected!")
         keywords = keywords.concat(getJavaKeywords(method));
     } 
     
     // Add Java-Library plugin's keywords
     if (pluginConf['java-library']) {
-        console.log(">>> Plugin 'java-library' detected!")
+        console.log("> Plugin 'java-library' detected!")
     }
     
     // Add Android plugin's keywords
     if (pluginConf['com.android.application']) {
-        console.log(">>> Plugin 'com.android.application' detected!")
+        console.log("> Plugin 'com.android.application' detected!")
         keywords = keywords.concat(getAndroidKeywords(method));
     }
 
@@ -839,76 +902,20 @@ export function getDefaultKeywords(method: string) : CompletionItem[] {
  */
 export function getJavaKeywords(method: string) : CompletionItem[] {
     let map : {[key: string]: CompletionItem[]} = {
-        /* sourceSets => properties */
-        "sourceSets": [
+        /*  */
+        "": [
             {
-                label: 'name',
+                label: '',
                 kind: CompletionItemKind.Property,
-                documentation: 'The name of the source set, used to identify it.'
+                documentation: ''
             },
-            {
-                label: 'output',
-                kind: CompletionItemKind.Property,
-                documentation: 'The output files of the source set, containing its compiled classes and resources.'
-            },
-            {
-                label: 'output.classesDirs',
-                kind: CompletionItemKind.Property,
-                documentation: 'The directories to generate the classes of this source set into.'
-            },
-            {
-                label: 'output.resourcesDir',
-                kind: CompletionItemKind.Property,
-                documentation: 'The directory to generate the resources of this source set into.'
-            },
-            {
-                label: 'compileClasspath',
-                kind: CompletionItemKind.Property,
-                documentation: 'The classpath to use when compiling the source files of this source set.'
-            },
-            {
-                label: 'runtimeClasspath',
-                kind: CompletionItemKind.Property,
-                documentation: 'The classpath to use when executing the classes of this source set.'
-            },
-            {
-                label: 'java',
-                kind: CompletionItemKind.Property,
-                documentation: 'The Java source files of this source set. Contains only .java files found in the Java source directories, and excludes all other files.'
-            },
-            {
-                label: 'java.srcDirs',
-                kind: CompletionItemKind.Property,
-                documentation: 'The source directories containing the Java source files of this source set.'
-            },
-            {
-                label: 'java.outputDir',
-                kind: CompletionItemKind.Property,
-                documentation: 'The directory to generate compiled Java sources into.'
-            },
-            {
-                label: 'resources',
-                kind: CompletionItemKind.Property,
-                documentation: 'The resources of this source set. Contains only resources, and excludes any .java files found in the resource source directories. Other plugins, such as the Groovy plugin, exclude additional types of files from this collection.'
-            },
-            {
-                label: 'resources.srcDirs',
-                kind: CompletionItemKind.Property,
-                documentation: 'The source directories containing the resources of this source set.'
-            },
-            {
-                label: 'allJava',
-                kind: CompletionItemKind.Property,
-                documentation: 'All .java files of this source set. Some plugins, such as the Groovy plugin, add additional Java source files to this collection.'
-            },
-            {
-                label: 'allSource',
-                kind: CompletionItemKind.Property,
-                documentation: 'All source files of this source set. This include all resource files and all Java source files. Some plugins, such as the Groovy plugin, add additional source files to this collection.'
-            }
         ],
     }
-    return map[method];
+    let retval = map[method];
+    if (retval == undefined)
+        return [];
+    else
+        return retval;
 }
 
 /**
@@ -1144,177 +1151,57 @@ export function getAndroidKeywords(method: string) : CompletionItem[] {
             }
         ],
 
-        // DSL object to configure build types.
-        'buildTypes': [
+        // A Dependency on a module outside the current project.
+        'compile' : [
             {
-                label: 'applicationIdSuffix',
-                kind: CompletionItemKind.Property,
-                documentation: 'Application id suffix. It is appended to the "base" application id when calculating the final application id for a variant.'
-            },
-            {
-                label: 'consumerProguardFiles',
-                kind: CompletionItemKind.Property,
-                documentation: 'ProGuard rule files to be included in the published AAR.'
-            },
-            {
-                label: 'crunchPngs',
-                kind: CompletionItemKind.Property,
-                documentation: 'Whether to crunch PNGs.'
-            },
-            {
-                label: 'debuggable',
-                kind: CompletionItemKind.Property,
-                documentation: 'Whether this build type should generate a debuggable apk.'
-            },
-            {
-                label: 'embedMicroApp',
-                kind: CompletionItemKind.Property,
-                documentation: 'Whether a linked Android Wear app should be embedded in variant using this build type.'
-            },
-            {
-                label: 'javaCompileOptions',
-                kind: CompletionItemKind.Property,
-                documentation: 'Options for configuration Java compilation.'
-            },
-            {
-                label: 'jniDebuggable',
-                kind: CompletionItemKind.Property,
-                documentation: 'Whether this build type is configured to generate an APK with debuggable native code.'
-            },
-            {
-                label: 'manifestPlaceholders',
-                kind: CompletionItemKind.Property,
-                documentation: 'The manifest placeholders.'
-            },
-            {
-                label: 'matchingFallbacks',
-                kind: CompletionItemKind.Property,
-                documentation: 'Specifies a sorted list of build types that the plugin should try to use when a direct variant match with a local module dependency is not possible.'
-            },
-            {
-                label: 'minifyEnabled',
-                kind: CompletionItemKind.Property,
-                documentation: 'Whether removal of unused java code is enabled.'
-            },
-            {
-                label: 'multiDexEnabled',
-                kind: CompletionItemKind.Property,
-                documentation: 'Whether Multi-Dex is enabled for this variant.'
-            },
-            {
-                label: 'multiDexKeepFile',
-                kind: CompletionItemKind.Property,
-                documentation: 'Text file that specifies additional classes that will be compiled into the main dex file.'
-            },
-            {
-                label: 'multiDexKeepProguard',
-                kind: CompletionItemKind.Property,
-                documentation: 'Text file with additional ProGuard rules to be used to determine which classes are compiled into the main dex file.'
-            },
-            {
-                label: 'name',
-                kind: CompletionItemKind.Property,
-                documentation: 'Name of this build type.'
-            },
-            {
-                label: 'proguardFiles',
-                kind: CompletionItemKind.Property,
-                documentation: 'Specifies the ProGuard configuration files that the plugin should use.'
-            },
-            {
-                label: 'pseudoLocalesEnabled',
-                kind: CompletionItemKind.Property,
-                documentation: 'Whether to generate pseudo locale in the APK.'
-            },
-            {
-                label: 'renderscriptDebuggable',
-                kind: CompletionItemKind.Property,
-                documentation: 'Whether the build type is configured to generate an apk with debuggable RenderScript code.'
-            },
-            {
-                label: 'renderscriptOptimLevel',
-                kind: CompletionItemKind.Property,
-                documentation: 'Optimization level to use by the renderscript compiler.'
-            },
-            {
-                label: 'shrinkResources',
-                kind: CompletionItemKind.Property,
-                documentation: 'Whether shrinking of unused resources is enabled. Default is false;'
-            },
-            {
-                label: 'signingConfig',
-                kind: CompletionItemKind.Property,
-                documentation: 'The signing configuration.'
-            },
-            {
-                label: 'testCoverageEnabled',
-                kind: CompletionItemKind.Property,
-                documentation: 'Whether test coverage is enabled for this build type.'
-            },
-            {
-                label: 'useJack',
-                kind: CompletionItemKind.Property,
-                documentation: 'The Jack toolchain is deprecated.'
-            },
-            {
-                label: 'useProguard',
-                kind: CompletionItemKind.Property,
-                documentation: 'Specifies whether to always use ProGuard for code and resource shrinking.'
-            },
-            {
-                label: 'versionNameSuffix',
-                kind: CompletionItemKind.Property,
-                documentation: 'Version name suffix. It is appended to the "base" version name when calculating the final version name for a variant.'
-            },
-            {
-                label: 'zipAlignEnabled',
-                kind: CompletionItemKind.Property,
-                documentation: 'Whether zipalign is enabled for this build type.'
-            },
-            {
-                label: 'buildConfigField',
+                label: 'addArtifact',
                 kind: CompletionItemKind.Method,
-                documentation: 'Adds a new field to the generated BuildConfig class.'
+                documentation: 'Adds an artifact to this dependency.'
             },
             {
-                label: 'consumerProguardFile',
+                label: 'artifact',
                 kind: CompletionItemKind.Method,
-                documentation: 'Adds a proguard rule file to be included in the published AAR.'
+                documentation: 'Adds an artifact to this dependency.'
             },
             {
-                label: 'consumerProguardFiles',
+                label: 'copy',
                 kind: CompletionItemKind.Method,
-                documentation: 'Adds proguard rule files to be included in the published AAR.'
+                documentation: 'Creates and returns a new dependency with the property values of this one.'
             },
             {
-                label: 'externalNativeBuild',
+                label: 'exclude',
                 kind: CompletionItemKind.Method,
-                documentation: 'Configure native build options.'
+                documentation: 'Adds an exclude rule to exclude transitive dependencies of this dependency.'
             },
             {
-                label: 'initWith',
+                label: 'getArtifacts',
                 kind: CompletionItemKind.Method,
-                documentation: 'Copies all properties from the given build type.'
+                documentation: 'Returns the artifacts belonging to this dependency.'
             },
             {
-                label: 'proguardFile',
+                label: 'getExcludeRules',
                 kind: CompletionItemKind.Method,
-                documentation: 'Adds a new ProGuard configuration file.'
+                documentation: 'Returns the exclude rules for this dependency.'
             },
             {
-                label: 'proguardFiles',
+                label: 'getTargetConfiguration',
                 kind: CompletionItemKind.Method,
-                documentation: 'Adds new ProGuard configuration files.'
+                documentation: 'Returns the requested target configuration of this dependency.'
             },
             {
-                label: 'resValue',
+                label: 'isTransitive',
                 kind: CompletionItemKind.Method,
-                documentation: 'Adds a new generated resource.'
+                documentation: 'Returns whether this dependency should be resolved including or excluding its transitive dependencies.'
             },
             {
-                label: 'setProguardFiles',
+                label: 'setTargetConfiguration',
                 kind: CompletionItemKind.Method,
-                documentation: 'Sets the ProGuard configuration files.'
+                documentation: 'Sets the requested target configuration of this dependency.'
+            },
+            {
+                label: 'setTransitive',
+                kind: CompletionItemKind.Method,
+                documentation: 'Sets whether this dependency should be resolved including or excluding its transitive dependencies.'
             }
         ],
 
@@ -1568,6 +1455,32 @@ export function getAndroidKeywords(method: string) : CompletionItem[] {
             }
         ],
 
+        // Configures the dependencies for this project.
+        'dependencies' : [
+            {
+                label: 'compile',
+                kind: CompletionItemKind.Method,
+            },
+            {
+                label: 'testCompile',
+                kind: CompletionItemKind.Method,
+            },
+            {
+                label: 'runtime',
+                kind: CompletionItemKind.Method,
+            },
+            {
+                label: 'module',
+                kind: CompletionItemKind.Method,
+                documentation: 'Creates a dependency on a client module.'
+            },
+            {
+                label: 'project',
+                kind: CompletionItemKind.Method,
+                documentation: 'Creates a dependency on a project.'
+            }
+        ],
+
         // DSL object for configuring dx options.
         'dexOptions' : [
             {
@@ -1803,6 +1716,368 @@ export function getAndroidKeywords(method: string) : CompletionItem[] {
                 documentation: 'Adds a first-pick pattern.'
             }
         ],
+        
+        // DSL object for configuring APK Splits options.
+        'splits' : [
+            { 
+                label: 'abi',
+                kind: CompletionItemKind.Property,
+                documentation: 'ABI settings.'
+            },
+            { 
+                label: 'abiFilters',
+                kind: CompletionItemKind.Property,
+                documentation: 'The list of ABI filters used for multi-apk.'
+            },
+            { 
+                label: 'density',
+                kind: CompletionItemKind.Property,
+                documentation: 'Density settings.'
+            },
+            { 
+                label: 'densityFilters',
+                kind: CompletionItemKind.Property,
+                documentation: 'The list of Density filters used for multi-apk.'
+            },
+            { 
+                label: 'language',
+                kind: CompletionItemKind.Property,
+                documentation: 'Language settings.'
+            },
+            { 
+                label: 'languageFilters',
+                kind: CompletionItemKind.Property,
+                documentation: 'The list of language filters used for multi-apk.'
+            }
+        ],
+        
+        // Options for running tests.
+        'testOptions' : [
+            { 
+                label: 'animationsDisabled',
+                kind: CompletionItemKind.Property,
+                documentation: 'Disables animations during instrumented tests.'
+            },
+            { 
+                label: 'execution',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies whether to use on-device test orchestration.'
+            },
+            { 
+                label: 'reportDir',
+                kind: CompletionItemKind.Property,
+                documentation: 'Name of the reports directory.'
+            },
+            { 
+                label: 'resultsDir',
+                kind: CompletionItemKind.Property,
+                documentation: 'Name of the results directory.'
+            },
+            { 
+                label: 'unitTests',
+                kind: CompletionItemKind.Property,
+                documentation: 'Configures unit test options.'
+            }
+        ]
+    };
+    
+    let retval = map[method];
+    if (retval == undefined)
+        return [];
+    else
+        return retval;
+}
+
+/**
+ * Return the keywords of parent closure's method name
+ * @param method 
+ * @param pluginConf 
+ */
+export function getNestedKeywords(method: string, pluginConf: PluginConf) : CompletionItem[] {
+    // Initialize the default keywords as Script's keywords
+    let keywords: CompletionItem[] = [];
+
+    // Add Java plugin's nested keywords
+    if (pluginConf['java']) {
+        console.log("> Plugin 'java' detected!")
+        keywords = keywords.concat(getJavaNestedKeywords(method));
+    } 
+    
+    // Add Java-Library plugin's keywords
+    if (pluginConf['java-library']) {
+        console.log("> Plugin 'java-library' detected!")
+    }
+    
+    // Add Android plugin's keywords
+    if (pluginConf['com.android.application']) {
+        console.log("> Plugin 'com.android.application' detected!")
+        keywords = keywords.concat(getAndroidNestedKeywords(method));
+    }
+
+    return keywords;
+}
+
+/**
+ * Java plugin's nested keywords
+ * @param method 
+ */
+export function getJavaNestedKeywords(method: string) : CompletionItem[] {
+    let map : {[key: string]: CompletionItem[]} = {
+        /* sourceSets => properties */
+        "sourceSets": [
+            {
+                label: 'name',
+                kind: CompletionItemKind.Property,
+                documentation: 'The name of the source set, used to identify it.'
+            },
+            {
+                label: 'output',
+                kind: CompletionItemKind.Property,
+                documentation: 'The output files of the source set, containing its compiled classes and resources.'
+            },
+            {
+                label: 'output.classesDirs',
+                kind: CompletionItemKind.Property,
+                documentation: 'The directories to generate the classes of this source set into.'
+            },
+            {
+                label: 'output.resourcesDir',
+                kind: CompletionItemKind.Property,
+                documentation: 'The directory to generate the resources of this source set into.'
+            },
+            {
+                label: 'compileClasspath',
+                kind: CompletionItemKind.Property,
+                documentation: 'The classpath to use when compiling the source files of this source set.'
+            },
+            {
+                label: 'runtimeClasspath',
+                kind: CompletionItemKind.Property,
+                documentation: 'The classpath to use when executing the classes of this source set.'
+            },
+            {
+                label: 'java',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Java source files of this source set. Contains only .java files found in the Java source directories, and excludes all other files.'
+            },
+            {
+                label: 'java.srcDirs',
+                kind: CompletionItemKind.Property,
+                documentation: 'The source directories containing the Java source files of this source set.'
+            },
+            {
+                label: 'java.outputDir',
+                kind: CompletionItemKind.Property,
+                documentation: 'The directory to generate compiled Java sources into.'
+            },
+            {
+                label: 'resources',
+                kind: CompletionItemKind.Property,
+                documentation: 'The resources of this source set. Contains only resources, and excludes any .java files found in the resource source directories. Other plugins, such as the Groovy plugin, exclude additional types of files from this collection.'
+            },
+            {
+                label: 'resources.srcDirs',
+                kind: CompletionItemKind.Property,
+                documentation: 'The source directories containing the resources of this source set.'
+            },
+            {
+                label: 'allJava',
+                kind: CompletionItemKind.Property,
+                documentation: 'All .java files of this source set. Some plugins, such as the Groovy plugin, add additional Java source files to this collection.'
+            },
+            {
+                label: 'allSource',
+                kind: CompletionItemKind.Property,
+                documentation: 'All source files of this source set. This include all resource files and all Java source files. Some plugins, such as the Groovy plugin, add additional source files to this collection.'
+            }
+        ],
+    }
+    let retval = map[method];
+    if (retval == undefined)
+        return [];
+    else
+        return retval;
+}
+
+/**
+ * Android plugin's nested keywords
+ * @param method 
+ */
+export function getAndroidNestedKeywords(method: string) : CompletionItem[] {
+    let map : {[key: string]: CompletionItem[]} = {
+        // DSL object to configure build types.
+        'buildTypes': [
+            {
+                label: 'applicationIdSuffix',
+                kind: CompletionItemKind.Property,
+                documentation: 'Application id suffix. It is appended to the "base" application id when calculating the final application id for a variant.'
+            },
+            {
+                label: 'consumerProguardFiles',
+                kind: CompletionItemKind.Property,
+                documentation: 'ProGuard rule files to be included in the published AAR.'
+            },
+            {
+                label: 'crunchPngs',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether to crunch PNGs.'
+            },
+            {
+                label: 'debuggable',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether this build type should generate a debuggable apk.'
+            },
+            {
+                label: 'embedMicroApp',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether a linked Android Wear app should be embedded in variant using this build type.'
+            },
+            {
+                label: 'javaCompileOptions',
+                kind: CompletionItemKind.Property,
+                documentation: 'Options for configuration Java compilation.'
+            },
+            {
+                label: 'jniDebuggable',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether this build type is configured to generate an APK with debuggable native code.'
+            },
+            {
+                label: 'manifestPlaceholders',
+                kind: CompletionItemKind.Property,
+                documentation: 'The manifest placeholders.'
+            },
+            {
+                label: 'matchingFallbacks',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies a sorted list of build types that the plugin should try to use when a direct variant match with a local module dependency is not possible.'
+            },
+            {
+                label: 'minifyEnabled',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether removal of unused java code is enabled.'
+            },
+            {
+                label: 'multiDexEnabled',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether Multi-Dex is enabled for this variant.'
+            },
+            {
+                label: 'multiDexKeepFile',
+                kind: CompletionItemKind.Property,
+                documentation: 'Text file that specifies additional classes that will be compiled into the main dex file.'
+            },
+            {
+                label: 'multiDexKeepProguard',
+                kind: CompletionItemKind.Property,
+                documentation: 'Text file with additional ProGuard rules to be used to determine which classes are compiled into the main dex file.'
+            },
+            {
+                label: 'name',
+                kind: CompletionItemKind.Property,
+                documentation: 'Name of this build type.'
+            },
+            {
+                label: 'proguardFiles',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies the ProGuard configuration files that the plugin should use.'
+            },
+            {
+                label: 'pseudoLocalesEnabled',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether to generate pseudo locale in the APK.'
+            },
+            {
+                label: 'renderscriptDebuggable',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether the build type is configured to generate an apk with debuggable RenderScript code.'
+            },
+            {
+                label: 'renderscriptOptimLevel',
+                kind: CompletionItemKind.Property,
+                documentation: 'Optimization level to use by the renderscript compiler.'
+            },
+            {
+                label: 'shrinkResources',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether shrinking of unused resources is enabled. Default is false;'
+            },
+            {
+                label: 'signingConfig',
+                kind: CompletionItemKind.Property,
+                documentation: 'The signing configuration.'
+            },
+            {
+                label: 'testCoverageEnabled',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether test coverage is enabled for this build type.'
+            },
+            {
+                label: 'useJack',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Jack toolchain is deprecated.'
+            },
+            {
+                label: 'useProguard',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies whether to always use ProGuard for code and resource shrinking.'
+            },
+            {
+                label: 'versionNameSuffix',
+                kind: CompletionItemKind.Property,
+                documentation: 'Version name suffix. It is appended to the "base" version name when calculating the final version name for a variant.'
+            },
+            {
+                label: 'zipAlignEnabled',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether zipalign is enabled for this build type.'
+            },
+            {
+                label: 'buildConfigField',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a new field to the generated BuildConfig class.'
+            },
+            {
+                label: 'consumerProguardFile',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a proguard rule file to be included in the published AAR.'
+            },
+            {
+                label: 'consumerProguardFiles',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds proguard rule files to be included in the published AAR.'
+            },
+            {
+                label: 'externalNativeBuild',
+                kind: CompletionItemKind.Method,
+                documentation: 'Configure native build options.'
+            },
+            {
+                label: 'initWith',
+                kind: CompletionItemKind.Method,
+                documentation: 'Copies all properties from the given build type.'
+            },
+            {
+                label: 'proguardFile',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a new ProGuard configuration file.'
+            },
+            {
+                label: 'proguardFiles',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds new ProGuard configuration files.'
+            },
+            {
+                label: 'resValue',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a new generated resource.'
+            },
+            {
+                label: 'setProguardFiles',
+                kind: CompletionItemKind.Method,
+                documentation: 'Sets the ProGuard configuration files.'
+            }
+        ], 
 
         // Encapsulates all product flavors properties for this project.
         'productFlavors' : [
@@ -2113,71 +2388,11 @@ export function getAndroidKeywords(method: string) : CompletionItem[] {
                 documentation: 'Sets the root of the source sets to a given path. All entries of the source set are located under this root directory.'
             }
         ],
-        
-        // DSL object for configuring APK Splits options.
-        'splits' : [
-            { 
-                label: 'abi',
-                kind: CompletionItemKind.Property,
-                documentation: 'ABI settings.'
-            },
-            { 
-                label: 'abiFilters',
-                kind: CompletionItemKind.Property,
-                documentation: 'The list of ABI filters used for multi-apk.'
-            },
-            { 
-                label: 'density',
-                kind: CompletionItemKind.Property,
-                documentation: 'Density settings.'
-            },
-            { 
-                label: 'densityFilters',
-                kind: CompletionItemKind.Property,
-                documentation: 'The list of Density filters used for multi-apk.'
-            },
-            { 
-                label: 'language',
-                kind: CompletionItemKind.Property,
-                documentation: 'Language settings.'
-            },
-            { 
-                label: 'languageFilters',
-                kind: CompletionItemKind.Property,
-                documentation: 'The list of language filters used for multi-apk.'
-            }
-        ],
-        
-        // Options for running tests.
-        'testOptions' : [
-            { 
-                label: 'animationsDisabled',
-                kind: CompletionItemKind.Property,
-                documentation: 'Disables animations during instrumented tests.'
-            },
-            { 
-                label: 'execution',
-                kind: CompletionItemKind.Property,
-                documentation: 'Specifies whether to use on-device test orchestration.'
-            },
-            { 
-                label: 'reportDir',
-                kind: CompletionItemKind.Property,
-                documentation: 'Name of the reports directory.'
-            },
-            { 
-                label: 'resultsDir',
-                kind: CompletionItemKind.Property,
-                documentation: 'Name of the results directory.'
-            },
-            { 
-                label: 'unitTests',
-                kind: CompletionItemKind.Property,
-                documentation: 'Configures unit test options.'
-            }
-        ]
     };
-    
-    return map[method];
-}
 
+    let retval = map[method];
+    if (retval == undefined)
+        return [];
+    else
+        return retval;
+}

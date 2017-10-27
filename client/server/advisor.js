@@ -1,9 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_languageserver_1 = require("vscode-languageserver");
+// additionalTextEdits: [{
+//     range: {start: {line: pos.line, character: pos.character + 10}, end: {line: pos.line, character: pos.character + 10}},
+//     newText: "{}",
+// }]
 function getRootKeywords(fileName, pluginConf) {
-    // Initialize the default keywords as Script's keywords
-    let keywords = getScriptRootKeywords();
+    // Initialize the default keywords as core type and Script's keywords
+    let keywords = [];
+    keywords = keywords.concat(getScriptRootKeywords());
+    keywords = keywords.concat(getCoreTypeKeywords());
     // Add delegate's keywords
     if (fileName == "build.gradle") {
         console.log("Delegate: Project");
@@ -19,21 +25,34 @@ function getRootKeywords(fileName, pluginConf) {
     }
     // Add Java plugin's keywords
     if (pluginConf['java']) {
-        console.log(">>> Plugin 'java' detected!");
+        console.log("> Plugin 'java' detected!");
         keywords = keywords.concat(getJavaRootKeywords());
     }
     // Add Java-Library plugin's keywords
     if (pluginConf['java-library']) {
-        console.log(">>> Plugin 'java-library' detected!");
+        console.log("> Plugin 'java-library' detected!");
     }
     // Add Android plugin's keywords
     if (pluginConf['com.android.application']) {
-        console.log(">>> Plugin 'com.android.application' detected!");
+        console.log("> Plugin 'com.android.application' detected!");
         keywords = keywords.concat(getAndroidRootKeywords());
     }
     return keywords;
 }
 exports.getRootKeywords = getRootKeywords;
+/**
+ * Core type keywords
+ */
+function getCoreTypeKeywords() {
+    return [
+        {
+            label: 'task',
+            kind: vscode_languageserver_1.CompletionItemKind.Property,
+            documentation: 'A Task represents a single atomic piece of work for a build, such as compiling classes or generating javadoc.'
+        }
+    ];
+}
+exports.getCoreTypeKeywords = getCoreTypeKeywords;
 /**
  * Script keywords
  */
@@ -139,13 +158,52 @@ function getProjectRootKeywords() {
     /* [PROJECT] ROOT => Build script structure */
     return [
         {
+            label: 'project',
+            kind: vscode_languageserver_1.CompletionItemKind.Property,
+            documentation: 'The Project instance'
+        },
+        {
+            label: 'name',
+            kind: vscode_languageserver_1.CompletionItemKind.Property,
+            documentation: 'The name of the project directory.'
+        },
+        {
+            label: 'path',
+            kind: vscode_languageserver_1.CompletionItemKind.Property,
+            documentation: 'The absolute path of the project.'
+        },
+        {
+            label: 'description',
+            kind: vscode_languageserver_1.CompletionItemKind.Property,
+            documentation: 'A description for the project.'
+        },
+        {
+            label: 'projectDir',
+            kind: vscode_languageserver_1.CompletionItemKind.Property,
+            documentation: 'The directory containing the build script.'
+        },
+        {
+            label: 'buildDir',
+            kind: vscode_languageserver_1.CompletionItemKind.Property,
+            documentation: 'projectDir/build'
+        },
+        {
+            label: 'group',
+            kind: vscode_languageserver_1.CompletionItemKind.Property
+        },
+        {
+            label: 'version',
+            kind: vscode_languageserver_1.CompletionItemKind.Property
+        },
+        {
+            label: 'ant',
+            kind: vscode_languageserver_1.CompletionItemKind.Property,
+            documentation: 'An AntBuilder instance'
+        },
+        {
             label: 'allprojects',
             kind: vscode_languageserver_1.CompletionItemKind.Method,
             documentation: 'Configures this project and each of its sub-projects.'
-            // additionalTextEdits: [{
-            //     range: {start: {line: pos.line, character: pos.character + 10}, end: {line: pos.line, character: pos.character + 10}},
-            //     newText: "{}",
-            // }]
         },
         {
             label: 'artifacts',
@@ -645,22 +703,27 @@ function getAndroidRootKeywords() {
     ];
 }
 exports.getAndroidRootKeywords = getAndroidRootKeywords;
+/**
+ * Return the keywords of current method name
+ * @param method
+ * @param pluginConf
+ */
 function getKeywords(method, pluginConf) {
     // Initialize the default keywords as Script's keywords
     let keywords = [];
     keywords = keywords.concat(getDefaultKeywords(method));
     // Add Java plugin's keywords
     if (pluginConf['java']) {
-        console.log(">>> Plugin 'java' detected!");
+        console.log("> Plugin 'java' detected!");
         keywords = keywords.concat(getJavaKeywords(method));
     }
     // Add Java-Library plugin's keywords
     if (pluginConf['java-library']) {
-        console.log(">>> Plugin 'java-library' detected!");
+        console.log("> Plugin 'java-library' detected!");
     }
     // Add Android plugin's keywords
     if (pluginConf['com.android.application']) {
-        console.log(">>> Plugin 'com.android.application' detected!");
+        console.log("> Plugin 'com.android.application' detected!");
         keywords = keywords.concat(getAndroidKeywords(method));
     }
     return keywords;
@@ -824,76 +887,20 @@ exports.getDefaultKeywords = getDefaultKeywords;
  */
 function getJavaKeywords(method) {
     let map = {
-        /* sourceSets => properties */
-        "sourceSets": [
+        /*  */
+        "": [
             {
-                label: 'name',
+                label: '',
                 kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The name of the source set, used to identify it.'
+                documentation: ''
             },
-            {
-                label: 'output',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The output files of the source set, containing its compiled classes and resources.'
-            },
-            {
-                label: 'output.classesDirs',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The directories to generate the classes of this source set into.'
-            },
-            {
-                label: 'output.resourcesDir',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The directory to generate the resources of this source set into.'
-            },
-            {
-                label: 'compileClasspath',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The classpath to use when compiling the source files of this source set.'
-            },
-            {
-                label: 'runtimeClasspath',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The classpath to use when executing the classes of this source set.'
-            },
-            {
-                label: 'java',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The Java source files of this source set. Contains only .java files found in the Java source directories, and excludes all other files.'
-            },
-            {
-                label: 'java.srcDirs',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The source directories containing the Java source files of this source set.'
-            },
-            {
-                label: 'java.outputDir',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The directory to generate compiled Java sources into.'
-            },
-            {
-                label: 'resources',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The resources of this source set. Contains only resources, and excludes any .java files found in the resource source directories. Other plugins, such as the Groovy plugin, exclude additional types of files from this collection.'
-            },
-            {
-                label: 'resources.srcDirs',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The source directories containing the resources of this source set.'
-            },
-            {
-                label: 'allJava',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'All .java files of this source set. Some plugins, such as the Groovy plugin, add additional Java source files to this collection.'
-            },
-            {
-                label: 'allSource',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'All source files of this source set. This include all resource files and all Java source files. Some plugins, such as the Groovy plugin, add additional source files to this collection.'
-            }
         ],
     };
-    return map[method];
+    let retval = map[method];
+    if (retval == undefined)
+        return [];
+    else
+        return retval;
 }
 exports.getJavaKeywords = getJavaKeywords;
 /**
@@ -1126,177 +1133,57 @@ function getAndroidKeywords(method) {
                 documentation: 'The time out used for all adb operations.'
             }
         ],
-        // DSL object to configure build types.
-        'buildTypes': [
+        // A Dependency on a module outside the current project.
+        'compile': [
             {
-                label: 'applicationIdSuffix',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Application id suffix. It is appended to the "base" application id when calculating the final application id for a variant.'
-            },
-            {
-                label: 'consumerProguardFiles',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'ProGuard rule files to be included in the published AAR.'
-            },
-            {
-                label: 'crunchPngs',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Whether to crunch PNGs.'
-            },
-            {
-                label: 'debuggable',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Whether this build type should generate a debuggable apk.'
-            },
-            {
-                label: 'embedMicroApp',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Whether a linked Android Wear app should be embedded in variant using this build type.'
-            },
-            {
-                label: 'javaCompileOptions',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Options for configuration Java compilation.'
-            },
-            {
-                label: 'jniDebuggable',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Whether this build type is configured to generate an APK with debuggable native code.'
-            },
-            {
-                label: 'manifestPlaceholders',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The manifest placeholders.'
-            },
-            {
-                label: 'matchingFallbacks',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Specifies a sorted list of build types that the plugin should try to use when a direct variant match with a local module dependency is not possible.'
-            },
-            {
-                label: 'minifyEnabled',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Whether removal of unused java code is enabled.'
-            },
-            {
-                label: 'multiDexEnabled',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Whether Multi-Dex is enabled for this variant.'
-            },
-            {
-                label: 'multiDexKeepFile',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Text file that specifies additional classes that will be compiled into the main dex file.'
-            },
-            {
-                label: 'multiDexKeepProguard',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Text file with additional ProGuard rules to be used to determine which classes are compiled into the main dex file.'
-            },
-            {
-                label: 'name',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Name of this build type.'
-            },
-            {
-                label: 'proguardFiles',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Specifies the ProGuard configuration files that the plugin should use.'
-            },
-            {
-                label: 'pseudoLocalesEnabled',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Whether to generate pseudo locale in the APK.'
-            },
-            {
-                label: 'renderscriptDebuggable',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Whether the build type is configured to generate an apk with debuggable RenderScript code.'
-            },
-            {
-                label: 'renderscriptOptimLevel',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Optimization level to use by the renderscript compiler.'
-            },
-            {
-                label: 'shrinkResources',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Whether shrinking of unused resources is enabled. Default is false;'
-            },
-            {
-                label: 'signingConfig',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The signing configuration.'
-            },
-            {
-                label: 'testCoverageEnabled',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Whether test coverage is enabled for this build type.'
-            },
-            {
-                label: 'useJack',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The Jack toolchain is deprecated.'
-            },
-            {
-                label: 'useProguard',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Specifies whether to always use ProGuard for code and resource shrinking.'
-            },
-            {
-                label: 'versionNameSuffix',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Version name suffix. It is appended to the "base" version name when calculating the final version name for a variant.'
-            },
-            {
-                label: 'zipAlignEnabled',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Whether zipalign is enabled for this build type.'
-            },
-            {
-                label: 'buildConfigField',
+                label: 'addArtifact',
                 kind: vscode_languageserver_1.CompletionItemKind.Method,
-                documentation: 'Adds a new field to the generated BuildConfig class.'
+                documentation: 'Adds an artifact to this dependency.'
             },
             {
-                label: 'consumerProguardFile',
+                label: 'artifact',
                 kind: vscode_languageserver_1.CompletionItemKind.Method,
-                documentation: 'Adds a proguard rule file to be included in the published AAR.'
+                documentation: 'Adds an artifact to this dependency.'
             },
             {
-                label: 'consumerProguardFiles',
+                label: 'copy',
                 kind: vscode_languageserver_1.CompletionItemKind.Method,
-                documentation: 'Adds proguard rule files to be included in the published AAR.'
+                documentation: 'Creates and returns a new dependency with the property values of this one.'
             },
             {
-                label: 'externalNativeBuild',
+                label: 'exclude',
                 kind: vscode_languageserver_1.CompletionItemKind.Method,
-                documentation: 'Configure native build options.'
+                documentation: 'Adds an exclude rule to exclude transitive dependencies of this dependency.'
             },
             {
-                label: 'initWith',
+                label: 'getArtifacts',
                 kind: vscode_languageserver_1.CompletionItemKind.Method,
-                documentation: 'Copies all properties from the given build type.'
+                documentation: 'Returns the artifacts belonging to this dependency.'
             },
             {
-                label: 'proguardFile',
+                label: 'getExcludeRules',
                 kind: vscode_languageserver_1.CompletionItemKind.Method,
-                documentation: 'Adds a new ProGuard configuration file.'
+                documentation: 'Returns the exclude rules for this dependency.'
             },
             {
-                label: 'proguardFiles',
+                label: 'getTargetConfiguration',
                 kind: vscode_languageserver_1.CompletionItemKind.Method,
-                documentation: 'Adds new ProGuard configuration files.'
+                documentation: 'Returns the requested target configuration of this dependency.'
             },
             {
-                label: 'resValue',
+                label: 'isTransitive',
                 kind: vscode_languageserver_1.CompletionItemKind.Method,
-                documentation: 'Adds a new generated resource.'
+                documentation: 'Returns whether this dependency should be resolved including or excluding its transitive dependencies.'
             },
             {
-                label: 'setProguardFiles',
+                label: 'setTargetConfiguration',
                 kind: vscode_languageserver_1.CompletionItemKind.Method,
-                documentation: 'Sets the ProGuard configuration files.'
+                documentation: 'Sets the requested target configuration of this dependency.'
+            },
+            {
+                label: 'setTransitive',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Sets whether this dependency should be resolved including or excluding its transitive dependencies.'
             }
         ],
         // Java compilation options.
@@ -1546,6 +1433,31 @@ function getAndroidKeywords(method) {
                 documentation: 'Adds proguard rule files to be used when processing test code.'
             }
         ],
+        // Configures the dependencies for this project.
+        'dependencies': [
+            {
+                label: 'compile',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+            },
+            {
+                label: 'testCompile',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+            },
+            {
+                label: 'runtime',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+            },
+            {
+                label: 'module',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Creates a dependency on a client module.'
+            },
+            {
+                label: 'project',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Creates a dependency on a project.'
+            }
+        ],
         // DSL object for configuring dx options.
         'dexOptions': [
             {
@@ -1776,6 +1688,361 @@ function getAndroidKeywords(method) {
                 label: 'pickFirst',
                 kind: vscode_languageserver_1.CompletionItemKind.Method,
                 documentation: 'Adds a first-pick pattern.'
+            }
+        ],
+        // DSL object for configuring APK Splits options.
+        'splits': [
+            {
+                label: 'abi',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'ABI settings.'
+            },
+            {
+                label: 'abiFilters',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The list of ABI filters used for multi-apk.'
+            },
+            {
+                label: 'density',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Density settings.'
+            },
+            {
+                label: 'densityFilters',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The list of Density filters used for multi-apk.'
+            },
+            {
+                label: 'language',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Language settings.'
+            },
+            {
+                label: 'languageFilters',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The list of language filters used for multi-apk.'
+            }
+        ],
+        // Options for running tests.
+        'testOptions': [
+            {
+                label: 'animationsDisabled',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Disables animations during instrumented tests.'
+            },
+            {
+                label: 'execution',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Specifies whether to use on-device test orchestration.'
+            },
+            {
+                label: 'reportDir',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Name of the reports directory.'
+            },
+            {
+                label: 'resultsDir',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Name of the results directory.'
+            },
+            {
+                label: 'unitTests',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Configures unit test options.'
+            }
+        ]
+    };
+    let retval = map[method];
+    if (retval == undefined)
+        return [];
+    else
+        return retval;
+}
+exports.getAndroidKeywords = getAndroidKeywords;
+/**
+ * Return the keywords of parent closure's method name
+ * @param method
+ * @param pluginConf
+ */
+function getNestedKeywords(method, pluginConf) {
+    // Initialize the default keywords as Script's keywords
+    let keywords = [];
+    // Add Java plugin's nested keywords
+    if (pluginConf['java']) {
+        console.log("> Plugin 'java' detected!");
+        keywords = keywords.concat(getJavaNestedKeywords(method));
+    }
+    // Add Java-Library plugin's keywords
+    if (pluginConf['java-library']) {
+        console.log("> Plugin 'java-library' detected!");
+    }
+    // Add Android plugin's keywords
+    if (pluginConf['com.android.application']) {
+        console.log("> Plugin 'com.android.application' detected!");
+        keywords = keywords.concat(getAndroidNestedKeywords(method));
+    }
+    return keywords;
+}
+exports.getNestedKeywords = getNestedKeywords;
+/**
+ * Java plugin's nested keywords
+ * @param method
+ */
+function getJavaNestedKeywords(method) {
+    let map = {
+        /* sourceSets => properties */
+        "sourceSets": [
+            {
+                label: 'name',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The name of the source set, used to identify it.'
+            },
+            {
+                label: 'output',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The output files of the source set, containing its compiled classes and resources.'
+            },
+            {
+                label: 'output.classesDirs',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The directories to generate the classes of this source set into.'
+            },
+            {
+                label: 'output.resourcesDir',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The directory to generate the resources of this source set into.'
+            },
+            {
+                label: 'compileClasspath',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The classpath to use when compiling the source files of this source set.'
+            },
+            {
+                label: 'runtimeClasspath',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The classpath to use when executing the classes of this source set.'
+            },
+            {
+                label: 'java',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The Java source files of this source set. Contains only .java files found in the Java source directories, and excludes all other files.'
+            },
+            {
+                label: 'java.srcDirs',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The source directories containing the Java source files of this source set.'
+            },
+            {
+                label: 'java.outputDir',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The directory to generate compiled Java sources into.'
+            },
+            {
+                label: 'resources',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The resources of this source set. Contains only resources, and excludes any .java files found in the resource source directories. Other plugins, such as the Groovy plugin, exclude additional types of files from this collection.'
+            },
+            {
+                label: 'resources.srcDirs',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The source directories containing the resources of this source set.'
+            },
+            {
+                label: 'allJava',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'All .java files of this source set. Some plugins, such as the Groovy plugin, add additional Java source files to this collection.'
+            },
+            {
+                label: 'allSource',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'All source files of this source set. This include all resource files and all Java source files. Some plugins, such as the Groovy plugin, add additional source files to this collection.'
+            }
+        ],
+    };
+    let retval = map[method];
+    if (retval == undefined)
+        return [];
+    else
+        return retval;
+}
+exports.getJavaNestedKeywords = getJavaNestedKeywords;
+/**
+ * Android plugin's nested keywords
+ * @param method
+ */
+function getAndroidNestedKeywords(method) {
+    let map = {
+        // DSL object to configure build types.
+        'buildTypes': [
+            {
+                label: 'applicationIdSuffix',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Application id suffix. It is appended to the "base" application id when calculating the final application id for a variant.'
+            },
+            {
+                label: 'consumerProguardFiles',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'ProGuard rule files to be included in the published AAR.'
+            },
+            {
+                label: 'crunchPngs',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Whether to crunch PNGs.'
+            },
+            {
+                label: 'debuggable',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Whether this build type should generate a debuggable apk.'
+            },
+            {
+                label: 'embedMicroApp',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Whether a linked Android Wear app should be embedded in variant using this build type.'
+            },
+            {
+                label: 'javaCompileOptions',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Options for configuration Java compilation.'
+            },
+            {
+                label: 'jniDebuggable',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Whether this build type is configured to generate an APK with debuggable native code.'
+            },
+            {
+                label: 'manifestPlaceholders',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The manifest placeholders.'
+            },
+            {
+                label: 'matchingFallbacks',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Specifies a sorted list of build types that the plugin should try to use when a direct variant match with a local module dependency is not possible.'
+            },
+            {
+                label: 'minifyEnabled',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Whether removal of unused java code is enabled.'
+            },
+            {
+                label: 'multiDexEnabled',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Whether Multi-Dex is enabled for this variant.'
+            },
+            {
+                label: 'multiDexKeepFile',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Text file that specifies additional classes that will be compiled into the main dex file.'
+            },
+            {
+                label: 'multiDexKeepProguard',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Text file with additional ProGuard rules to be used to determine which classes are compiled into the main dex file.'
+            },
+            {
+                label: 'name',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Name of this build type.'
+            },
+            {
+                label: 'proguardFiles',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Specifies the ProGuard configuration files that the plugin should use.'
+            },
+            {
+                label: 'pseudoLocalesEnabled',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Whether to generate pseudo locale in the APK.'
+            },
+            {
+                label: 'renderscriptDebuggable',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Whether the build type is configured to generate an apk with debuggable RenderScript code.'
+            },
+            {
+                label: 'renderscriptOptimLevel',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Optimization level to use by the renderscript compiler.'
+            },
+            {
+                label: 'shrinkResources',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Whether shrinking of unused resources is enabled. Default is false;'
+            },
+            {
+                label: 'signingConfig',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The signing configuration.'
+            },
+            {
+                label: 'testCoverageEnabled',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Whether test coverage is enabled for this build type.'
+            },
+            {
+                label: 'useJack',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'The Jack toolchain is deprecated.'
+            },
+            {
+                label: 'useProguard',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Specifies whether to always use ProGuard for code and resource shrinking.'
+            },
+            {
+                label: 'versionNameSuffix',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Version name suffix. It is appended to the "base" version name when calculating the final version name for a variant.'
+            },
+            {
+                label: 'zipAlignEnabled',
+                kind: vscode_languageserver_1.CompletionItemKind.Property,
+                documentation: 'Whether zipalign is enabled for this build type.'
+            },
+            {
+                label: 'buildConfigField',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Adds a new field to the generated BuildConfig class.'
+            },
+            {
+                label: 'consumerProguardFile',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Adds a proguard rule file to be included in the published AAR.'
+            },
+            {
+                label: 'consumerProguardFiles',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Adds proguard rule files to be included in the published AAR.'
+            },
+            {
+                label: 'externalNativeBuild',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Configure native build options.'
+            },
+            {
+                label: 'initWith',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Copies all properties from the given build type.'
+            },
+            {
+                label: 'proguardFile',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Adds a new ProGuard configuration file.'
+            },
+            {
+                label: 'proguardFiles',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Adds new ProGuard configuration files.'
+            },
+            {
+                label: 'resValue',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Adds a new generated resource.'
+            },
+            {
+                label: 'setProguardFiles',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Sets the ProGuard configuration files.'
             }
         ],
         // Encapsulates all product flavors properties for this project.
@@ -2085,69 +2352,12 @@ function getAndroidKeywords(method) {
                 documentation: 'Sets the root of the source sets to a given path. All entries of the source set are located under this root directory.'
             }
         ],
-        // DSL object for configuring APK Splits options.
-        'splits': [
-            {
-                label: 'abi',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'ABI settings.'
-            },
-            {
-                label: 'abiFilters',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The list of ABI filters used for multi-apk.'
-            },
-            {
-                label: 'density',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Density settings.'
-            },
-            {
-                label: 'densityFilters',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The list of Density filters used for multi-apk.'
-            },
-            {
-                label: 'language',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Language settings.'
-            },
-            {
-                label: 'languageFilters',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The list of language filters used for multi-apk.'
-            }
-        ],
-        // Options for running tests.
-        'testOptions': [
-            {
-                label: 'animationsDisabled',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Disables animations during instrumented tests.'
-            },
-            {
-                label: 'execution',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Specifies whether to use on-device test orchestration.'
-            },
-            {
-                label: 'reportDir',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Name of the reports directory.'
-            },
-            {
-                label: 'resultsDir',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Name of the results directory.'
-            },
-            {
-                label: 'unitTests',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Configures unit test options.'
-            }
-        ]
     };
-    return map[method];
+    let retval = map[method];
+    if (retval == undefined)
+        return [];
+    else
+        return retval;
 }
-exports.getAndroidKeywords = getAndroidKeywords;
+exports.getAndroidNestedKeywords = getAndroidNestedKeywords;
 //# sourceMappingURL=advisor.js.map

@@ -89,7 +89,7 @@ function getCurrentClosure(doc, pos) {
         }
     }
     /* Find the heading of this closure */
-    let heading = "";
+    let heading = "", methodStartPos = 0;
     let start = i - 1, end = i - 1;
     let inWords = false;
     for (; start >= 0; start--) {
@@ -112,6 +112,7 @@ function getCurrentClosure(doc, pos) {
             if (ch == '\n' || ch == '\r') {
                 start++;
                 heading = doc.substring(start, end + 1).trim();
+                methodStartPos = start - 1;
                 break;
             }
         }
@@ -135,8 +136,9 @@ function getCurrentClosure(doc, pos) {
     }
     let content = doc.substring(i + 1, pos - 1) + doc.substring(pos, j).trim();
     return {
+        content: content,
         methodStr: heading,
-        content: content
+        methodStartPos: methodStartPos
     };
 }
 exports.getCurrentClosure = getCurrentClosure;
@@ -183,14 +185,24 @@ function parseClosureMethod(methodStr) {
         if (firstEqualIdx != -1)
             methodStr = methodStr.substring(firstEqualIdx + 1).trim();
         // Extract the method name before brackets
-        let leftBracketIdx = methodStr.lastIndexOf("(");
-        let lastDotIdx = methodStr.lastIndexOf(".");
-        if (leftBracketIdx != -1 && leftBracketIdx > lastDotIdx + 1)
+        // let leftBracketIdx = methodStr.lastIndexOf("(");
+        // let lastDotIdx = methodStr.lastIndexOf(".");
+        // if (leftBracketIdx != -1 && leftBracketIdx > lastDotIdx + 1)
+        //     methodName = methodStr.substring(0, leftBracketIdx).trim();
+        // else
+        //     methodName = methodStr.trim();
+        // if (lastDotIdx != -1)
+        //     methodName = methodName.substring(lastDotIdx + 1);
+        // Extract the method name before brackets
+        let leftBracketIdx = methodStr.indexOf("(");
+        if (leftBracketIdx > 0)
             methodName = methodStr.substring(0, leftBracketIdx).trim();
         else
-            methodName = methodStr.trim();
-        if (lastDotIdx != -1)
-            methodName = methodName.substring(lastDotIdx + 1);
+            methodName = methodStr;
+        // Extract the method name after dots
+        let dotIdx = methodName.lastIndexOf(".");
+        if (dotIdx > 0)
+            methodName = methodName.substring(dotIdx + 1);
         // Create Method object
         method = {
             method: methodName
@@ -198,14 +210,16 @@ function parseClosureMethod(methodStr) {
         // Handle corner case
         if (methodName == "task") {
             let rightBracketIdx = methodStr.indexOf(")");
-            let taskName = methodStr.substr(leftBracketIdx + 1, rightBracketIdx).trim();
-            let [l, r] = [taskName.charAt(0), taskName.charAt(taskName.length - 1)];
-            if ((l == '\"' && r == '\"') || (l == '\'' && r == '\''))
-                taskName = taskName.substring(1, taskName.length - 1);
-            method["name"] = taskName;
+            if (rightBracketIdx > leftBracketIdx + 1) {
+                let taskName = methodStr.substr(leftBracketIdx + 1, rightBracketIdx).trim();
+                let [l, r] = [taskName.charAt(0), taskName.charAt(taskName.length - 1)];
+                if ((l == '\"' && r == '\"') || (l == '\'' && r == '\''))
+                    taskName = taskName.substring(1, taskName.length - 1);
+                method["name"] = taskName;
+            }
         }
     }
-    console.log("Method: " + method.method + ", len: " + method.method.length);
+    console.log("[" + method.method + "]");
     return method;
 }
 exports.parseClosureMethod = parseClosureMethod;

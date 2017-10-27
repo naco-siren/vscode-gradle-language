@@ -10,7 +10,7 @@ import {
 } from 'vscode-languageserver';
 
 import * as parser from './parser'
-import {PluginConf, getRootKeywords, getKeywords} from './advisor'
+import {PluginConf, getRootKeywords, getKeywords, getNestedKeywords} from './advisor'
 
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
@@ -100,6 +100,7 @@ connection.onDidChangeWatchedFiles((_change) => {
 
 // This handler provides the initial list of the completion items.
 connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
+	console.log();
 	let textDocument : TextDocument = documents.get(_textDocumentPosition.textDocument.uri);
 	var fileName = path.basename(_textDocumentPosition.textDocument.uri);
 	let doc = textDocument.getText();
@@ -139,15 +140,33 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	}
 
 	// Return completion items
-	if (method.method == undefined) {
+	if (method.method == undefined)
 		return [];
-
-	} else if (method.method == "") {
-		return getRootKeywords(fileName, pluginConf);
-
+	let retval = [];
+	if (method.method == "") {
+		retval = getRootKeywords(fileName, pluginConf);
 	} else {
-		return getKeywords(method.method, pluginConf);
+		retval = getKeywords(method.method, pluginConf);
 	}
+	if (retval.length != 0) {
+		return retval;
+	} 
+
+	// If method not in mapping, try parent closure's method 
+	console.log("=== Try parent closure ===");
+	let parentClosure = parser.getCurrentClosure(doc, closure.methodStartPos);
+	let parentMethod = parser.parseClosureMethod(parentClosure.methodStr);
+	console.log();
+
+	if (parentMethod.method == undefined)
+		return [];
+	if (parentMethod.method != "") {
+		retval = getNestedKeywords(parentMethod.method, pluginConf);
+	}
+	if (retval.length > 0)
+		return retval;
+	else
+		return [];
 });
 
 // This handler resolve additional information for the item selected in
