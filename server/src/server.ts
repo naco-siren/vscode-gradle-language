@@ -10,7 +10,7 @@ import {
 } from 'vscode-languageserver';
 
 import * as parser from './parser'
-import {PluginConf, getRootKeywords, getKeywords, getNestedKeywords} from './advisor'
+import {PluginConf, getRootKeywords, getKeywords, getNestedKeywords, getTaskCreationOptions} from './advisor'
 
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
@@ -103,16 +103,25 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	console.log();
 	let textDocument : TextDocument = documents.get(_textDocumentPosition.textDocument.uri);
 	var fileName = path.basename(_textDocumentPosition.textDocument.uri);
-	let doc = textDocument.getText();
 	let pos = textDocument.offsetAt(_textDocumentPosition.position);
+	let doc = textDocument.getText();
+	let lines = doc.split(/\r?\n/g);
 
 	// Get current closure and parse its method
 	let closure = parser.getCurrentClosure(doc, pos);
 	let method = parser.parseClosureMethod(closure.methodStr);
 	
+	// On ROOT, check if within Task paramters
+	if (method.method == "") {
+		let line = lines[_textDocumentPosition.position.line];
+		let curMethod = parser.parseClosureMethod(line);
+		if (curMethod.method == "task") {
+			return getTaskCreationOptions();
+		}
+	}
+
 	// Collect plugins used for root closure
 	let pluginConf: PluginConf = {};
-	let lines = textDocument.getText().split(/\r?\n/g);
 	for (var i = 0; i < lines.length; i++) {
 		let line = lines[i];
 

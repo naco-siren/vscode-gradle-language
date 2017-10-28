@@ -81,14 +81,22 @@ connection.onCompletion((_textDocumentPosition) => {
     console.log();
     let textDocument = documents.get(_textDocumentPosition.textDocument.uri);
     var fileName = path.basename(_textDocumentPosition.textDocument.uri);
-    let doc = textDocument.getText();
     let pos = textDocument.offsetAt(_textDocumentPosition.position);
+    let doc = textDocument.getText();
+    let lines = doc.split(/\r?\n/g);
     // Get current closure and parse its method
     let closure = parser.getCurrentClosure(doc, pos);
     let method = parser.parseClosureMethod(closure.methodStr);
+    // On ROOT, check if within Task paramters
+    if (method.method == "") {
+        let line = lines[_textDocumentPosition.position.line];
+        let curMethod = parser.parseClosureMethod(line);
+        if (curMethod.method == "task") {
+            return advisor_1.getTaskCreationOptions();
+        }
+    }
     // Collect plugins used for root closure
     let pluginConf = {};
-    let lines = textDocument.getText().split(/\r?\n/g);
     for (var i = 0; i < lines.length; i++) {
         let line = lines[i];
         // Prune 'apply\s*plugin\s*:\s*'

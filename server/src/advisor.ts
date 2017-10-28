@@ -66,7 +66,7 @@ export function getCoreTypeKeywords() : CompletionItem[] {
 /**
  * Script keywords
  */
-export function getScriptRootKeywords() : CompletionItem[] {
+function getScriptRootKeywords() : CompletionItem[] {
     return [
         {
             label: 'buildscript',
@@ -164,7 +164,7 @@ export function getScriptRootKeywords() : CompletionItem[] {
 /**
  * Delegate Project's root keywords
  */
-export function getProjectRootKeywords() : CompletionItem[] {
+function getProjectRootKeywords() : CompletionItem[] {
     /* [PROJECT] ROOT => Build script structure */
     return [
         {
@@ -261,7 +261,7 @@ export function getProjectRootKeywords() : CompletionItem[] {
 /**
  * Delegate Gradle's root keywords
  */
-export function getGradleRootKeywords() : CompletionItem[] {
+function getGradleRootKeywords() : CompletionItem[] {
     /* [GRADLE] ROOT => properties and methods */
     return [
         {
@@ -410,7 +410,7 @@ export function getGradleRootKeywords() : CompletionItem[] {
 /**
  * Delegate Settings' root keywords
  */
-export function getSettingsRootKeywords() : CompletionItem[] {
+function getSettingsRootKeywords() : CompletionItem[] {
     /* [SETTINGS] ROOT => properties and methods */
     return [
         {
@@ -499,7 +499,7 @@ export function getSettingsRootKeywords() : CompletionItem[] {
 /**
  * Plugin Java's root keywords
  */
-export function getJavaRootKeywords() : CompletionItem[] {
+function getJavaRootKeywords() : CompletionItem[] {
     /* [JAVA] ROOT => properties and methods */
     return [
         {
@@ -703,7 +703,7 @@ export function getJavaRootKeywords() : CompletionItem[] {
 /**
  * Plugin Android's root keywords
  */
-export function getAndroidRootKeywords() : CompletionItem[] {
+function getAndroidRootKeywords() : CompletionItem[] {
     /* Root => android closure */
     return [
         {
@@ -747,7 +747,7 @@ export function getKeywords(method: string, pluginConf: PluginConf) : Completion
  * Default keywords
  * @param method 
  */
-export function getDefaultKeywords(method: string) : CompletionItem[] {
+function getDefaultKeywords(method: string) : CompletionItem[] {
     let map : {[key: string]: CompletionItem[]} = {
         /* [DEFAULT] task => properties and closures */
         "task" : [
@@ -900,7 +900,7 @@ export function getDefaultKeywords(method: string) : CompletionItem[] {
  * Java plugin's keywords
  * @param method 
  */
-export function getJavaKeywords(method: string) : CompletionItem[] {
+function getJavaKeywords(method: string) : CompletionItem[] {
     let map : {[key: string]: CompletionItem[]} = {
         /*  */
         "": [
@@ -922,7 +922,7 @@ export function getJavaKeywords(method: string) : CompletionItem[] {
  * Android plugin's keywords
  * @param method 
  */
-export function getAndroidKeywords(method: string) : CompletionItem[] {
+function getAndroidKeywords(method: string) : CompletionItem[] {
     let map : {[key: string]: CompletionItem[]} = {
         /* android => properties and closures */
         "android" : [
@@ -1478,6 +1478,31 @@ export function getAndroidKeywords(method: string) : CompletionItem[] {
                 label: 'project',
                 kind: CompletionItemKind.Method,
                 documentation: 'Creates a dependency on a project.'
+            },
+            {
+                label: 'mavenCentral',
+                kind: CompletionItemKind.Module,
+                documentation: 'Maven central repository.'
+            },
+            {
+                label: 'google',
+                kind: CompletionItemKind.Module,
+                documentation: 'Maven Google repository.'
+            },
+            {
+                label: 'maven',
+                kind: CompletionItemKind.Module,
+                documentation: 'Maven repositories.'
+            },
+            {
+                label: 'flatDir',
+                kind: CompletionItemKind.Module,
+                documentation: 'Flat directory repository.'
+            },
+            {
+                label: 'ivy',
+                kind: CompletionItemKind.Module,
+                documentation: 'Ivy repositories'
             }
         ],
 
@@ -1821,7 +1846,7 @@ export function getNestedKeywords(method: string, pluginConf: PluginConf) : Comp
  * Java plugin's nested keywords
  * @param method 
  */
-export function getJavaNestedKeywords(method: string) : CompletionItem[] {
+function getJavaNestedKeywords(method: string) : CompletionItem[] {
     let map : {[key: string]: CompletionItem[]} = {
         /* sourceSets => properties */
         "sourceSets": [
@@ -1903,7 +1928,7 @@ export function getJavaNestedKeywords(method: string) : CompletionItem[] {
  * Android plugin's nested keywords
  * @param method 
  */
-export function getAndroidNestedKeywords(method: string) : CompletionItem[] {
+function getAndroidNestedKeywords(method: string) : CompletionItem[] {
     let map : {[key: string]: CompletionItem[]} = {
         // DSL object to configure build types.
         'buildTypes': [
@@ -2395,4 +2420,47 @@ export function getAndroidNestedKeywords(method: string) : CompletionItem[] {
         return [];
     else
         return retval;
+}
+
+/**
+ * TaskContainer.create()'s creation options
+ */
+export function getTaskCreationOptions() : CompletionItem[] {
+    return [
+            {
+                label: 'name',
+                kind: CompletionItemKind.Constructor,
+                documentation: 'The name of the task to create.'
+            },
+            {
+                label: 'type',
+                kind: CompletionItemKind.Constructor,
+                documentation: 'The class of the task to create.'
+            },
+            {
+                label: 'action',
+                kind: CompletionItemKind.Constructor,
+                documentation: 'The closure or Action to execute when the task executes.'
+            },
+            {
+                label: 'overwrite',
+                kind: CompletionItemKind.Constructor,
+                documentation: 'Replace an existing task?'
+            },
+            {
+                label: 'dependsOn',
+                kind: CompletionItemKind.Constructor,
+                documentation: 'The dependencies of the task.'
+            },
+            {
+                label: 'group',
+                kind: CompletionItemKind.Constructor,
+                documentation: 'The group of the task.'
+            },
+            {
+                label: 'description',
+                kind: CompletionItemKind.Constructor,
+                documentation: 'The description of the task.'
+            }
+        ];
 }

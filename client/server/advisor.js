@@ -150,7 +150,6 @@ function getScriptRootKeywords() {
         }
     ];
 }
-exports.getScriptRootKeywords = getScriptRootKeywords;
 /**
  * Delegate Project's root keywords
  */
@@ -247,7 +246,6 @@ function getProjectRootKeywords() {
         }
     ];
 }
-exports.getProjectRootKeywords = getProjectRootKeywords;
 /**
  * Delegate Gradle's root keywords
  */
@@ -396,7 +394,6 @@ function getGradleRootKeywords() {
         }
     ];
 }
-exports.getGradleRootKeywords = getGradleRootKeywords;
 /**
  * Delegate Settings' root keywords
  */
@@ -485,7 +482,6 @@ function getSettingsRootKeywords() {
         }
     ];
 }
-exports.getSettingsRootKeywords = getSettingsRootKeywords;
 /**
  * Plugin Java's root keywords
  */
@@ -689,7 +685,6 @@ function getJavaRootKeywords() {
         }
     ];
 }
-exports.getJavaRootKeywords = getJavaRootKeywords;
 /**
  * Plugin Android's root keywords
  */
@@ -702,7 +697,6 @@ function getAndroidRootKeywords() {
         },
     ];
 }
-exports.getAndroidRootKeywords = getAndroidRootKeywords;
 /**
  * Return the keywords of current method name
  * @param method
@@ -880,7 +874,6 @@ function getDefaultKeywords(method) {
     else
         return retval;
 }
-exports.getDefaultKeywords = getDefaultKeywords;
 /**
  * Java plugin's keywords
  * @param method
@@ -902,7 +895,6 @@ function getJavaKeywords(method) {
     else
         return retval;
 }
-exports.getJavaKeywords = getJavaKeywords;
 /**
  * Android plugin's keywords
  * @param method
@@ -1456,6 +1448,31 @@ function getAndroidKeywords(method) {
                 label: 'project',
                 kind: vscode_languageserver_1.CompletionItemKind.Method,
                 documentation: 'Creates a dependency on a project.'
+            },
+            {
+                label: 'mavenCentral',
+                kind: vscode_languageserver_1.CompletionItemKind.Module,
+                documentation: 'Maven central repository.'
+            },
+            {
+                label: 'google',
+                kind: vscode_languageserver_1.CompletionItemKind.Module,
+                documentation: 'Maven Google repository.'
+            },
+            {
+                label: 'maven',
+                kind: vscode_languageserver_1.CompletionItemKind.Module,
+                documentation: 'Maven repositories.'
+            },
+            {
+                label: 'flatDir',
+                kind: vscode_languageserver_1.CompletionItemKind.Module,
+                documentation: 'Flat directory repository.'
+            },
+            {
+                label: 'ivy',
+                kind: vscode_languageserver_1.CompletionItemKind.Module,
+                documentation: 'Ivy repositories'
             }
         ],
         // DSL object for configuring dx options.
@@ -1758,7 +1775,6 @@ function getAndroidKeywords(method) {
     else
         return retval;
 }
-exports.getAndroidKeywords = getAndroidKeywords;
 /**
  * Return the keywords of parent closure's method name
  * @param method
@@ -1865,7 +1881,6 @@ function getJavaNestedKeywords(method) {
     else
         return retval;
 }
-exports.getJavaNestedKeywords = getJavaNestedKeywords;
 /**
  * Android plugin's nested keywords
  * @param method
@@ -2359,5 +2374,47 @@ function getAndroidNestedKeywords(method) {
     else
         return retval;
 }
-exports.getAndroidNestedKeywords = getAndroidNestedKeywords;
+/**
+ * TaskContainer.create()'s creation options
+ */
+function getTaskCreationOptions() {
+    return [
+        {
+            label: 'name',
+            kind: vscode_languageserver_1.CompletionItemKind.Constructor,
+            documentation: 'The name of the task to create.'
+        },
+        {
+            label: 'type',
+            kind: vscode_languageserver_1.CompletionItemKind.Constructor,
+            documentation: 'The class of the task to create.'
+        },
+        {
+            label: 'action',
+            kind: vscode_languageserver_1.CompletionItemKind.Constructor,
+            documentation: 'The closure or Action to execute when the task executes.'
+        },
+        {
+            label: 'overwrite',
+            kind: vscode_languageserver_1.CompletionItemKind.Constructor,
+            documentation: 'Replace an existing task?'
+        },
+        {
+            label: 'dependsOn',
+            kind: vscode_languageserver_1.CompletionItemKind.Constructor,
+            documentation: 'The dependencies of the task.'
+        },
+        {
+            label: 'group',
+            kind: vscode_languageserver_1.CompletionItemKind.Constructor,
+            documentation: 'The group of the task.'
+        },
+        {
+            label: 'description',
+            kind: vscode_languageserver_1.CompletionItemKind.Constructor,
+            documentation: 'The description of the task.'
+        }
+    ];
+}
+exports.getTaskCreationOptions = getTaskCreationOptions;
 //# sourceMappingURL=advisor.js.map
