@@ -2,6 +2,7 @@
  * 1. Gradle's own impletation of AST transformation for Task type: 
  *    See: https://github.com/gradle/gradle/blob/master/subprojects/core/src/main/java/org/gradle/groovy/scripts/internal/TaskDefinitionScriptTransformer.java)
  */
+apply plugin: 'java'
 
 task taskA {
 

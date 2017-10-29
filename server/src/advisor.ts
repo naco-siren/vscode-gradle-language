@@ -749,13 +749,17 @@ export function getKeywords(method: string, pluginConf: PluginConf) : Completion
  */
 function getDefaultKeywords(method: string) : CompletionItem[] {
     let map : {[key: string]: CompletionItem[]} = {
-        /* [DEFAULT] keywords: "all", "each", etc. */
+        /* [DEFAULT] keywords: "if", "all", "each", etc. */
+        "if" : [
+            
+        ],
         "all" : [
 
         ],
         "each" : [
 
         ],
+
 
         /* [DEFAULT] task => properties and closures */
         "task" : [
@@ -909,15 +913,860 @@ function getDefaultKeywords(method: string) : CompletionItem[] {
  * @param method 
  */
 function getJavaKeywords(method: string) : CompletionItem[] {
+    /* Preprocess method name */
+    if (method.startsWith("compile") || method.endsWith("Compile") || method.endsWith("CompileOnly") || method.endsWith("CompileClasspath")) {
+        method = "JavaCompile";
+    } else if (method.endsWith("Runtime")) {
+        method = "runtime";
+    } else if (method == "processResources" || method == "processTestResources" || (method.startsWith("process") && method.endsWith("Resources")) ) {
+        method = "Copy";
+    } else if (method.startsWith("clean")) {
+        method = "Delete";
+    } else if (method == "maven" || method == "ivy") {
+        method = "Repository";
+    }
+
     let map : {[key: string]: CompletionItem[]} = {
-        /*  */
-        "": [
+
+        // Compiles Java source files 
+        'Copy' : [
+            {
+                label: 'dir',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'caseSensitive',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies whether case-sensitive pattern matching should be used.'
+            },
+            {
+                label: 'destinationDir',
+                kind: CompletionItemKind.Property,
+                documentation: 'The directory to copy files into.'
+            },
+            {
+                label: 'dirMode',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Unix permissions to use for the target directories. null means that existing permissions are preserved.'
+            },
+            {
+                label: 'duplicatesStrategy',
+                kind: CompletionItemKind.Property,
+                documentation: 'The strategy to use when trying to copy more than one file to the same destination.'
+            },
+            {
+                label: 'excludes',
+                kind: CompletionItemKind.Property,
+                documentation: 'The set of exclude patterns.'
+            },
+            {
+                label: 'fileMode',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Unix permissions to use for the target files. null means that existing permissions are preserved.'
+            },
+            {
+                label: 'includeEmptyDirs',
+                kind: CompletionItemKind.Property,
+                documentation: 'Tells if empty target directories will be included in the copy.'
+            },
+            {
+                label: 'includes',
+                kind: CompletionItemKind.Property,
+                documentation: 'The set of include patterns.'
+            },
+            {
+                label: 'source',
+                kind: CompletionItemKind.Property,
+                documentation: 'The source files for this task.'
+            },
+            {
+                label: 'eachFile',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds an action to be applied to each file as it about to be copied into its destination.'
+            },
+            {
+                label: 'exclude',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds an exclude spec or an ANT style exclude pattern.'
+            },
+            {
+                label: 'expand',
+                kind: CompletionItemKind.Method,
+                documentation: 'Expands property references in each file as it is copied. More specifically, each file is transformed using Groovy\'s SimpleTemplateEngine.'
+            },
+            {
+                label: 'filesMatching',
+                kind: CompletionItemKind.Method,
+                documentation: 'Configure the FileCopyDetails for each file whose path matches any of the specified Ant-style patterns.'
+            },
+            {
+                label: 'filesNotMatching',
+                kind: CompletionItemKind.Method,
+                documentation: 'Configure the FileCopyDetails for each file whose path does not match any of the specified Ant-style patterns.'
+            },
+            {
+                label: 'filter',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a content filter based on the provided closure.'
+            },
+            {
+                label: 'from',
+                kind: CompletionItemKind.Method,
+                documentation: 'Specifies the source files or directories for a copy and creates a child CopySourceSpec.'
+            },
+            {
+                label: 'include',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds an include spec or an ANT style include pattern.'
+            },
+            {
+                label: 'into',
+                kind: CompletionItemKind.Method,
+                documentation: 'Specifies the destination directory for a copy.'
+            },
+            {
+                label: 'rename',
+                kind: CompletionItemKind.Method,
+                documentation: 'Renames a source file. The closure will be called with a single parameter, the name of the file. The closure should return a String object with a new target name. The closure may return null, in which case the original name will be used.'
+            },
+            {
+                label: 'with',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds the given specs as a child of this spec.'
+            }
+        ],
+
+        // Simply removes the directory denoted by its dir property
+        'Delete' : [
+            {
+                label: 'dir',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'delete',
+                kind: CompletionItemKind.Property,
+                documentation: 'The set of files which will be deleted by this task.'
+            },
+            {
+                label: 'followSymlinks',
+                kind: CompletionItemKind.Property,
+                documentation: 'Returns if symlinks should be followed when doing a delete.'
+            },
+            {
+                label: 'targetFiles',
+                kind: CompletionItemKind.Property,
+                documentation: 'The resolved set of files which will be deleted by this task.'
+            }
+        ],
+
+        // Assembles a JAR archive
+        'jar' : [
+            {
+                label: 'appendix',
+                kind: CompletionItemKind.Property,
+                documentation: 'The appendix part of the archive name, if any.'
+            },
+            {
+                label: 'archiveName',
+                kind: CompletionItemKind.Property,
+                documentation: 'The archive name. If the name has not been explicitly set, the pattern for the name is:[baseName]-[appendix]-[version]-[classifier].[extension]'
+            },
+            {
+                label: 'archivePath',
+                kind: CompletionItemKind.Property,
+                documentation: 'The path where the archive is constructed. The path is simply the destinationDir plus the archiveName.'
+            },
+            {
+                label: 'baseName',
+                kind: CompletionItemKind.Property,
+                documentation: 'The base name of the archive.'
+            },
+            {
+                label: 'caseSensitive',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies whether case-sensitive pattern matching should be used.'
+            },
+            {
+                label: 'classifier',
+                kind: CompletionItemKind.Property,
+                documentation: 'The classifier part of the archive name, if any.'
+            },
+            {
+                label: 'destinationDir',
+                kind: CompletionItemKind.Property,
+                documentation: 'The directory where the archive is generated into.'
+            },
+            {
+                label: 'dirMode',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Unix permissions to use for the target directories. null means that existing permissions are preserved.'
+            },
+            {
+                label: 'duplicatesStrategy',
+                kind: CompletionItemKind.Property,
+                documentation: 'The strategy to use when trying to copy more than one file to the same destination.'
+            },
+            {
+                label: 'entryCompression',
+                kind: CompletionItemKind.Property,
+                documentation: 'The compression level of the entries of the archive.'
+            },
+            {
+                label: 'excludes',
+                kind: CompletionItemKind.Property,
+                documentation: 'The set of exclude patterns.'
+            },
+            {
+                label: 'extension',
+                kind: CompletionItemKind.Property,
+                documentation: 'The extension part of the archive name.'
+            },
+            {
+                label: 'fileMode',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Unix permissions to use for the target files. null means that existing permissions are preserved.'
+            },
+            {
+                label: 'includeEmptyDirs',
+                kind: CompletionItemKind.Property,
+                documentation: 'Tells if empty target directories will be included in the copy.'
+            },
+            {
+                label: 'includes',
+                kind: CompletionItemKind.Property,
+                documentation: 'The set of include patterns.'
+            },
+            {
+                label: 'manifest',
+                kind: CompletionItemKind.Property,
+                documentation: 'The manifest for this JAR archive.'
+            },
+            {
+                label: 'metadataCharset',
+                kind: CompletionItemKind.Property,
+                documentation: 'The character set used to encode JAR metadata like file names. Defaults to UTF-8.'
+            },
+            {
+                label: 'preserveFileTimestamps',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies whether file timestamps should be preserved in the archive.'
+            },
+            {
+                label: 'reproducibleFileOrder',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies whether to enforce a reproducible file order when reading files from directories.'
+            },
+            {
+                label: 'source',
+                kind: CompletionItemKind.Property,
+                documentation: 'The source files for this task.'
+            },
+            {
+                label: 'version',
+                kind: CompletionItemKind.Property,
+                documentation: 'The version part of the archive name, if any.'
+            },
+            {
+                label: 'zip64',
+                kind: CompletionItemKind.Property,
+                documentation: 'Whether the zip can contain more than 65535 files and/or support files greater than 4GB in size.'
+            },
+            {
+                label: 'eachFile',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds an action to be applied to each file as it about to be copied into its destination. The given closure is called with a FileCopyDetails as its parameter. Actions are executed in the order added, and are inherited from the parent spec.'
+            },
+            {
+                label: 'exclude',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds an exclude spec or an ANT style exclude pattern.'
+            },
+            {
+                label: 'expand',
+                kind: CompletionItemKind.Method,
+                documentation: 'Expands property references in each file as it is copied.'
+            },
+            {
+                label: 'filesMatching',
+                kind: CompletionItemKind.Method,
+                documentation: 'Configure the FileCopyDetails for each file whose path matches any of the specified Ant-style patterns.'
+            },
+            {
+                label: 'filesNotMatching',
+                kind: CompletionItemKind.Method,
+                documentation: 'Configure the FileCopyDetails for each file whose path does not match any of the specified Ant-style patterns.'
+            },
+            {
+                label: 'filter',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a content filter based on the provided closure.'
+            },
+            {
+                label: 'from',
+                kind: CompletionItemKind.Method,
+                documentation: 'Specifies the source files or directories for a copy and creates a child CopySourceSpec.'
+            },
+            {
+                label: 'include',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds an include spec or an ANT style include pattern'
+            },
+            {
+                label: 'into',
+                kind: CompletionItemKind.Method,
+                documentation: 'Specifies the destination directory *inside* the archive for the files.'
+            },
+            {
+                label: 'manifest',
+                kind: CompletionItemKind.Method,
+                documentation: 'Configures the manifest for this JAR archive.'
+            },
+            {
+                label: 'metaInf',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds content to this JAR archive\'s META-INF directory.'
+            },
+            {
+                label: 'rename',
+                kind: CompletionItemKind.Method,
+                documentation: 'Renames a source file. The closure will be called with a single parameter, the name of the file. The closure should return a String object with a new target name. The closure may return null, in which case the original name will be used.'
+            },
+            {
+                label: 'with',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds the given specs as a child of this spec.'
+            }
+        ],
+
+        // Compiles Java source files
+        'JavaCompile' : [
+            {
+                label: 'classpath',
+                kind: CompletionItemKind.Property,
+                documentation: 'The classpath to use to compile the source files.'
+            },
+            {
+                label: 'destinationDir',
+                kind: CompletionItemKind.Property,
+                documentation: 'The directory to generate the .class files into.'
+            },
+            {
+                label: 'excludes',
+                kind: CompletionItemKind.Property,
+                documentation: 'The set of exclude patterns.'
+            },
+            {
+                label: 'includes',
+                kind: CompletionItemKind.Property,
+                documentation: 'The compilation options.'
+            },
+            {
+                label: 'source',
+                kind: CompletionItemKind.Property,
+                documentation: 'The source for this task, after the include and exclude patterns have been applied. Ignores source files which do not exist.'
+            },
+            {
+                label: 'sourceCompatibility',
+                kind: CompletionItemKind.Property,
+                documentation: 'The Java language level to use to compile the source files.'
+            },
+            {
+                label: 'targetCompatibility',
+                kind: CompletionItemKind.Property,
+                documentation: 'The target JVM to generate the .class files for.'
+            },
+            {
+                label: 'toolChain',
+                kind: CompletionItemKind.Property,
+                documentation: 'The tool chain that will be used to compile the Java source.'
+            },
+            {
+                label: 'exclude',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds an exclude spec or an ANT style exclude pattern.'
+            },
+            {
+                label: 'include',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds an include spec or an ANT style include pattern.'
+            },
+            {
+                label: 'source',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds some source to this task. The given source objects will be evaluated as per Project.files(java.lang.Object[]).'
+            }
+        ],
+
+        // Configures the dependencies for this project
+        'dependencies' : [
+            {
+                label: 'compile',
+                kind: CompletionItemKind.Method,
+                documentation: 'Compile time dependencies.'
+            },
+            {
+                label: 'compileOnly',
+                kind: CompletionItemKind.Method,
+                documentation: 'Compile time only dependencies, not used at runtime.'
+            },
+            {
+                label: 'compileClasspath',
+                kind: CompletionItemKind.Method,
+                documentation: 'Compile classpath, used when compiling source.'
+            },
+            {
+                label: 'runtime',
+                kind: CompletionItemKind.Method,
+                documentation: 'Runtime dependencies.'
+            },
+            {
+                label: 'testCompile',
+                kind: CompletionItemKind.Method,
+                documentation: 'Additional dependencies for compiling tests.'
+            },
+            {
+                label: 'testCompileOnly',
+                kind: CompletionItemKind.Method,
+                documentation: 'Additional dependencies only for compiling tests, not used at runtime.'
+            },
+            {
+                label: 'testCompileClasspath',
+                kind: CompletionItemKind.Method,
+                documentation: 'Test compile classpath, used when compiling test sources.'
+            },
+            {
+                label: 'testRuntime',
+                kind: CompletionItemKind.Method,
+                documentation: 'Additional dependencies for running tests only.'
+            },
+            {
+                label: 'archives',
+                kind: CompletionItemKind.Method,
+                documentation: 'Artifacts (e.g. jars) produced by this project.'
+            },
+            {
+                label: 'default',
+                kind: CompletionItemKind.Method,
+                documentation: 'Artifacts (e.g. jars) produced by this project.'
+            },
+            {
+                label: 'modules',
+                kind: CompletionItemKind.Method
+            }
+        ],
+
+        // A SourceSetContainer manages a set of SourceSet objects
+        'sourceSets' : [ 
+        ],
+
+        // Assembles the production classes and resources directories.
+        'classes' : [
+        ],
+
+        // Assembles the test classes and resources directories.
+        'testClasses' : [
+        ],
+
+        // Core Javadoc options and standard doclet's options
+        'javadoc' : [
+            {
+                label: 'classpath',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'source',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'destinationDir',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'title',
+                kind: CompletionItemKind.Property
+            }
+        ],
+
+        // Gradle repository management
+        'repositories' : [
+            {
+                label: 'mavenCentral',
+                kind: CompletionItemKind.Module,
+                documentation: 'Maven central repository.'
+            },
+            {
+                label: 'jcenter',
+                kind: CompletionItemKind.Module,
+                documentation: 'Maven JCenter repository.'
+            },
+            {
+                label: 'google',
+                kind: CompletionItemKind.Module,
+                documentation: 'Maven Google repository.'
+            },
+            {
+                label: 'maven',
+                kind: CompletionItemKind.Module,
+                documentation: 'Maven repositories.'
+            },
+            {
+                label: 'flatDir',
+                kind: CompletionItemKind.Module,
+                documentation: 'Flat directory repository.'
+            },
+            {
+                label: 'ivy',
+                kind: CompletionItemKind.Module,
+                documentation: 'Ivy repositories'
+            },
+            {
+                label: 'localRepository',
+                kind: CompletionItemKind.Module,
+                documentation: 'Local repository'
+            }
+        ],
+
+        // Add a custom repository
+        'Repository' : [
+            {
+                label: 'credentials',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'authentication',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'url',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'artifactUrls',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'layout',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'ivyPattern',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'artifactPattern',
+                kind: CompletionItemKind.Property
+            }
+        ],
+        'credentials' : [
+            {
+                label: 'username',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'password',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'accessKey',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'secretKey',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'sessionToken',
+                kind: CompletionItemKind.Property
+            }
+        ],
+        'authentication' : [
+            {
+                label: 'digest',
+                kind: CompletionItemKind.Method
+            },
+            {
+                label: 'basic',
+                kind: CompletionItemKind.Method
+            }
+        ],
+
+        // Execute JUnit (3.8.x or 4.x) or TestNG tests
+        'test' : [
+            {
+                label: 'allJvmArgs',
+                kind: CompletionItemKind.Property,
+                documentation: 'The full set of arguments to use to launch the JVM for the process.'
+            },
+            {
+                label: 'binResultsDir',
+                kind: CompletionItemKind.Property,
+                documentation: 'The root folder for the test results in internal binary format.'
+            },
+            {
+                label: 'bootstrapClasspath',
+                kind: CompletionItemKind.Property,
+                documentation: 'The bootstrap classpath to use for the process. The default bootstrap classpath for the JVM is used when this classpath is empty.'
+            },
+            {
+                label: 'classpath',
+                kind: CompletionItemKind.Property,
+                documentation: 'The classpath to use to execute the tests.'
+            },
+            {
+                label: 'debug',
+                kind: CompletionItemKind.Property,
+                documentation: 'Returns true if debugging is enabled for the process. When enabled, the process is started suspended and listening on port 5005.'
+            },
             {
                 label: '',
                 kind: CompletionItemKind.Property,
                 documentation: ''
             },
+            {
+                label: 'enableAssertions',
+                kind: CompletionItemKind.Property,
+                documentation: 'Returns true if assertions are enabled for the process.'
+            },
+            {
+                label: 'environment',
+                kind: CompletionItemKind.Property,
+                documentation: 'The environment variables to use for the process. Defaults to the environment of this process.'
+            },
+            {
+                label: 'excludes',
+                kind: CompletionItemKind.Property,
+                documentation: 'The exclude patterns for test execution.'
+            },
+            {
+                label: 'executable',
+                kind: CompletionItemKind.Property,
+                documentation: 'The name of the executable to use.'
+            },
+            {
+                label: 'forkEvery',
+                kind: CompletionItemKind.Property,
+                documentation: 'The maximum number of test classes to execute in a forked test process. The forked test process will be restarted when this limit is reached. The default value is 0 (no maximum).'
+            },
+            {
+                label: 'ignoreFailures',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies whether the build should break when the verifications performed by this task fail.'
+            },
+            {
+                label: 'includes',
+                kind: CompletionItemKind.Property,
+                documentation: 'The include patterns for test execution.'
+            },
+            {
+                label: 'jvmArgs',
+                kind: CompletionItemKind.Property,
+                documentation: 'The extra arguments to use to launch the JVM for the process. Does not include system properties and the minimum/maximum heap size.'
+            },
+            {
+                label: 'maxHeapSize',
+                kind: CompletionItemKind.Property,
+                documentation: 'The maximum heap size for the process, if any.'
+            },
+            {
+                label: 'maxParallelForks',
+                kind: CompletionItemKind.Property,
+                documentation: 'The maximum number of forked test processes to execute in parallel. The default value is 1 (no parallel test execution). It cannot exceed the value of max-workers for the current build.'
+            },
+            {
+                label: 'minHeapSize',
+                kind: CompletionItemKind.Property,
+                documentation: 'The minimum heap size for the process, if any.'
+            },
+            {
+                label: 'options',
+                kind: CompletionItemKind.Property,
+                documentation: 'Returns test framework specific options. Make sure to call Test.useJUnit() or Test.useTestNG() before using this method.'
+            },
+            {
+                label: 'reports',
+                kind: CompletionItemKind.Property,
+                documentation: 'The reports that this task potentially produces.'
+            },
+            {
+                label: 'scanForTestClasses',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies whether test classes should be detected. When true the classes which match the include and exclude patterns are scanned for test classes, and any found are executed. When false the classes which match the include and exclude patterns are executed.'
+            },
+            {
+                label: 'systemProperties',
+                kind: CompletionItemKind.Property,
+                documentation: 'The system properties which will be used for the process.'
+            },
+            {
+                label: 'testClassesDir',
+                kind: CompletionItemKind.Property,
+                documentation: 'The root folder for the compiled test sources.'
+            },
+            {
+                label: 'testClassesDirs',
+                kind: CompletionItemKind.Property,
+                documentation: 'The directories for the compiled test sources.'
+            },
+            {
+                label: 'testLogging',
+                kind: CompletionItemKind.Property,
+                documentation: 'Allows to set options related to which test events are logged to the console, and on which detail level.'
+            },
+            {
+                label: 'workingDir',
+                kind: CompletionItemKind.Property,
+                documentation: 'The working directory for the process. Defaults to the project directory.'
+            },
+            {
+                label: 'jacoco',
+                kind: CompletionItemKind.Property,
+                documentation: 'The JacocoTaskExtension added by the jacoco plugin.'
+            },
+            {
+                label: 'addTestListener',
+                kind: CompletionItemKind.Method,
+                documentation: 'Registers a test listener with this task.'
+            },
+            {
+                label: 'addTestOutputListener',
+                kind: CompletionItemKind.Method,
+                documentation: 'Registers a output listener with this task.'
+            },
+            {
+                label: 'afterSuite',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a closure to be notified after a test suite has executed. A TestDescriptor and TestResult instance are passed to the closure as a parameter.'
+            },
+            {
+                label: 'afterTest',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a closure to be notified after a test has executed. A TestDescriptor and TestResult instance are passed to the closure as a parameter.'
+            },
+            {
+                label: 'beforeSuite',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a closure to be notified before a test suite is executed. A TestDescriptor instance is passed to the closure as a parameter.'
+            },
+            {
+                label: 'beforeTest',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a closure to be notified before a test is executed. A TestDescriptor instance is passed to the closure as a parameter.'
+            },
+            {
+                label: 'bootstrapClasspath',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds the given values to the end of the bootstrap classpath for the process.'
+            },
+            {
+                label: 'copyTo',
+                kind: CompletionItemKind.Method,
+                documentation: 'Copies these options to the given target options.'
+            },
+            {
+                label: 'environment',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds one or more environment variables to the environment for this process.'
+            },
+            {
+                label: 'exclude',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a exclude spec or some exclude patterns.'
+            },
+            {
+                label: 'executable',
+                kind: CompletionItemKind.Method,
+                documentation: 'Sets the name of the executable to use.'
+            },
+            {
+                label: 'include',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a include spec or some include patterns.'
+            },
+            {
+                label: 'jvmArgs',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds some arguments to use to launch the JVM for the process.'
+            },
+            {
+                label: 'onOutput',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a closure to be notified when output from the test received. A TestDescriptorand TestOutputEvent instance are passed to the closure as a parameter.'
+            },
+            {
+                label: 'options',
+                kind: CompletionItemKind.Method,
+                documentation: 'Configures test framework specific options.'
+            },
+            {
+                label: 'removeTestListener',
+                kind: CompletionItemKind.Method,
+                documentation: 'Unregisters a test listener with this task.'
+            },
+            {
+                label: 'removeTestOutputListener',
+                kind: CompletionItemKind.Method,
+                documentation: 'Unregisters a test output listener with this task.'
+            },
+            {
+                label: 'reports',
+                kind: CompletionItemKind.Method,
+                documentation: 'Configures the reports that this task potentially produces.'
+            },
+            {
+                label: 'setTestNameIncludePatterns',
+                kind: CompletionItemKind.Method,
+                documentation: 'Sets the test name patterns to be included in execution. Classes or method names are supported, wildcard \'*\' is supported.'
+            },
+            {
+                label: 'systemProperties',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds some system properties to use for the process.'
+            },
+            {
+                label: 'testLogging',
+                kind: CompletionItemKind.Method,
+                documentation: 'Allows configuring the logging of the test execution, for example log eagerly the standard output, etc.'
+            },
+            {
+                label: 'useJUnit',
+                kind: CompletionItemKind.Method,
+                documentation: 'Specifies that JUnit should be used to execute the tests.'
+            },
+            {
+                label: 'useTestNG',
+                kind: CompletionItemKind.Method,
+                documentation: 'Specifies that TestNG should be used to execute the tests.'
+            },
+            {
+                label: 'workingDir',
+                kind: CompletionItemKind.Method,
+                documentation: 'Sets the working directory for the process.'
+            }
         ],
+
+        // Uploads artifacts in the archives configuration, including the JAR file.
+        'uploadArchives' : [
+            {
+                label: 'artifacts',
+                kind: CompletionItemKind.Property,
+                documentation: 'The artifacts which will be uploaded.'
+            },
+            {
+                label: 'configuration',
+                kind: CompletionItemKind.Property,
+                documentation: 'The configuration to upload.'
+            },
+            {
+                label: 'repositories',
+                kind: CompletionItemKind.Property,
+                documentation: 'The repositories to upload to.'
+            },
+            {
+                label: 'uploadDescriptor',
+                kind: CompletionItemKind.Property,
+                documentation: 'Specifies whether the dependency descriptor should be uploaded.'
+            }
+        ]
     }
     let retval = map[method];
     if (retval == undefined)
@@ -931,13 +1780,16 @@ function getJavaKeywords(method: string) : CompletionItem[] {
  * @param method 
  */
 function getAndroidKeywords(method: string) : CompletionItem[] {
-    // Preprocess method name
-    if (method.endsWith("Compile")) {
+    /* Preprocess method name */
+    if (method.endsWith("Compile") || method.endsWith("CompileOnly") || method.endsWith("CompileClasspath")) {
         method = "compile";
+    } else if (method.endsWith("Runtime")) {
+        method = "runtime";
     }
 
+
     let map : {[key: string]: CompletionItem[]} = {
-        /* android => properties and closures */
+        // android => properties and closures
         "android" : [
             {
                 label: 'aaptOptions',
@@ -1496,11 +2348,20 @@ function getAndroidKeywords(method: string) : CompletionItem[] {
                 label: 'project',
                 kind: CompletionItemKind.Method,
                 documentation: 'Creates a dependency on a project.'
-            },
+            }
+        ],
+
+        // Gradle repository management
+        'repositories' : [
             {
                 label: 'mavenCentral',
                 kind: CompletionItemKind.Module,
                 documentation: 'Maven central repository.'
+            },
+            {
+                label: 'jcenter',
+                kind: CompletionItemKind.Module,
+                documentation: 'Maven JCenter repository.'
             },
             {
                 label: 'google',
@@ -1521,6 +2382,75 @@ function getAndroidKeywords(method: string) : CompletionItem[] {
                 label: 'ivy',
                 kind: CompletionItemKind.Module,
                 documentation: 'Ivy repositories'
+            },
+            {
+                label: 'localRepository',
+                kind: CompletionItemKind.Module,
+                documentation: 'Local repository'
+            }
+        ],
+
+        // Add a custom repository
+        'Repository' : [
+            {
+                label: 'credentials',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'authentication',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'url',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'artifactUrls',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'layout',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'ivyPattern',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'artifactPattern',
+                kind: CompletionItemKind.Property
+            }
+        ],
+        'credentials' : [
+            {
+                label: 'username',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'password',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'accessKey',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'secretKey',
+                kind: CompletionItemKind.Property
+            },
+            {
+                label: 'sessionToken',
+                kind: CompletionItemKind.Property
+            }
+        ],
+        'authentication' : [
+            {
+                label: 'digest',
+                kind: CompletionItemKind.Method
+            },
+            {
+                label: 'basic',
+                kind: CompletionItemKind.Method
             }
         ],
 
@@ -1798,7 +2728,7 @@ function getAndroidKeywords(method: string) : CompletionItem[] {
                 documentation: 'The list of language filters used for multi-apk.'
             }
         ],
-        
+
         // Options for running tests.
         'testOptions' : [
             { 
@@ -1867,7 +2797,7 @@ export function getNestedKeywords(method: string, pluginConf: PluginConf) : Comp
  */
 function getJavaNestedKeywords(method: string) : CompletionItem[] {
     let map : {[key: string]: CompletionItem[]} = {
-        /* sourceSets => properties */
+        // SourceSetContainer manages a set of SourceSet objects.
         "sourceSets": [
             {
                 label: 'name',
@@ -1936,6 +2866,7 @@ function getJavaNestedKeywords(method: string) : CompletionItem[] {
             }
         ],
     }
+    
     let retval = map[method];
     if (retval == undefined)
         return [];
