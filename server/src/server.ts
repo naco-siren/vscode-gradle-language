@@ -159,7 +159,7 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 			pluginConf['com.android.application'] = true;
 	}
 
-	// Return completion items
+	// Return completion items if method name hit in map
 	console.log("=== Keywords for current closure ===");
 	if (method.method == undefined)
 		return [];
@@ -169,7 +169,7 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	} else {
 		retval = getKeywords(method.method, pluginConf);
 	}
-	if (retval.length != 0) {
+	if (retval.length == 0 || retval.length != 1 || retval[0] != undefined) {
 		return retval;
 	} 
 

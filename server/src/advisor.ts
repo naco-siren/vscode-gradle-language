@@ -749,6 +749,14 @@ export function getKeywords(method: string, pluginConf: PluginConf) : Completion
  */
 function getDefaultKeywords(method: string) : CompletionItem[] {
     let map : {[key: string]: CompletionItem[]} = {
+        /* [DEFAULT] keywords: "all", "each", etc. */
+        "all" : [
+
+        ],
+        "each" : [
+
+        ],
+
         /* [DEFAULT] task => properties and closures */
         "task" : [
             {
@@ -923,6 +931,11 @@ function getJavaKeywords(method: string) : CompletionItem[] {
  * @param method 
  */
 function getAndroidKeywords(method: string) : CompletionItem[] {
+    // Preprocess method name
+    if (method.endsWith("Compile")) {
+        method = "compile";
+    }
+
     let map : {[key: string]: CompletionItem[]} = {
         /* android => properties and closures */
         "android" : [
@@ -1149,6 +1162,11 @@ function getAndroidKeywords(method: string) : CompletionItem[] {
                 kind: CompletionItemKind.Property,
                 documentation: 'The time out used for all adb operations.'
             }
+        ],
+
+        // DSL object to configure build types.
+        "buildTypes" : [
+
         ],
 
         // A Dependency on a module outside the current project.
@@ -1742,6 +1760,11 @@ function getAndroidKeywords(method: string) : CompletionItem[] {
             }
         ],
         
+        // Encapsulates all product flavors properties for this project.
+        'productFlavors' : [
+            
+        ],
+
         // DSL object for configuring APK Splits options.
         'splits' : [
             { 
@@ -1806,11 +1829,7 @@ function getAndroidKeywords(method: string) : CompletionItem[] {
         ]
     };
     
-    let retval = map[method];
-    if (retval == undefined)
-        return [];
-    else
-        return retval;
+    return map[method];
 }
 
 /**
@@ -2423,7 +2442,7 @@ function getAndroidNestedKeywords(method: string) : CompletionItem[] {
 }
 
 /**
- * TaskContainer.create()'s creation options
+ * TaskContainer.create()'s parameters
  */
 export function getTaskCreationOptions() : CompletionItem[] {
     return [

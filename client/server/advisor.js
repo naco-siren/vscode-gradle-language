@@ -729,6 +729,9 @@ exports.getKeywords = getKeywords;
  */
 function getDefaultKeywords(method) {
     let map = {
+        /* [DEFAULT] keywords: "all", "each", etc. */
+        "all": [],
+        "each": [],
         /* [DEFAULT] task => properties and closures */
         "task": [
             {
@@ -900,6 +903,10 @@ function getJavaKeywords(method) {
  * @param method
  */
 function getAndroidKeywords(method) {
+    // Preprocess method name
+    if (method.endsWith("Compile")) {
+        method = "compile";
+    }
     let map = {
         /* android => properties and closures */
         "android": [
@@ -1125,6 +1132,8 @@ function getAndroidKeywords(method) {
                 documentation: 'The time out used for all adb operations.'
             }
         ],
+        // DSL object to configure build types.
+        "buildTypes": [],
         // A Dependency on a module outside the current project.
         'compile': [
             {
@@ -1707,6 +1716,8 @@ function getAndroidKeywords(method) {
                 documentation: 'Adds a first-pick pattern.'
             }
         ],
+        // Encapsulates all product flavors properties for this project.
+        'productFlavors': [],
         // DSL object for configuring APK Splits options.
         'splits': [
             {
@@ -1769,11 +1780,7 @@ function getAndroidKeywords(method) {
             }
         ]
     };
-    let retval = map[method];
-    if (retval == undefined)
-        return [];
-    else
-        return retval;
+    return map[method];
 }
 /**
  * Return the keywords of parent closure's method name
@@ -2375,7 +2382,7 @@ function getAndroidNestedKeywords(method) {
         return retval;
 }
 /**
- * TaskContainer.create()'s creation options
+ * TaskContainer.create()'s parameters
  */
 function getTaskCreationOptions() {
     return [
