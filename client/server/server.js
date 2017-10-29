@@ -84,15 +84,23 @@ connection.onCompletion((_textDocumentPosition) => {
     let pos = textDocument.offsetAt(_textDocumentPosition.position);
     let doc = textDocument.getText();
     let lines = doc.split(/\r?\n/g);
+    let line = lines[_textDocumentPosition.position.line];
     // Get current closure and parse its method
     let closure = parser.getCurrentClosure(doc, pos);
     let method = parser.parseClosureMethod(closure.methodStr);
-    // On ROOT, check if within Task paramters
+    // On ROOT, handle TaskContainer creation paramters
     if (method.method == "") {
-        let line = lines[_textDocumentPosition.position.line];
         let curMethod = parser.parseClosureMethod(line);
         if (curMethod.method == "task") {
-            return advisor_1.getTaskCreationOptions();
+            console.log("=== Keywords for Task constructor ===");
+            // Return Task types if after "type: "
+            if (line.substring(0, _textDocumentPosition.position.character - 1).trim().endsWith("type:"))
+                return advisor_1.getTaskTypes();
+            // Return Task creation option keywords after '(' or ','
+            if (parser.shouldHintParam(line, _textDocumentPosition.position.character))
+                return advisor_1.getTaskCreationOptions();
+            // Return nothing by default
+            return [];
         }
     }
     // Collect plugins used for root closure
@@ -120,6 +128,7 @@ connection.onCompletion((_textDocumentPosition) => {
             pluginConf['com.android.application'] = true;
     }
     // Return completion items
+    console.log("=== Keywords for current closure ===");
     if (method.method == undefined)
         return [];
     let retval = [];

@@ -10,7 +10,7 @@ import {
 } from 'vscode-languageserver';
 
 import * as parser from './parser'
-import {PluginConf, getRootKeywords, getKeywords, getNestedKeywords, getTaskCreationOptions} from './advisor'
+import {PluginConf, getRootKeywords, getKeywords, getNestedKeywords, getTaskCreationOptions, getTaskTypes} from './advisor'
 
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
@@ -106,17 +106,28 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	let pos = textDocument.offsetAt(_textDocumentPosition.position);
 	let doc = textDocument.getText();
 	let lines = doc.split(/\r?\n/g);
+	let line = lines[_textDocumentPosition.position.line];
 
 	// Get current closure and parse its method
 	let closure = parser.getCurrentClosure(doc, pos);
 	let method = parser.parseClosureMethod(closure.methodStr);
 	
-	// On ROOT, check if within Task paramters
+	// On ROOT, handle TaskContainer creation paramters
 	if (method.method == "") {
-		let line = lines[_textDocumentPosition.position.line];
 		let curMethod = parser.parseClosureMethod(line);
 		if (curMethod.method == "task") {
-			return getTaskCreationOptions();
+			console.log("=== Keywords for Task constructor ===");
+
+			// Return Task types if after "type: "
+			if (line.substring(0, _textDocumentPosition.position.character - 1).trim().endsWith("type:"))
+				return getTaskTypes();
+
+			// Return Task creation option keywords after '(' or ','
+			if (parser.shouldHintParam(line, _textDocumentPosition.position.character)) 
+				return getTaskCreationOptions();
+
+			// Return nothing by default
+			return [];
 		}
 	}
 
@@ -149,6 +160,7 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	}
 
 	// Return completion items
+	console.log("=== Keywords for current closure ===");
 	if (method.method == undefined)
 		return [];
 	let retval = [];

@@ -223,4 +223,25 @@ function parseClosureMethod(methodStr) {
     return method;
 }
 exports.parseClosureMethod = parseClosureMethod;
+/**
+ * Check if a constructor's cursor is at the beginning of a parameter.
+ * @param line
+ * @param charIdx
+ */
+function shouldHintParam(line, charIdx) {
+    let i = charIdx - 2;
+    for (; i >= 0; i--) {
+        switch (line.charAt(i)) {
+            case ' ':
+                continue;
+            case '(':
+            case ',':
+                return true;
+            default:
+                return false;
+        }
+    }
+    return false;
+}
+exports.shouldHintParam = shouldHintParam;
 //# sourceMappingURL=parser.js.map

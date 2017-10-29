@@ -2464,3 +2464,221 @@ export function getTaskCreationOptions() : CompletionItem[] {
             }
         ];
 }
+
+/**
+* Core type Task's types
+*/
+export function getTaskTypes() : CompletionItem[] {
+   return [
+            {
+                label: 'AntlrTask',
+                kind: CompletionItemKind.Value,
+                documentation: 'Generates parsers from Antlr grammars.'
+            },
+            {
+                label: 'BuildEnvironmentReportTask',
+                kind: CompletionItemKind.Value,
+                documentation: 'Provides information about the build environment for the project that the task is associated with.'
+            },
+            {
+                label: 'Checkstyle',
+                kind: CompletionItemKind.Value,
+                documentation: 'Runs Checkstyle against some source files.'
+            },
+            {
+                label: 'CodeNarc',
+                kind: CompletionItemKind.Value,
+                documentation: 'Runs CodeNarc against some source files.'
+            },
+            {
+                label: 'CompareGradleBuilds',
+                kind: CompletionItemKind.Value,
+                documentation: 'Executes two Gradle builds (that can be the same build) with specified versions and compares the outcomes. Please see the “Comparing Builds” chapter of the Gradle User Guide for more information.'
+            },
+            {
+                label: 'Copy',
+                kind: CompletionItemKind.Value,
+                documentation: 'Copies files into a destination directory. This task can also rename and filter files as it copies. The task implements CopySpec for specifying what to copy.'
+            },
+            {
+                label: 'CreateStartScripts',
+                kind: CompletionItemKind.Value,
+                documentation: 'Creates start scripts for launching JVM applications.'
+            },
+            {
+                label: 'Delete',
+                kind: CompletionItemKind.Value,
+                documentation: 'Deletes files or directories.'
+            },
+            {
+                label: 'Ear',
+                kind: CompletionItemKind.Value,
+                documentation: 'Assembles an EAR archive.'
+            },
+            {
+                label: 'Exec',
+                kind: CompletionItemKind.Value,
+                documentation: 'Executes a command line process. Example:'
+            },
+            {
+                label: 'FindBugs',
+                kind: CompletionItemKind.Value,
+                documentation: 'Analyzes code with FindBugs. See the FindBugs Manual for additional information on configuration options.'
+            },
+            {
+                label: 'GenerateIvyDescriptor',
+                kind: CompletionItemKind.Value,
+                documentation: 'Generates an Ivy XML Module Descriptor file.'
+            },
+            {
+                label: 'GenerateMavenPom',
+                kind: CompletionItemKind.Value,
+                documentation: 'Generates a Maven module descriptor (POM) file.'
+            },
+            {
+                label: 'GenerateBuildDashboard',
+                kind: CompletionItemKind.Value,
+                documentation: 'Generates build dashboard report.'
+            },
+            {
+                label: 'GradleBuild',
+                kind: CompletionItemKind.Value,
+                documentation: 'Executes a Gradle build.'
+            },
+            {
+                label: 'GroovyCompile',
+                kind: CompletionItemKind.Value,
+                documentation: 'Compiles Groovy source files, and optionally, Java source files.'
+            },
+            {
+                label: 'Groovydoc',
+                kind: CompletionItemKind.Value,
+                documentation: 'Generates HTML API documentation for Groovy source, and optionally, Java source.'
+            },
+            {
+                label: 'HtmlDependencyReportTask',
+                kind: CompletionItemKind.Value,
+                documentation: 'Generates an HTML dependency report. This report combines the features of the ASCII dependency report and those of the ASCII dependency insight report. For a given project, it generates a tree of the dependencies of every configuration, and each dependency can be clicked to show the insight of this dependency.'
+            },
+            {
+                label: 'JacocoReport',
+                kind: CompletionItemKind.Value,
+                documentation: 'Task to generate HTML, Xml and CSV reports of Jacoco coverage data.'
+            },
+            {
+                label: 'JacocoMerge',
+                kind: CompletionItemKind.Value,
+                documentation: 'Task to merge multiple execution data files into one.'
+            },
+            {
+                label: 'JacocoCoverageVerification',
+                kind: CompletionItemKind.Value,
+                documentation: 'Task for verifying code coverage metrics. Fails the task if violations are detected based on specified rules.'
+            },
+            {
+                label: 'Jar',
+                kind: CompletionItemKind.Value,
+                documentation: 'Assembles a JAR archive.'
+            },
+            {
+                label: 'JavaCompile',
+                kind: CompletionItemKind.Value,
+                documentation: 'Compiles Java source files.'
+            },
+            {
+                label: 'Javadoc',
+                kind: CompletionItemKind.Value,
+                documentation: 'Generates HTML API documentation for Java classes.'
+            },
+            {
+                label: 'JavaExec',
+                kind: CompletionItemKind.Value,
+                documentation: 'Executes a Java application in a child process.'
+            },
+            {
+                label: 'JDepend',
+                kind: CompletionItemKind.Value,
+                documentation: 'Analyzes code with JDepend.'
+            },
+            {
+                label: 'Pmd',
+                kind: CompletionItemKind.Value,
+                documentation: 'Runs a set of static code analysis rules on Java source code files and generates a report of problems found.'
+            },
+            {
+                label: 'PublishToIvyRepository',
+                kind: CompletionItemKind.Value,
+                documentation: 'Publishes an IvyPublication to an IvyArtifactRepository.'
+            },
+            {
+                label: 'PublishToMavenRepository',
+                kind: CompletionItemKind.Value,
+                documentation: 'Publishes a MavenPublication to a MavenArtifactRepository.'
+            },
+            {
+                label: 'ScalaCompile',
+                kind: CompletionItemKind.Value,
+                documentation: 'Compiles Scala source files, and optionally, Java source files.'
+            },
+            {
+                label: 'ScalaDoc',
+                kind: CompletionItemKind.Value,
+                documentation: 'Generates HTML API documentation for Scala source files.'
+            },
+            {
+                label: 'InitBuild',
+                kind: CompletionItemKind.Value,
+                documentation: 'Generates a Gradle project structure.'
+            },
+            {
+                label: 'Sign',
+                kind: CompletionItemKind.Value,
+                documentation: 'A task for creating digital signature files for one or more; tasks, files, publishable artifacts or configurations.'
+            },
+            {
+                label: 'Sync',
+                kind: CompletionItemKind.Value,
+                documentation: 'Synchronizes the contents of a destination directory with some source directories and files.'
+            },
+            {
+                label: 'Tar',
+                kind: CompletionItemKind.Value,
+                documentation: 'Assembles a TAR archive.'
+            },
+            {
+                label: 'Test',
+                kind: CompletionItemKind.Value,
+                documentation: 'Executes JUnit (3.8.x or 4.x) or TestNG tests. Test are always run in (one or more) separate JVMs. The sample below shows various configuration options.'
+            },
+            {
+                label: 'TestReport',
+                kind: CompletionItemKind.Value,
+                documentation: 'Generates an HTML test report from the results of one or more Test tasks.'
+            },
+            {
+                label: 'Upload',
+                kind: CompletionItemKind.Value,
+                documentation: 'Uploads the artifacts of a Configuration to a set of repositories.'
+            },
+            {
+                label: 'War',
+                kind: CompletionItemKind.Value,
+                documentation: 'Assembles a WAR archive.'
+            },
+            {
+                label: 'Wrapper',
+                kind: CompletionItemKind.Value,
+                documentation: 'Generates scripts (for *nix and windows) which allow you to build your project with Gradle, without having to install Gradle.'
+            },
+            {
+                label: 'WriteProperties',
+                kind: CompletionItemKind.Value,
+                documentation: 'Writes a Properties in a way that the results can be expected to be reproducible.'
+            },
+            {
+                label: 'Zip',
+                kind: CompletionItemKind.Value,
+                documentation: 'Assembles a ZIP archive. The default is to compress the contents of the zip.'
+            }
+        ];
+}

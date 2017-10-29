@@ -242,3 +242,24 @@ export function parseClosureMethod(methodStr: string) : Method {
     console.log("[" + method.method + "]");
     return method;
 }
+
+/**
+ * Check if a constructor's cursor is at the beginning of a parameter.
+ * @param line 
+ * @param charIdx 
+ */
+export function shouldHintParam(line: string, charIdx: number) : boolean {
+    let i = charIdx - 2;
+    for (; i >= 0; i--) {
+        switch(line.charAt(i)) {
+            case ' ':
+                continue;
+            case '(':
+            case ',':
+                return true;
+            default:
+                return false;
+        }
+    }
+    return false;
+}
