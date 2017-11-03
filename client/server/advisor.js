@@ -5,7 +5,7 @@ const vscode_languageserver_1 = require("vscode-languageserver");
 //     range: {start: {line: pos.line, character: pos.character + 10}, end: {line: pos.line, character: pos.character + 10}},
 //     newText: "{}",
 // }]
-function getRootKeywords(fileName, pluginConf) {
+function getDelegateKeywords(fileName) {
     // Initialize the default keywords as core type and Script's keywords
     let keywords = [];
     keywords = keywords.concat(getScriptRootKeywords());
@@ -13,16 +13,21 @@ function getRootKeywords(fileName, pluginConf) {
     // Add delegate's keywords
     if (fileName == "build.gradle") {
         console.log("Delegate: Project");
-        keywords = keywords.concat(getProjectRootKeywords());
+        keywords = keywords.concat(getDelegateProjectKeywords());
     }
     else if (fileName == "init.gradle") {
         console.log("Delegate: Gradle");
-        keywords = keywords.concat(getGradleRootKeywords());
+        keywords = keywords.concat(getDelegateGradleKeywords());
     }
     else if (fileName == "settings.gradle") {
         console.log("Delegate: Settings");
-        keywords = keywords.concat(getSettingsRootKeywords());
+        keywords = keywords.concat(getDelegateSettingsKeywords());
     }
+    return keywords;
+}
+exports.getDelegateKeywords = getDelegateKeywords;
+function getRootKeywords(fileName, pluginConf) {
+    let keywords = getDelegateKeywords(fileName);
     // Add Java plugin's keywords
     if (pluginConf['java']) {
         console.log("> Plugin 'java' detected!");
@@ -153,7 +158,7 @@ function getScriptRootKeywords() {
 /**
  * Delegate Project's root keywords
  */
-function getProjectRootKeywords() {
+function getDelegateProjectKeywords() {
     /* [PROJECT] ROOT => Build script structure */
     return [
         {
@@ -249,7 +254,7 @@ function getProjectRootKeywords() {
 /**
  * Delegate Gradle's root keywords
  */
-function getGradleRootKeywords() {
+function getDelegateGradleKeywords() {
     /* [GRADLE] ROOT => properties and methods */
     return [
         {
@@ -397,7 +402,7 @@ function getGradleRootKeywords() {
 /**
  * Delegate Settings' root keywords
  */
-function getSettingsRootKeywords() {
+function getDelegateSettingsKeywords() {
     /* [SETTINGS] ROOT => properties and methods */
     return [
         {

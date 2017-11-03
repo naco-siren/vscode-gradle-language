@@ -10,7 +10,7 @@ export interface PluginConf {
             //     newText: "{}",
             // }]
 
-export function getRootKeywords(fileName: string, pluginConf: PluginConf) : CompletionItem[] {
+export function getDelegateKeywords(fileName: string) : CompletionItem[] {
     // Initialize the default keywords as core type and Script's keywords
     let keywords: CompletionItem[] = [];
     keywords = keywords.concat(getScriptRootKeywords());
@@ -19,16 +19,21 @@ export function getRootKeywords(fileName: string, pluginConf: PluginConf) : Comp
     // Add delegate's keywords
     if (fileName == "build.gradle") {
         console.log("Delegate: Project");
-        keywords = keywords.concat(getProjectRootKeywords());
+        keywords = keywords.concat(getDelegateProjectKeywords());
 
     } else if (fileName == "init.gradle") {
         console.log("Delegate: Gradle");
-        keywords = keywords.concat(getGradleRootKeywords());
+        keywords = keywords.concat(getDelegateGradleKeywords());
 
     } else if (fileName == "settings.gradle") {
         console.log("Delegate: Settings");
-        keywords = keywords.concat(getSettingsRootKeywords());
+        keywords = keywords.concat(getDelegateSettingsKeywords());
     }
+    return keywords;
+}
+
+export function getRootKeywords(fileName: string, pluginConf: PluginConf) : CompletionItem[] {
+    let keywords = getDelegateKeywords(fileName);
 
     // Add Java plugin's keywords
     if (pluginConf['java']) {
@@ -164,7 +169,7 @@ function getScriptRootKeywords() : CompletionItem[] {
 /**
  * Delegate Project's root keywords
  */
-function getProjectRootKeywords() : CompletionItem[] {
+function getDelegateProjectKeywords() : CompletionItem[] {
     /* [PROJECT] ROOT => Build script structure */
     return [
         {
@@ -261,7 +266,7 @@ function getProjectRootKeywords() : CompletionItem[] {
 /**
  * Delegate Gradle's root keywords
  */
-function getGradleRootKeywords() : CompletionItem[] {
+function getDelegateGradleKeywords() : CompletionItem[] {
     /* [GRADLE] ROOT => properties and methods */
     return [
         {
@@ -410,7 +415,7 @@ function getGradleRootKeywords() : CompletionItem[] {
 /**
  * Delegate Settings' root keywords
  */
-function getSettingsRootKeywords() : CompletionItem[] {
+function getDelegateSettingsKeywords() : CompletionItem[] {
     /* [SETTINGS] ROOT => properties and methods */
     return [
         {

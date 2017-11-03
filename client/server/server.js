@@ -85,25 +85,7 @@ connection.onCompletion((_textDocumentPosition) => {
     let doc = textDocument.getText();
     let lines = doc.split(/\r?\n/g);
     let line = lines[_textDocumentPosition.position.line];
-    // Get current closure and parse its method
-    let closure = parser.getCurrentClosure(doc, pos);
-    let method = parser.parseClosureMethod(closure.methodStr);
-    // On ROOT, handle TaskContainer creation paramters
-    if (method.method == "") {
-        let curMethod = parser.parseClosureMethod(line);
-        if (curMethod.method == "task") {
-            console.log("=== Keywords for Task constructor ===");
-            // Return Task types if after "type: "
-            if (line.substring(0, _textDocumentPosition.position.character - 1).trim().endsWith("type:"))
-                return advisor_1.getTaskTypes();
-            // Return Task creation option keywords after '(' or ','
-            if (parser.shouldHintParam(line, _textDocumentPosition.position.character))
-                return advisor_1.getTaskCreationOptions();
-            // Return nothing by default
-            return [];
-        }
-    }
-    // Collect plugins used for root closure
+    // First, collect plugins used for root closure
     let pluginConf = {};
     for (var i = 0; i < lines.length; i++) {
         let line = lines[i];
@@ -127,7 +109,52 @@ connection.onCompletion((_textDocumentPosition) => {
         if (line.indexOf('com.android.application') >= 0)
             pluginConf['com.android.application'] = true;
     }
-    // Return completion items if method name hit in map
+    // Second, get current closure and parse its method
+    let closure = parser.getCurrentClosure(doc, pos);
+    let method = parser.parseClosureMethod(closure.methodStr);
+    console.log("[" + method.method + "], new line: " + (closure.newLine ? "yes" : "no"));
+    // Situation 1: Found existing code in current line
+    if (closure.newLine == false) {
+        // On entity with dot, hint the entity's properties and methods
+        if (doc.charAt(pos - 1) == '.') {
+            let prefix = line.substring(0, _textDocumentPosition.position.character - 1);
+            let curMethod = parser.parseClosureMethod(prefix);
+            console.log("[[" + curMethod.method + "]]");
+            if (curMethod.method == "project") {
+                return advisor_1.getDelegateKeywords(fileName);
+            }
+            else {
+                return advisor_1.getKeywords(curMethod.method, pluginConf);
+            }
+        }
+        // On ROOT, handle several popular cases
+        if (method.method == "") {
+            let curMethod = parser.parseClosureMethod(line);
+            console.log("[[" + curMethod.method + "]]");
+            // TaskContainer creation
+            if (curMethod.method == "task") {
+                console.log("=== Keywords for Task constructor ===");
+                // Return Task types if after "type: "
+                if (line.substring(0, _textDocumentPosition.position.character - 1).trim().endsWith("type:"))
+                    return advisor_1.getTaskTypes();
+                // Return Task creation option keywords after '(' or ','
+                if (parser.shouldHintParam(line, _textDocumentPosition.position.character))
+                    return advisor_1.getTaskCreationOptions();
+                // Return nothing by default
+                return [];
+            }
+            else if (curMethod.method == "apply") {
+                console.log("=== Keywords for apply ===");
+                // Return parameters for apply
+                return [];
+            }
+        }
+        else {
+            console.log("=== Keywords for current delegate ===");
+            return advisor_1.getDelegateKeywords(fileName);
+        }
+    }
+    // Situation 2: if method name hit in map, return completion items
     console.log("=== Keywords for current closure ===");
     if (method.method == undefined)
         return [];
@@ -141,10 +168,11 @@ connection.onCompletion((_textDocumentPosition) => {
     if (retval.length == 0 || retval.length != 1 || retval[0] != undefined) {
         return retval;
     }
-    // If method not in mapping, try parent closure's method 
+    // Situation 3: If method not in mapping, try parent closure's method 
     console.log("=== Try parent closure ===");
     let parentClosure = parser.getCurrentClosure(doc, closure.methodStartPos);
     let parentMethod = parser.parseClosureMethod(parentClosure.methodStr);
+    console.log("[" + parentMethod.method + "], new line: " + (parentClosure.newLine ? "yes" : "no"));
     console.log();
     if (parentMethod.method == undefined)
         return [];

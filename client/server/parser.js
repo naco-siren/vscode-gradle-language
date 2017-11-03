@@ -74,6 +74,7 @@ function getCurrentClosure(doc, pos) {
     /* Find the opening curly bracket of current closure */
     let stack = [];
     let i = pos - 1;
+    let newLine = true, inline = true;
     for (; i >= 0; i--) {
         let ch = doc.charAt(i);
         if (ch == '}') {
@@ -85,6 +86,18 @@ function getCurrentClosure(doc, pos) {
             }
             else {
                 stack.pop();
+            }
+        }
+        else if (ch == ' ' || ch == '\t') {
+            continue;
+        }
+        else if (ch == '\r' || ch == '\n') {
+            inline = false;
+            continue;
+        }
+        else {
+            if (i < pos - 1 && inline && newLine) {
+                newLine = false;
             }
         }
     }
@@ -136,6 +149,7 @@ function getCurrentClosure(doc, pos) {
     }
     let content = doc.substring(i + 1, pos - 1) + doc.substring(pos, j).trim();
     return {
+        newLine: newLine,
         content: content,
         methodStr: heading,
         methodStartPos: methodStartPos
@@ -197,15 +211,20 @@ function parseClosureMethod(methodStr) {
         let leftBracketIdx = methodStr.indexOf("(");
         if (leftBracketIdx > 0)
             methodName = methodStr.substring(0, leftBracketIdx).trim();
-        else
+        else {
             methodName = methodStr;
+            // Handle blank spaces
+            let lastBlankIdx = methodName.lastIndexOf(" ");
+            if (lastBlankIdx > 0)
+                methodName = methodName.substring(lastBlankIdx);
+        }
         // Extract the method name after dots
         let dotIdx = methodName.lastIndexOf(".");
         if (dotIdx > 0)
             methodName = methodName.substring(dotIdx + 1);
         // Create Method object
         method = {
-            method: methodName
+            method: methodName.trim()
         };
         // Handle corner case
         if (methodName == "task") {
@@ -219,7 +238,7 @@ function parseClosureMethod(methodStr) {
             }
         }
     }
-    console.log("[" + method.method + "]");
+    // console.log("[" + method.method + "]");
     return method;
 }
 exports.parseClosureMethod = parseClosureMethod;
