@@ -12,7 +12,8 @@ import {
 import * as parser from './parser'
 
 import {
-	PluginConf, getDelegateKeywords, getRootKeywords, getKeywords, getNestedKeywords, 
+	PluginConf, getDelegateKeywords, getRootKeywords, 
+	getKeywords, getDefaultKeywords, getNestedKeywords, 
 	getTaskCreationOptions, getTaskTypes
 } from './advisor'
 
@@ -107,8 +108,11 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	console.log();
 	let textDocument : TextDocument = documents.get(_textDocumentPosition.textDocument.uri);
 	var fileName = path.basename(_textDocumentPosition.textDocument.uri);
-	let pos = textDocument.offsetAt(_textDocumentPosition.position);
+
+	let pos = _textDocumentPosition.position;
+	let offset = textDocument.offsetAt(pos);
 	let doc = textDocument.getText();
+
 	let lines = doc.split(/\r?\n/g);
 	let line = lines[_textDocumentPosition.position.line];
 
@@ -141,18 +145,19 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	}
 
 	// Second, get current closure and parse its method
-	let closure = parser.getCurrentClosure(doc, pos);
+	let closure = parser.getCurrentClosure(doc, offset);
 	let method = parser.parseClosureMethod(closure.methodStr);
 	console.log("[" + method.method + "], new line: " + (closure.newLine ? "yes" : "no"));
 	
 
 	// Situation 1: Found existing code in current line
 	if (closure.newLine == false) {
+		let prefix = line.substring(0, _textDocumentPosition.position.character - 1);
+		let curMethod = parser.parseClosureMethod(prefix);
+
 		// On entity with dot, hint the entity's properties and methods
-		if (doc.charAt(pos-1) == '.') {
-			let prefix = line.substring(0, _textDocumentPosition.position.character - 1);
-			let curMethod = parser.parseClosureMethod(prefix);
-			console.log("[[" + curMethod.method + "]]");
+		if (doc.charAt(offset-1) == '.') {
+			console.log("[[" + curMethod.method + "]] dot");
 
 			if (curMethod.method == "project") {
 				return getDelegateKeywords(fileName);
@@ -162,8 +167,7 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 		}
 
 		// On ROOT, handle several popular cases
-		if (method.method == "") {
-			let curMethod = parser.parseClosureMethod(line);
+		if (method.method == "") {;
 			console.log("[[" + curMethod.method + "]]");
 			
 			// TaskContainer creation
@@ -180,19 +184,39 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 
 				// Return nothing by default
 				return [];
+
 			} else if (curMethod.method == "apply") {
 				console.log("=== Keywords for apply ===");
+
+				// let items: CompletionItem[] = getDefaultKeywords(curMethod.method);
+
+				// for (let item of items) {
+				// 	item.additionalTextEdits = [{
+				// 		range: {
+				// 			start: {line: pos.line, character: pos.character + item.label.length}, 
+				// 			end: {line: pos.line, character: pos.character + item.label.length + 5}},
+				// 		newText: ": ",
+				// 	}]
+
+				// 	console.log("<" + item.label + "> : ");
+				// 	console.log(item.additionalTextEdits[0].range.start.character);
+				// 	console.log(item.additionalTextEdits[0].range.end.character);
+				// }
+
+				// additionalTextEdits: [{
+                //     range: {start: {line: pos.line, character: pos.character + 10}, end: {line: pos.line, character: pos.character + 10}},
+                //     newText: ":",
+				// }]
 				
 				// Return parameters for apply
-				return [];
+				return getDefaultKeywords(curMethod.method);
+				// return items;
 			}
 		}
 
 		// hint delegate or delegate's properties & methods
-		else {
-			console.log("=== Keywords for current delegate ===");
-			return getDelegateKeywords(fileName);
-		}	
+		console.log("=== Keywords for current delegate ===");
+		return getDelegateKeywords(fileName);	
 	}
 
 

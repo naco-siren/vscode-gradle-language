@@ -875,6 +875,33 @@ function getDefaultKeywords(method) {
                 kind: vscode_languageserver_1.CompletionItemKind.Method,
                 documentation: 'Sets a property of this task. This method searches for a property with the given name in the following locations, and sets the property on the first location where it finds the property.'
             }
+        ],
+        /* [DEFAULT] task => properties and closures */
+        "apply": [
+            {
+                label: 'from',
+                insertText: 'from: ',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Adds a script to use to configure the target objects.'
+            },
+            {
+                label: 'plugin',
+                insertText: 'plugin: ',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Adds a Plugin to use to configure the target objects.',
+            },
+            {
+                label: 'to',
+                insertText: 'to: ',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Specifies some target objects to be configured.'
+            },
+            {
+                label: 'type',
+                insertText: 'type: ',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Adds the plugin implemented by the given class to the target.'
+            }
         ]
     };
     let retval = map[method];
@@ -883,6 +910,7 @@ function getDefaultKeywords(method) {
     else
         return retval;
 }
+exports.getDefaultKeywords = getDefaultKeywords;
 /**
  * Java plugin's keywords
  * @param method

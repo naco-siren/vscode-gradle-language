@@ -752,7 +752,7 @@ export function getKeywords(method: string, pluginConf: PluginConf) : Completion
  * Default keywords
  * @param method 
  */
-function getDefaultKeywords(method: string) : CompletionItem[] {
+export function getDefaultKeywords(method: string) : CompletionItem[] {
     let map : {[key: string]: CompletionItem[]} = {
         /* [DEFAULT] keywords: "if", "all", "each", etc. */
         "if" : [
@@ -903,6 +903,34 @@ function getDefaultKeywords(method: string) : CompletionItem[] {
                 kind: CompletionItemKind.Method,
                 documentation: 'Sets a property of this task. This method searches for a property with the given name in the following locations, and sets the property on the first location where it finds the property.'
             }            
+        ],
+
+         /* [DEFAULT] task => properties and closures */
+         "apply" : [
+            {
+                label: 'from',
+                insertText: 'from: ',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a script to use to configure the target objects.'
+            },
+            {
+                label: 'plugin',
+                insertText: 'plugin: ',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds a Plugin to use to configure the target objects.',
+            },
+            {
+                label: 'to',
+                insertText: 'to: ',
+                kind: CompletionItemKind.Method,
+                documentation: 'Specifies some target objects to be configured.'
+            },
+            {
+                label: 'type',
+                insertText: 'type: ',
+                kind: CompletionItemKind.Method,
+                documentation: 'Adds the plugin implemented by the given class to the target.'
+            }
         ]
     };
     

@@ -81,7 +81,8 @@ connection.onCompletion((_textDocumentPosition) => {
     console.log();
     let textDocument = documents.get(_textDocumentPosition.textDocument.uri);
     var fileName = path.basename(_textDocumentPosition.textDocument.uri);
-    let pos = textDocument.offsetAt(_textDocumentPosition.position);
+    let pos = _textDocumentPosition.position;
+    let offset = textDocument.offsetAt(pos);
     let doc = textDocument.getText();
     let lines = doc.split(/\r?\n/g);
     let line = lines[_textDocumentPosition.position.line];
@@ -110,16 +111,16 @@ connection.onCompletion((_textDocumentPosition) => {
             pluginConf['com.android.application'] = true;
     }
     // Second, get current closure and parse its method
-    let closure = parser.getCurrentClosure(doc, pos);
+    let closure = parser.getCurrentClosure(doc, offset);
     let method = parser.parseClosureMethod(closure.methodStr);
     console.log("[" + method.method + "], new line: " + (closure.newLine ? "yes" : "no"));
     // Situation 1: Found existing code in current line
     if (closure.newLine == false) {
+        let prefix = line.substring(0, _textDocumentPosition.position.character - 1);
+        let curMethod = parser.parseClosureMethod(prefix);
         // On entity with dot, hint the entity's properties and methods
-        if (doc.charAt(pos - 1) == '.') {
-            let prefix = line.substring(0, _textDocumentPosition.position.character - 1);
-            let curMethod = parser.parseClosureMethod(prefix);
-            console.log("[[" + curMethod.method + "]]");
+        if (doc.charAt(offset - 1) == '.') {
+            console.log("[[" + curMethod.method + "]] dot");
             if (curMethod.method == "project") {
                 return advisor_1.getDelegateKeywords(fileName);
             }
@@ -129,7 +130,7 @@ connection.onCompletion((_textDocumentPosition) => {
         }
         // On ROOT, handle several popular cases
         if (method.method == "") {
-            let curMethod = parser.parseClosureMethod(line);
+            ;
             console.log("[[" + curMethod.method + "]]");
             // TaskContainer creation
             if (curMethod.method == "task") {
@@ -145,14 +146,30 @@ connection.onCompletion((_textDocumentPosition) => {
             }
             else if (curMethod.method == "apply") {
                 console.log("=== Keywords for apply ===");
+                // let items: CompletionItem[] = getDefaultKeywords(curMethod.method);
+                // for (let item of items) {
+                // 	item.additionalTextEdits = [{
+                // 		range: {
+                // 			start: {line: pos.line, character: pos.character + item.label.length}, 
+                // 			end: {line: pos.line, character: pos.character + item.label.length + 5}},
+                // 		newText: ": ",
+                // 	}]
+                // 	console.log("<" + item.label + "> : ");
+                // 	console.log(item.additionalTextEdits[0].range.start.character);
+                // 	console.log(item.additionalTextEdits[0].range.end.character);
+                // }
+                // additionalTextEdits: [{
+                //     range: {start: {line: pos.line, character: pos.character + 10}, end: {line: pos.line, character: pos.character + 10}},
+                //     newText: ":",
+                // }]
                 // Return parameters for apply
-                return [];
+                return advisor_1.getDefaultKeywords(curMethod.method);
+                // return items;
             }
         }
-        else {
-            console.log("=== Keywords for current delegate ===");
-            return advisor_1.getDelegateKeywords(fileName);
-        }
+        // hint delegate or delegate's properties & methods
+        console.log("=== Keywords for current delegate ===");
+        return advisor_1.getDelegateKeywords(fileName);
     }
     // Situation 2: if method name hit in map, return completion items
     console.log("=== Keywords for current closure ===");

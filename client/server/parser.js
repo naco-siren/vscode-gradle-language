@@ -68,12 +68,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * Get current closure's heading and content
  *
  * @param doc the TextDocument that is being edited
- * @param pos the zero-based index of the cursor's position
+ * @param offset the zero-based index of the cursor's position
  */
-function getCurrentClosure(doc, pos) {
+function getCurrentClosure(doc, offset) {
     /* Find the opening curly bracket of current closure */
     let stack = [];
-    let i = pos - 1;
+    let i = offset - 1;
     let newLine = true, inline = true;
     for (; i >= 0; i--) {
         let ch = doc.charAt(i);
@@ -96,7 +96,7 @@ function getCurrentClosure(doc, pos) {
             continue;
         }
         else {
-            if (i < pos - 1 && inline && newLine) {
+            if (i < offset - 1 && inline && newLine) {
                 newLine = false;
             }
         }
@@ -132,7 +132,7 @@ function getCurrentClosure(doc, pos) {
     }
     /* Find the closing curly bracket of current closure */
     stack = [];
-    let j = pos;
+    let j = offset;
     for (; j < doc.length; j++) {
         let ch = doc.charAt(j);
         if (ch == '{') {
@@ -147,7 +147,7 @@ function getCurrentClosure(doc, pos) {
             }
         }
     }
-    let content = doc.substring(i + 1, pos - 1) + doc.substring(pos, j).trim();
+    let content = doc.substring(i + 1, offset - 1) + doc.substring(offset, j).trim();
     return {
         newLine: newLine,
         content: content,
@@ -212,7 +212,7 @@ function parseClosureMethod(methodStr) {
         if (leftBracketIdx > 0)
             methodName = methodStr.substring(0, leftBracketIdx).trim();
         else {
-            methodName = methodStr;
+            methodName = methodStr.trim();
             // Handle blank spaces
             let lastBlankIdx = methodName.lastIndexOf(" ");
             if (lastBlankIdx > 0)
