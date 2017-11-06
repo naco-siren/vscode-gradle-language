@@ -7,7 +7,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const path = require("path");
 const vscode_languageserver_1 = require("vscode-languageserver");
 const parser = require("./parser");
-const advisor_1 = require("./advisor");
+const advisorBase_1 = require("./advisorBase");
+const advisorRoot_1 = require("./advisorRoot");
+const advisorGeneral_1 = require("./advisorGeneral");
+const advisorTask_1 = require("./advisorTask");
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection = vscode_languageserver_1.createConnection(new vscode_languageserver_1.IPCMessageReader(process), new vscode_languageserver_1.IPCMessageWriter(process));
 // Create a simple text document manager. The text document manager
@@ -122,10 +125,10 @@ connection.onCompletion((_textDocumentPosition) => {
         if (doc.charAt(offset - 1) == '.') {
             console.log("[[" + curMethod.method + "]] dot");
             if (curMethod.method == "project") {
-                return advisor_1.getDelegateKeywords(fileName);
+                return advisorBase_1.getDelegateKeywords(fileName);
             }
             else {
-                return advisor_1.getKeywords(curMethod.method, pluginConf);
+                return advisorGeneral_1.getKeywords(curMethod.method, pluginConf);
             }
         }
         // On ROOT, handle several popular cases
@@ -137,34 +140,41 @@ connection.onCompletion((_textDocumentPosition) => {
                 console.log("=== Keywords for Task constructor ===");
                 // Return Task types if after "type: "
                 if (line.substring(0, _textDocumentPosition.position.character - 1).trim().endsWith("type:"))
-                    return advisor_1.getTaskTypes();
+                    return advisorTask_1.getTaskTypes();
                 // Return Task creation option keywords after '(' or ','
                 if (parser.shouldHintParam(line, _textDocumentPosition.position.character))
-                    return advisor_1.getTaskCreationOptions();
+                    return advisorTask_1.getTaskCreationOptions();
                 // Return nothing by default
                 return [];
             }
             else if (curMethod.method == "apply") {
                 console.log("=== Keywords for apply ===");
                 // Return parameters for apply
-                return advisor_1.getDefaultKeywords(curMethod.method);
+                return advisorGeneral_1.getDefaultKeywords(curMethod.method);
                 // return items;
             }
         }
         // hint delegate or delegate's properties & methods
         console.log("=== Keywords for current delegate ===");
-        return advisor_1.getDelegateKeywords(fileName);
+        return advisorBase_1.getDelegateKeywords(fileName);
     }
     // Situation 2: if method name hit in map, return completion items
-    console.log("=== Keywords for current closure ===");
     if (method.method == undefined)
         return [];
     let retval = [];
     if (method.method == "") {
-        retval = advisor_1.getRootKeywords(fileName, pluginConf);
+        console.log("=== Root keywords for current closure ===");
+        retval = advisorRoot_1.getRootKeywords(fileName, pluginConf);
     }
     else {
-        retval = advisor_1.getKeywords(method.method, pluginConf);
+        console.log("=== Keywords for current closure ===");
+        retval = advisorGeneral_1.getKeywords(method.method, pluginConf);
+        // Handle Task keywords based on its type
+        let taskType = method['type'];
+        if (method.method == 'task' && taskType != undefined) {
+            console.log("=== Keywords for type: " + taskType + " ===");
+            retval = retval.concat(advisorTask_1.getTaskKeywords(taskType));
+        }
     }
     if (retval.length == 0 || retval.length != 1 || retval[0] != undefined) {
         return retval;
@@ -178,7 +188,7 @@ connection.onCompletion((_textDocumentPosition) => {
     if (parentMethod.method == undefined)
         return [];
     if (parentMethod.method != "") {
-        retval = advisor_1.getNestedKeywords(parentMethod.method, pluginConf);
+        retval = advisorGeneral_1.getNestedKeywords(parentMethod.method, pluginConf);
     }
     if (retval.length > 0)
         return retval;

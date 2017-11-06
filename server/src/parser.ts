@@ -261,14 +261,7 @@ export function parseClosureMethod(methodStr: string) : Method {
             }
         }
     }
-
-    // Parse the parameters
-    if (method.method == 'task')  {
-        console.log("> Task: " + method)
-        for (let key in method) {
-            console.log(key + " => " + method[key]);
-        }
-    }
+    
     return method;
 }
 

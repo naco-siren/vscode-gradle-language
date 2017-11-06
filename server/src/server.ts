@@ -11,11 +11,10 @@ import {
 
 import * as parser from './parser'
 
-import {
-	PluginConf, getDelegateKeywords, getRootKeywords, 
-	getKeywords, getDefaultKeywords, getNestedKeywords, 
-	getTaskCreationOptions, getTaskTypes
-} from './advisor'
+import {PluginConf, getDelegateKeywords} from './advisorBase'
+import {getRootKeywords} from './advisorRoot'
+import {getKeywords, getDefaultKeywords, getNestedKeywords} from './advisorGeneral'
+import {getTaskCreationOptions, getTaskTypes, getTaskKeywords} from './advisorTask'
 
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
@@ -199,16 +198,25 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 		return getDelegateKeywords(fileName);	
 	}
 
-
+	
 	// Situation 2: if method name hit in map, return completion items
-	console.log("=== Keywords for current closure ===");
 	if (method.method == undefined)
 		return [];
 	let retval = [];
 	if (method.method == "") {
+		console.log("=== Root keywords for current closure ===");
 		retval = getRootKeywords(fileName, pluginConf);
+
 	} else {
+		console.log("=== Keywords for current closure ===");
 		retval = getKeywords(method.method, pluginConf);
+
+		// Handle Task keywords based on its type
+		let taskType = method['type']
+		if (method.method == 'task' && taskType != undefined) {
+			console.log("=== Keywords for type: " + taskType + " ===");
+			retval = retval.concat(getTaskKeywords(taskType));
+		} 
 	}
 	if (retval.length == 0 || retval.length != 1 || retval[0] != undefined) {
 		return retval;
