@@ -8,36 +8,43 @@ function getTaskCreationOptions() {
     return [
         {
             label: 'name',
+            insertText: 'name: ',
             kind: vscode_languageserver_1.CompletionItemKind.Constructor,
             documentation: 'The name of the task to create.'
         },
         {
             label: 'type',
+            insertText: 'type: ',
             kind: vscode_languageserver_1.CompletionItemKind.Constructor,
             documentation: 'The class of the task to create.'
         },
         {
             label: 'action',
+            insertText: 'action: ',
             kind: vscode_languageserver_1.CompletionItemKind.Constructor,
             documentation: 'The closure or Action to execute when the task executes.'
         },
         {
             label: 'overwrite',
+            insertText: 'overwrite: ',
             kind: vscode_languageserver_1.CompletionItemKind.Constructor,
             documentation: 'Replace an existing task?'
         },
         {
             label: 'dependsOn',
+            insertText: 'dependsOn: ',
             kind: vscode_languageserver_1.CompletionItemKind.Constructor,
             documentation: 'The dependencies of the task.'
         },
         {
             label: 'group',
+            insertText: 'group: ',
             kind: vscode_languageserver_1.CompletionItemKind.Constructor,
             documentation: 'The group of the task.'
         },
         {
             label: 'description',
+            insertText: 'description: ',
             kind: vscode_languageserver_1.CompletionItemKind.Constructor,
             documentation: 'The description of the task.'
         }

@@ -7,36 +7,43 @@ export function getTaskCreationOptions() : CompletionItem[] {
     return [
             {
                 label: 'name',
+                insertText: 'name: ',
                 kind: CompletionItemKind.Constructor,
                 documentation: 'The name of the task to create.'
             },
             {
                 label: 'type',
+                insertText: 'type: ',
                 kind: CompletionItemKind.Constructor,
                 documentation: 'The class of the task to create.'
             },
             {
                 label: 'action',
+                insertText: 'action: ',
                 kind: CompletionItemKind.Constructor,
                 documentation: 'The closure or Action to execute when the task executes.'
             },
             {
                 label: 'overwrite',
+                insertText: 'overwrite: ',
                 kind: CompletionItemKind.Constructor,
                 documentation: 'Replace an existing task?'
             },
             {
                 label: 'dependsOn',
+                insertText: 'dependsOn: ',
                 kind: CompletionItemKind.Constructor,
                 documentation: 'The dependencies of the task.'
             },
             {
                 label: 'group',
+                insertText: 'group: ',
                 kind: CompletionItemKind.Constructor,
                 documentation: 'The group of the task.'
             },
             {
                 label: 'description',
+                insertText: 'description: ',
                 kind: CompletionItemKind.Constructor,
                 documentation: 'The description of the task.'
             }
