@@ -931,6 +931,15 @@ export function getDefaultKeywords(method: string) : CompletionItem[] {
                 kind: CompletionItemKind.Method,
                 documentation: 'Adds the plugin implemented by the given class to the target.'
             }
+        ],
+
+        // Declares plugins to use in a script.
+        'plugins' : [
+            {
+                label: 'id',
+                kind: CompletionItemKind.Method,
+                documentation: 'Add a dependency on the plugin with the given id.'
+            }
         ]
     };
     
@@ -1801,6 +1810,7 @@ function getJavaKeywords(method: string) : CompletionItem[] {
             }
         ]
     }
+
     let retval = map[method];
     if (retval == undefined)
         return [];

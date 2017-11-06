@@ -146,22 +146,6 @@ connection.onCompletion((_textDocumentPosition) => {
             }
             else if (curMethod.method == "apply") {
                 console.log("=== Keywords for apply ===");
-                // let items: CompletionItem[] = getDefaultKeywords(curMethod.method);
-                // for (let item of items) {
-                // 	item.additionalTextEdits = [{
-                // 		range: {
-                // 			start: {line: pos.line, character: pos.character + item.label.length}, 
-                // 			end: {line: pos.line, character: pos.character + item.label.length + 5}},
-                // 		newText: ": ",
-                // 	}]
-                // 	console.log("<" + item.label + "> : ");
-                // 	console.log(item.additionalTextEdits[0].range.start.character);
-                // 	console.log(item.additionalTextEdits[0].range.end.character);
-                // }
-                // additionalTextEdits: [{
-                //     range: {start: {line: pos.line, character: pos.character + 10}, end: {line: pos.line, character: pos.character + 10}},
-                //     newText: ":",
-                // }]
                 // Return parameters for apply
                 return advisor_1.getDefaultKeywords(curMethod.method);
                 // return items;

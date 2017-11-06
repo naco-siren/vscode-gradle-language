@@ -129,12 +129,12 @@ export function getCurrentClosure(doc: string, offset: number) : Closure {
         } else {
             if (ch == '\n' || ch == '\r') {
                 start++;
-                heading = doc.substring(start, end + 1).trim();
-                methodStartPos = start - 1;
                 break;
             }
         }
     }
+    heading = doc.substring(start, end + 1).trim();
+    methodStartPos = start - 1;
 
     /* Find the closing curly bracket of current closure */
     stack = [];
@@ -182,20 +182,25 @@ export function parseClosureMethod(methodStr: string) : Method {
         
         // Check if parameters are specified in the brackets
         let paramStr = methodStr.substring(firstBlankIdx + 1).trim();
-        let leftBracketIdx = paramStr.indexOf("(");
-        // let rightBracketIdx = paramStr.indexOf(")"); 
-        // let params = paramStr.substring(leftBracketIdx + 1, rightBracketIdx);
-        
+        let leftBracketIdx = paramStr.indexOf("("), rightBracketIdx = paramStr.indexOf(")"); 
+
         // Parse task's name
         let taskName = leftBracketIdx == -1 ? paramStr.trim() : paramStr.substr(0, leftBracketIdx).trim();
         let [l, r] = [taskName.charAt(0), taskName.charAt(taskName.length-1)];
-        if ( (l == '\"' && r == '\"') || (l == '\'' && r == '\'') ) taskName = taskName.substring(1, taskName.length - 1);
+        if ( (l == '\"' && r == '\"') || (l == '\'' && r == '\'') ) 
+            taskName = taskName.substring(1, taskName.length - 1);
 
         // Create Method object
         method = {
             method: "task"
         };
         method["name"] = taskName;
+
+        // Parse Task constructor's parameters
+        if (leftBracketIdx > 0 && rightBracketIdx > leftBracketIdx) {
+            let paramsStr = paramStr.substring(leftBracketIdx + 1, rightBracketIdx).trim();
+            parseConstructorParams(paramsStr, method);
+        }
     }
 
     /* 
@@ -244,11 +249,11 @@ export function parseClosureMethod(methodStr: string) : Method {
             method: methodName.trim()
         };
 
-        // Handle corner case
-        if (methodName == "task") {
+        // Handle corner case: Task constructor with only a name parameter
+        if (methodName == "task" && leftBracketIdx > 0) {
             let rightBracketIdx = methodStr.indexOf(")");
             if (rightBracketIdx > leftBracketIdx + 1) {
-                let taskName = methodStr.substr(leftBracketIdx + 1, rightBracketIdx).trim();
+                let taskName = methodStr.substring(leftBracketIdx + 1, rightBracketIdx).trim();
                 let [l, r] = [taskName.charAt(0), taskName.charAt(taskName.length-1)];
                 if ( (l == '\"' && r == '\"') || (l == '\'' && r == '\'') ) 
                     taskName = taskName.substring(1, taskName.length - 1);
@@ -257,9 +262,62 @@ export function parseClosureMethod(methodStr: string) : Method {
         }
     }
 
-    // console.log("[" + method.method + "]");
+    // Parse the parameters
+    if (method.method == 'task')  {
+        console.log("> Task: " + method)
+        for (let key in method) {
+            console.log(key + " => " + method[key]);
+        }
+    }
     return method;
 }
+
+/**
+ * 
+ * @param paramStr 
+ * @param method 
+ */
+function parseConstructorParams(paramStr: string, method: Method) {
+    let i = 0, j = 0;
+    while (i < paramStr.length) {
+        // Tokenize key
+        for (j = i; paramStr.charAt(j) != ':'; j++);
+        let key = paramStr.substring(i, j).trim();
+        
+        // Tokenize value
+        for (i = j + 1; paramStr.charAt(i) == ' ' || paramStr.charAt(i) == '\t'; i++);
+        let inQuote = false; j = i;
+        while (j < paramStr.length) {
+            let ch = paramStr.charAt(j);
+            if (inQuote) {
+                if (ch == '\'' || ch == '\"') {
+                    j++;
+                    break;
+                } else {
+                    j++;
+                }
+            } else {
+                if (ch == '\'' || ch == '\"') {
+                    inQuote = true;
+                    j++;
+                } else if (ch == ',') {
+                    break;
+                } else {
+                    j++;
+                }
+            }
+        }
+        let value = inQuote ? paramStr.substring(i + 1, j - 1) : paramStr.substring(i, j);
+
+        // Put to dict
+        //console.log(key + " => " + value);
+        method[key] = value;
+
+        // Loop
+        i = j + 1;
+    }
+}
+
 
 /**
  * Check if a constructor's cursor is at the beginning of a parameter.

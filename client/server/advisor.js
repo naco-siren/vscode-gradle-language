@@ -902,6 +902,14 @@ function getDefaultKeywords(method) {
                 kind: vscode_languageserver_1.CompletionItemKind.Method,
                 documentation: 'Adds the plugin implemented by the given class to the target.'
             }
+        ],
+        // Declares plugins to use in a script.
+        'plugins': [
+            {
+                label: 'id',
+                kind: vscode_languageserver_1.CompletionItemKind.Method,
+                documentation: 'Add a dependency on the plugin with the given id.'
+            }
         ]
     };
     let retval = map[method];
