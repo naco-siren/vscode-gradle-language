@@ -4,7 +4,13 @@
  * ------------------------------------------------------------------------------------------ */
 'use strict';
 Object.defineProperty(exports, "__esModule", { value: true });
+const path = require("path");
 const vscode_languageserver_1 = require("vscode-languageserver");
+const parser = require("./parser");
+const advisorBase_1 = require("./advisorBase");
+const advisorRoot_1 = require("./advisorRoot");
+const advisorGeneral_1 = require("./advisorGeneral");
+const advisorTask_1 = require("./advisorTask");
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection = vscode_languageserver_1.createConnection(new vscode_languageserver_1.IPCMessageReader(process), new vscode_languageserver_1.IPCMessageWriter(process));
 // Create a simple text document manager. The text document manager
@@ -75,57 +81,119 @@ connection.onDidChangeWatchedFiles((_change) => {
 });
 // This handler provides the initial list of the completion items.
 connection.onCompletion((_textDocumentPosition) => {
-    console.log("[" + _textDocumentPosition.position.line + ", " + _textDocumentPosition.position.character + "]");
+    console.log();
     let textDocument = documents.get(_textDocumentPosition.textDocument.uri);
-    let pos = textDocument.offsetAt(_textDocumentPosition.position);
+    var fileName = path.basename(_textDocumentPosition.textDocument.uri);
+    let pos = _textDocumentPosition.position;
+    let offset = textDocument.offsetAt(pos);
     let doc = textDocument.getText();
-    // Find which scope current position is in
-    var stack = [];
-    var i = pos;
-    for (; i >= 0; i--) {
-        let ch = doc.charAt(i);
-        if (ch == '}') {
-            stack.push(i);
-        }
-        else if (ch == '{') {
-            if (stack.length == 0) {
-                break;
+    let lines = doc.split(/\r?\n/g);
+    let line = lines[_textDocumentPosition.position.line];
+    // First, collect plugins used for root closure
+    let pluginConf = {};
+    for (var i = 0; i < lines.length; i++) {
+        let line = lines[i];
+        // Prune 'apply\s*plugin\s*:\s*'
+        let applyIdx = line.indexOf('apply');
+        if (applyIdx < 0)
+            continue;
+        line = line.substring(applyIdx + 6);
+        let pluginIdx = line.indexOf('plugin');
+        if (pluginIdx < 0)
+            continue;
+        line = line.substring(pluginIdx + 6);
+        let colonIdx = line.indexOf(':');
+        if (colonIdx < 0)
+            continue;
+        // Confirm plugin type
+        if (line.indexOf('java') >= 0)
+            pluginConf['java'] = true;
+        if (line.indexOf('java-library') >= 0)
+            pluginConf['java-library'] = true;
+        if (line.indexOf('com.android.application') >= 0)
+            pluginConf['com.android.application'] = true;
+    }
+    // Second, get current closure and parse its method
+    let closure = parser.getCurrentClosure(doc, offset);
+    let method = parser.parseClosureMethod(closure.methodStr);
+    console.log("[" + method.method + "], new line: " + (closure.newLine ? "yes" : "no"));
+    // Situation 1: Found existing code in current line
+    if (closure.newLine == false) {
+        let prefix = line.substring(0, _textDocumentPosition.position.character - 1);
+        let curMethod = parser.parseClosureMethod(prefix);
+        // On entity with dot, hint the entity's properties and methods
+        if (doc.charAt(offset - 1) == '.') {
+            console.log("[[" + curMethod.method + "]] dot");
+            if (curMethod.method == "project") {
+                return advisorBase_1.getDelegateKeywords(fileName);
             }
             else {
-                stack.pop();
+                return advisorGeneral_1.getKeywords(curMethod.method, pluginConf);
             }
         }
+        // On ROOT, handle several popular cases
+        if (method.method == "") {
+            ;
+            console.log("[[" + curMethod.method + "]]");
+            // TaskContainer creation
+            if (curMethod.method == "task") {
+                console.log("=== Keywords for Task constructor ===");
+                // Return Task types if after "type: "
+                if (line.substring(0, _textDocumentPosition.position.character - 1).trim().endsWith("type:"))
+                    return advisorTask_1.getTaskTypes();
+                // Return Task creation option keywords after '(' or ','
+                if (parser.shouldHintParam(line, _textDocumentPosition.position.character))
+                    return advisorTask_1.getTaskCreationOptions();
+                // Return nothing by default
+                return [];
+            }
+            else if (curMethod.method == "apply") {
+                console.log("=== Keywords for apply ===");
+                // Return parameters for apply
+                return advisorGeneral_1.getDefaultKeywords(curMethod.method);
+                // return items;
+            }
+        }
+        // hint delegate or delegate's properties & methods
+        console.log("=== Keywords for current delegate ===");
+        return advisorBase_1.getDelegateKeywords(fileName);
     }
-    var j = i - 1;
-    var inWord = false;
-    for (; j >= 0; j--) {
-        let ch = doc.charAt(j);
-        if (ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r') {
-            if (inWord)
-                break;
-        }
-        else {
-            if (!inWord)
-                inWord = true;
+    // Situation 2: if method name hit in map, return completion items
+    if (method.method == undefined)
+        return [];
+    let retval = [];
+    if (method.method == "") {
+        console.log("=== Root keywords for current closure ===");
+        retval = advisorRoot_1.getRootKeywords(fileName, pluginConf);
+    }
+    else {
+        console.log("=== Keywords for current closure ===");
+        retval = advisorGeneral_1.getKeywords(method.method, pluginConf);
+        // Handle Task keywords based on its type
+        let taskType = method['type'];
+        if (method.method == 'task' && taskType != undefined) {
+            console.log("=== Keywords for type: " + taskType + " ===");
+            retval = retval.concat(advisorTask_1.getTaskKeywords(taskType));
         }
     }
-    let token = doc.substring(j + 1, i);
-    console.log(token);
-    // The pass parameter contains the position of the text document in 
-    // which code complete got requested. For the example we ignore this
-    // info and always provide the same completion items.
-    return [
-        {
-            label: 'TypeScript',
-            kind: vscode_languageserver_1.CompletionItemKind.Text,
-            data: 1
-        },
-        {
-            label: 'JavaScript',
-            kind: vscode_languageserver_1.CompletionItemKind.Text,
-            data: 2
-        }
-    ];
+    if (retval.length == 0 || retval.length != 1 || retval[0] != undefined) {
+        return retval;
+    }
+    // Situation 3: If method not in mapping, try parent closure's method 
+    console.log("=== Try parent closure ===");
+    let parentClosure = parser.getCurrentClosure(doc, closure.methodStartPos);
+    let parentMethod = parser.parseClosureMethod(parentClosure.methodStr);
+    console.log("[" + parentMethod.method + "], new line: " + (parentClosure.newLine ? "yes" : "no"));
+    console.log();
+    if (parentMethod.method == undefined)
+        return [];
+    if (parentMethod.method != "") {
+        retval = advisorGeneral_1.getNestedKeywords(parentMethod.method, pluginConf);
+    }
+    if (retval.length > 0)
+        return retval;
+    else
+        return [];
 });
 // This handler resolve additional information for the item selected in
 // the completion list.
