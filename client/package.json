@@ -61,9 +61,14 @@
 		],
 		"grammars": [
 			{
-				"language": "gradle",
+				"language": "groovy",
 				"scopeName": "source.groovy",
 				"path": "./syntaxes/groovy.tmLanguage.json"
+			},
+			{
+				"language": "gradle",
+				"scopeName": "source.gradle",
+				"path": "./syntaxes/gradle.tmLanguage.json"
 			}
 		]
 	},

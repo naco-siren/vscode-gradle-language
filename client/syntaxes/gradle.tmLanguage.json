@@ -1,0 +1,4984 @@
+
+{
+  "information_for_contributors": [
+    "This file has been converted from https://github.com/kingofmalkier/sublime-gradle/blob/master/gradle.tmLanguage",
+    "If you want to provide a fix or improvement, please create a pull request against the original repository.",
+    "Once accepted there, we are happy to receive an update request."
+  ],
+  "version": "https://github.com/kingofmalkier/sublime-gradle/commit/ff026cc5a8f0ec480df57f0bf50937719a8ebc31",
+  "fileTypes": [
+    "gradle"
+  ],
+  "name": "Gradle",
+  "patterns": [
+    {
+      "include": "#generic-task-beginning"
+    },
+    {
+      "include": "#project-patterns"
+    },
+    {
+      "include": "source.groovy"
+    }
+  ],
+  "repository": {
+    "generic-task-beginning": {
+      "patterns": [
+        {
+          "begin": "\\s*(task)\\s+(\\w+)\\s*",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.task.source.gradle"
+            },
+            "2": {
+              "name": "entity.name.function"
+            }
+          },
+          "contentName": "task.body.source.gradle",
+          "end": "}",
+          "name": "task.source.gradle",
+          "patterns": [
+            {
+              "include": "#specific-tasks"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        }
+      ]
+    },
+    "parent-task-patterns": {
+      "patterns": [
+        {
+          "match": "\\bactions\\b",
+          "name": "support.function.parent.task.actions.gradle"
+        },
+        {
+          "match": "\\bant\\b",
+          "name": "support.function.parent.task.ant.gradle"
+        },
+        {
+          "match": "\\bconvention\\b",
+          "name": "support.function.parent.task.convention.gradle"
+        },
+        {
+          "match": "\\bdependsOn\\b",
+          "name": "support.function.parent.task.dependsOn.gradle"
+        },
+        {
+          "match": "\\bdescription\\b",
+          "name": "support.function.parent.task.description.gradle"
+        },
+        {
+          "match": "\\bdidWork\\b",
+          "name": "support.function.parent.task.didWork.gradle"
+        },
+        {
+          "match": "\\benabled\\b",
+          "name": "support.function.parent.task.enabled.gradle"
+        },
+        {
+          "match": "\\bextensions\\b",
+          "name": "support.function.parent.task.extensions.gradle"
+        },
+        {
+          "match": "\\bfinalizedBy\\b",
+          "name": "support.function.parent.task.finalizedBy.gradle"
+        },
+        {
+          "match": "\\bgroup\\b",
+          "name": "support.function.parent.task.group.gradle"
+        },
+        {
+          "match": "\\binputs\\b",
+          "name": "support.function.parent.task.inputs.gradle"
+        },
+        {
+          "match": "\\blogger\\b",
+          "name": "support.function.parent.task.logger.gradle"
+        },
+        {
+          "match": "\\blogging\\b",
+          "name": "support.function.parent.task.logging.gradle"
+        },
+        {
+          "match": "\\bmustRunAfter\\b",
+          "name": "support.function.parent.task.mustRunAfter.gradle"
+        },
+        {
+          "match": "\\bname\\b",
+          "name": "support.function.parent.task.name.gradle"
+        },
+        {
+          "match": "\\boutputs\\b",
+          "name": "support.function.parent.task.outputs.gradle"
+        },
+        {
+          "match": "\\bpath\\b",
+          "name": "support.function.parent.task.path.gradle"
+        },
+        {
+          "match": "\\bproject\\b",
+          "name": "support.function.parent.task.project.gradle"
+        },
+        {
+          "match": "\\bstate\\b",
+          "name": "support.function.parent.task.state.gradle"
+        },
+        {
+          "match": "\\btaskDependencies\\b",
+          "name": "support.function.parent.task.taskDependencies.gradle"
+        },
+        {
+          "match": "\\btemporaryDir\\b",
+          "name": "support.function.parent.task.temporaryDir.gradle"
+        },
+        {
+          "match": "\\bdeleteAllActions\\b",
+          "name": "support.function.parent.task.deleteAllActions.gradle"
+        },
+        {
+          "match": "\\bdoFirst\\b",
+          "name": "support.function.parent.task.doFirst.gradle"
+        },
+        {
+          "match": "\\bdoLast\\b",
+          "name": "support.function.parent.task.doLast.gradle"
+        },
+        {
+          "match": "\\bhasProperty\\b",
+          "name": "support.function.parent.task.hasProperty.gradle"
+        },
+        {
+          "match": "\\bleftShift\\b",
+          "name": "support.function.parent.task.leftShift.gradle"
+        },
+        {
+          "match": "\\bonlyIf\\b",
+          "name": "support.function.parent.task.onlyIf.gradle"
+        },
+        {
+          "match": "\\bproperty\\b",
+          "name": "support.function.parent.task.property.gradle"
+        },
+        {
+          "match": "\\bsetProperty\\b",
+          "name": "support.function.parent.task.setProperty.gradle"
+        }
+      ]
+    },
+    "project-patterns": {
+      "patterns": [
+        {
+          "match": "\\ballprojects\\b",
+          "name": "support.type.project.allprojects.gradle"
+        },
+        {
+          "match": "\\bant\\b",
+          "name": "support.type.project.ant.gradle"
+        },
+        {
+          "match": "\\bartifacts\\b",
+          "name": "support.type.project.artifacts.gradle"
+        },
+        {
+          "match": "\\bbuildDir\\b",
+          "name": "support.type.project.buildDir.gradle"
+        },
+        {
+          "match": "\\bbuildFile\\b",
+          "name": "support.type.project.buildFile.gradle"
+        },
+        {
+          "match": "\\bbuildscript\\b",
+          "name": "support.type.project.buildscript.gradle"
+        },
+        {
+          "match": "\\bchildProjects\\b",
+          "name": "support.type.project.childProjects.gradle"
+        },
+        {
+          "match": "\\bconfigurations\\b",
+          "name": "support.type.project.configurations.gradle"
+        },
+        {
+          "match": "\\bconvention\\b",
+          "name": "support.type.project.convention.gradle"
+        },
+        {
+          "match": "\\bdefaultTasks\\b",
+          "name": "support.type.project.defaultTasks.gradle"
+        },
+        {
+          "match": "\\bdependencies\\b",
+          "name": "support.type.project.dependencies.gradle"
+        },
+        {
+          "match": "\\bdependsOnProjects\\b",
+          "name": "support.type.project.dependsOnProjects.gradle"
+        },
+        {
+          "match": "\\bdescription\\b",
+          "name": "support.type.project.description.gradle"
+        },
+        {
+          "match": "\\bextensions\\b",
+          "name": "support.type.project.extensions.gradle"
+        },
+        {
+          "match": "\\bgradle\\b",
+          "name": "support.type.project.gradle.gradle"
+        },
+        {
+          "match": "\\bgroup\\b",
+          "name": "support.type.project.group.gradle"
+        },
+        {
+          "match": "\\blogger\\b",
+          "name": "support.type.project.logger.gradle"
+        },
+        {
+          "match": "\\blogging\\b",
+          "name": "support.type.project.logging.gradle"
+        },
+        {
+          "match": "\\bname\\b",
+          "name": "support.type.project.name.gradle"
+        },
+        {
+          "match": "\\bparent\\b",
+          "name": "support.type.project.parent.gradle"
+        },
+        {
+          "match": "\\bpath\\b",
+          "name": "support.type.project.path.gradle"
+        },
+        {
+          "match": "\\bplugins\\b",
+          "name": "support.type.project.plugins.gradle"
+        },
+        {
+          "match": "\\bproject\\b",
+          "name": "support.type.project.project.gradle"
+        },
+        {
+          "match": "\\bprojectDir\\b",
+          "name": "support.type.project.projectDir.gradle"
+        },
+        {
+          "match": "\\bproperties\\b",
+          "name": "support.type.project.properties.gradle"
+        },
+        {
+          "match": "\\brepositories\\b",
+          "name": "support.type.project.repositories.gradle"
+        },
+        {
+          "match": "\\bresources\\b",
+          "name": "support.type.project.resources.gradle"
+        },
+        {
+          "match": "\\brootDir\\b",
+          "name": "support.type.project.rootDir.gradle"
+        },
+        {
+          "match": "\\brootProject\\b",
+          "name": "support.type.project.rootProject.gradle"
+        },
+        {
+          "match": "\\bstate\\b",
+          "name": "support.type.project.state.gradle"
+        },
+        {
+          "match": "\\bstatus\\b",
+          "name": "support.type.project.status.gradle"
+        },
+        {
+          "match": "\\bsubprojects\\b",
+          "name": "support.type.project.subprojects.gradle"
+        },
+        {
+          "match": "\\btasks\\b",
+          "name": "support.type.project.tasks.gradle"
+        },
+        {
+          "match": "\\bversion\\b",
+          "name": "support.type.project.version.gradle"
+        },
+        {
+          "match": "\\bbinaries\\b",
+          "name": "support.type.project.binaries.gradle"
+        },
+        {
+          "match": "\\bsources\\b",
+          "name": "support.type.project.sources.gradle"
+        },
+        {
+          "match": "\\bannounce\\b",
+          "name": "support.type.project.announce.gradle"
+        },
+        {
+          "match": "\\bapplicationDefaultJvmArgs\\b",
+          "name": "support.type.project.applicationDefaultJvmArgs.gradle"
+        },
+        {
+          "match": "\\bapplicationDistribution\\b",
+          "name": "support.type.project.applicationDistribution.gradle"
+        },
+        {
+          "match": "\\bapplicationName\\b",
+          "name": "support.type.project.applicationName.gradle"
+        },
+        {
+          "match": "\\bmainClassName\\b",
+          "name": "support.type.project.mainClassName.gradle"
+        },
+        {
+          "match": "\\bcheckstyle\\b",
+          "name": "support.type.project.checkstyle.gradle"
+        },
+        {
+          "match": "\\bcheckstyleConfigFile\\b",
+          "name": "support.type.project.checkstyleConfigFile.gradle"
+        },
+        {
+          "match": "\\bcheckstyleConfigFileName\\b",
+          "name": "support.type.project.checkstyleConfigFileName.gradle"
+        },
+        {
+          "match": "\\bcheckstyleProperties\\b",
+          "name": "support.type.project.checkstyleProperties.gradle"
+        },
+        {
+          "match": "\\bcheckstyleResultsDir\\b",
+          "name": "support.type.project.checkstyleResultsDir.gradle"
+        },
+        {
+          "match": "\\bcheckstyleResultsDirName\\b",
+          "name": "support.type.project.checkstyleResultsDirName.gradle"
+        },
+        {
+          "match": "\\bcodeNarcConfigFile\\b",
+          "name": "support.type.project.codeNarcConfigFile.gradle"
+        },
+        {
+          "match": "\\bcodeNarcConfigFileName\\b",
+          "name": "support.type.project.codeNarcConfigFileName.gradle"
+        },
+        {
+          "match": "\\bcodeNarcReportsDir\\b",
+          "name": "support.type.project.codeNarcReportsDir.gradle"
+        },
+        {
+          "match": "\\bcodeNarcReportsDirName\\b",
+          "name": "support.type.project.codeNarcReportsDirName.gradle"
+        },
+        {
+          "match": "\\bcodenarc\\b",
+          "name": "support.type.project.codenarc.gradle"
+        },
+        {
+          "match": "\\bdistributions\\b",
+          "name": "support.type.project.distributions.gradle"
+        },
+        {
+          "match": "\\bappDirName\\b",
+          "name": "support.type.project.appDirName.gradle"
+        },
+        {
+          "match": "\\bdeploymentDescriptor\\b",
+          "name": "support.type.project.deploymentDescriptor.gradle"
+        },
+        {
+          "match": "\\blibDirName\\b",
+          "name": "support.type.project.libDirName.gradle"
+        },
+        {
+          "match": "\\beclipse\\b",
+          "name": "support.type.project.eclipse.gradle"
+        },
+        {
+          "match": "\\bfindbugs\\b",
+          "name": "support.type.project.findbugs.gradle"
+        },
+        {
+          "match": "\\bidea\\b",
+          "name": "support.type.project.idea.gradle"
+        },
+        {
+          "match": "\\bjacoco\\b",
+          "name": "support.type.project.jacoco.gradle"
+        },
+        {
+          "match": "\\bapiDocTitle\\b",
+          "name": "support.type.project.apiDocTitle.gradle"
+        },
+        {
+          "match": "\\barchivesBaseName\\b",
+          "name": "support.type.project.archivesBaseName.gradle"
+        },
+        {
+          "match": "\\bdistsDir\\b",
+          "name": "support.type.project.distsDir.gradle"
+        },
+        {
+          "match": "\\bdistsDirName\\b",
+          "name": "support.type.project.distsDirName.gradle"
+        },
+        {
+          "match": "\\bdocsDir\\b",
+          "name": "support.type.project.docsDir.gradle"
+        },
+        {
+          "match": "\\bdocsDirName\\b",
+          "name": "support.type.project.docsDirName.gradle"
+        },
+        {
+          "match": "\\blibsDir\\b",
+          "name": "support.type.project.libsDir.gradle"
+        },
+        {
+          "match": "\\blibsDirName\\b",
+          "name": "support.type.project.libsDirName.gradle"
+        },
+        {
+          "match": "\\breportsDir\\b",
+          "name": "support.type.project.reportsDir.gradle"
+        },
+        {
+          "match": "\\breportsDirName\\b",
+          "name": "support.type.project.reportsDirName.gradle"
+        },
+        {
+          "match": "\\bsourceCompatibility\\b",
+          "name": "support.type.project.sourceCompatibility.gradle"
+        },
+        {
+          "match": "\\bsourceSets\\b",
+          "name": "support.type.project.sourceSets.gradle"
+        },
+        {
+          "match": "\\btargetCompatibility\\b",
+          "name": "support.type.project.targetCompatibility.gradle"
+        },
+        {
+          "match": "\\btestReportDir\\b",
+          "name": "support.type.project.testReportDir.gradle"
+        },
+        {
+          "match": "\\btestReportDirName\\b",
+          "name": "support.type.project.testReportDirName.gradle"
+        },
+        {
+          "match": "\\btestResultsDir\\b",
+          "name": "support.type.project.testResultsDir.gradle"
+        },
+        {
+          "match": "\\btestResultsDirName\\b",
+          "name": "support.type.project.testResultsDirName.gradle"
+        },
+        {
+          "match": "\\bjdepend\\b",
+          "name": "support.type.project.jdepend.gradle"
+        },
+        {
+          "match": "\\bhttpPort\\b",
+          "name": "support.type.project.httpPort.gradle"
+        },
+        {
+          "match": "\\bstopKey\\b",
+          "name": "support.type.project.stopKey.gradle"
+        },
+        {
+          "match": "\\bstopPort\\b",
+          "name": "support.type.project.stopPort.gradle"
+        },
+        {
+          "match": "\\bconf2ScopeMappings\\b",
+          "name": "support.type.project.conf2ScopeMappings.gradle"
+        },
+        {
+          "match": "\\bmavenPomDir\\b",
+          "name": "support.type.project.mavenPomDir.gradle"
+        },
+        {
+          "match": "\\bbuildTypes\\b",
+          "name": "support.type.project.buildTypes.gradle"
+        },
+        {
+          "match": "\\bexecutables\\b",
+          "name": "support.type.project.executables.gradle"
+        },
+        {
+          "match": "\\bflavors\\b",
+          "name": "support.type.project.flavors.gradle"
+        },
+        {
+          "match": "\\blibraries\\b",
+          "name": "support.type.project.libraries.gradle"
+        },
+        {
+          "match": "\\bplatforms\\b",
+          "name": "support.type.project.platforms.gradle"
+        },
+        {
+          "match": "\\btoolChains\\b",
+          "name": "support.type.project.toolChains.gradle"
+        },
+        {
+          "match": "\\bpmd\\b",
+          "name": "support.type.project.pmd.gradle"
+        },
+        {
+          "match": "\\bprojectReportDir\\b",
+          "name": "support.type.project.projectReportDir.gradle"
+        },
+        {
+          "match": "\\bprojectReportDirName\\b",
+          "name": "support.type.project.projectReportDirName.gradle"
+        },
+        {
+          "match": "\\bpublishing\\b",
+          "name": "support.type.project.publishing.gradle"
+        },
+        {
+          "match": "\\bsigning\\b",
+          "name": "support.type.project.signing.gradle"
+        },
+        {
+          "match": "\\bvisualStudio\\b",
+          "name": "support.type.project.visualStudio.gradle"
+        },
+        {
+          "match": "\\bwebAppDir\\b",
+          "name": "support.type.project.webAppDir.gradle"
+        },
+        {
+          "match": "\\bwebAppDirName\\b",
+          "name": "support.type.project.webAppDirName.gradle"
+        },
+        {
+          "match": "\\babsoluteProjectPath\\b",
+          "name": "support.type.project.absoluteProjectPath.gradle"
+        },
+        {
+          "match": "\\bafterEvaluate\\b",
+          "name": "support.type.project.afterEvaluate.gradle"
+        },
+        {
+          "match": "\\bapply\\b",
+          "name": "support.type.project.apply.gradle"
+        },
+        {
+          "match": "\\bbeforeEvaluate\\b",
+          "name": "support.type.project.beforeEvaluate.gradle"
+        },
+        {
+          "match": "\\bchildrenDependOnMe\\b",
+          "name": "support.type.project.childrenDependOnMe.gradle"
+        },
+        {
+          "match": "\\bconfigure\\b",
+          "name": "support.type.project.configure.gradle"
+        },
+        {
+          "match": "\\bcontainer\\b",
+          "name": "support.type.project.container.gradle"
+        },
+        {
+          "match": "\\bcopy\\b",
+          "name": "support.type.project.copy.gradle"
+        },
+        {
+          "match": "\\bcopySpec\\b",
+          "name": "support.type.project.copySpec.gradle"
+        },
+        {
+          "match": "\\bdelete\\b",
+          "name": "support.type.project.delete.gradle"
+        },
+        {
+          "match": "\\bdependsOn\\b",
+          "name": "support.type.project.dependsOn.gradle"
+        },
+        {
+          "match": "\\bdependsOnChildren\\b",
+          "name": "support.type.project.dependsOnChildren.gradle"
+        },
+        {
+          "match": "\\bevaluationDependsOn\\b",
+          "name": "support.type.project.evaluationDependsOn.gradle"
+        },
+        {
+          "match": "\\bexec\\b",
+          "name": "support.type.project.exec.gradle"
+        },
+        {
+          "match": "\\bfile\\b",
+          "name": "support.type.project.file.gradle"
+        },
+        {
+          "match": "\\bfileTree\\b",
+          "name": "support.type.project.fileTree.gradle"
+        },
+        {
+          "match": "\\bfiles\\b",
+          "name": "support.type.project.files.gradle"
+        },
+        {
+          "match": "\\bfindProject\\b",
+          "name": "support.type.project.findProject.gradle"
+        },
+        {
+          "match": "\\bgetAllTasks\\b",
+          "name": "support.type.project.getAllTasks.gradle"
+        },
+        {
+          "match": "\\bgetTasksByName\\b",
+          "name": "support.type.project.getTasksByName.gradle"
+        },
+        {
+          "match": "\\bhasProperty\\b",
+          "name": "support.type.project.hasProperty.gradle"
+        },
+        {
+          "match": "\\bjavaexec\\b",
+          "name": "support.type.project.javaexec.gradle"
+        },
+        {
+          "match": "\\bmkdir\\b",
+          "name": "support.type.project.mkdir.gradle"
+        },
+        {
+          "match": "\\bproperty\\b",
+          "name": "support.type.project.property.gradle"
+        },
+        {
+          "match": "\\brelativePath\\b",
+          "name": "support.type.project.relativePath.gradle"
+        },
+        {
+          "match": "\\brelativeProjectPath\\b",
+          "name": "support.type.project.relativeProjectPath.gradle"
+        },
+        {
+          "match": "\\bsetProperty\\b",
+          "name": "support.type.project.setProperty.gradle"
+        },
+        {
+          "match": "\\btarTree\\b",
+          "name": "support.type.project.tarTree.gradle"
+        },
+        {
+          "match": "\\btask\\b",
+          "name": "support.type.project.task.gradle"
+        },
+        {
+          "match": "\\buri\\b",
+          "name": "support.type.project.uri.gradle"
+        },
+        {
+          "match": "\\bzipTree\\b",
+          "name": "support.type.project.zipTree.gradle"
+        },
+        {
+          "match": "\\bmanifest\\b",
+          "name": "support.type.project.manifest.gradle"
+        },
+        {
+          "match": "\\bpom\\b",
+          "name": "support.type.project.pom.gradle"
+        },
+        {
+          "match": "\\bosgiManifest\\b",
+          "name": "support.type.project.osgiManifest.gradle"
+        }
+      ]
+    },
+    "specific-tasks": {
+      "patterns": [
+        {
+          "begin": "(type):\\s*(Gradle)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Gradle.gradle"
+            }
+          },
+          "contentName": "tasks.body.Gradle.source.gradle",
+          "end": "}",
+          "name": "Gradle.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bgradle\\b",
+              "name": "support.function.tasks.gradle.gradle"
+            },
+            {
+              "match": "\\bgradleHomeDir\\b",
+              "name": "support.function.tasks.gradleHomeDir.gradle"
+            },
+            {
+              "match": "\\bgradleUserHomeDir\\b",
+              "name": "support.function.tasks.gradleUserHomeDir.gradle"
+            },
+            {
+              "match": "\\bgradleVersion\\b",
+              "name": "support.function.tasks.gradleVersion.gradle"
+            },
+            {
+              "match": "\\bparent\\b",
+              "name": "support.function.tasks.parent.gradle"
+            },
+            {
+              "match": "\\brootProject\\b",
+              "name": "support.function.tasks.rootProject.gradle"
+            },
+            {
+              "match": "\\bstartParameter\\b",
+              "name": "support.function.tasks.startParameter.gradle"
+            },
+            {
+              "match": "\\btaskGraph\\b",
+              "name": "support.function.tasks.taskGraph.gradle"
+            },
+            {
+              "match": "\\baddBuildListener\\b",
+              "name": "support.function.tasks.addBuildListener.gradle"
+            },
+            {
+              "match": "\\baddListener\\b",
+              "name": "support.function.tasks.addListener.gradle"
+            },
+            {
+              "match": "\\baddProjectEvaluationListener\\b",
+              "name": "support.function.tasks.addProjectEvaluationListener.gradle"
+            },
+            {
+              "match": "\\bafterProject\\b",
+              "name": "support.function.tasks.afterProject.gradle"
+            },
+            {
+              "match": "\\ballprojects\\b",
+              "name": "support.function.tasks.allprojects.gradle"
+            },
+            {
+              "match": "\\bbeforeProject\\b",
+              "name": "support.function.tasks.beforeProject.gradle"
+            },
+            {
+              "match": "\\bbuildFinished\\b",
+              "name": "support.function.tasks.buildFinished.gradle"
+            },
+            {
+              "match": "\\bprojectsEvaluated\\b",
+              "name": "support.function.tasks.projectsEvaluated.gradle"
+            },
+            {
+              "match": "\\bprojectsLoaded\\b",
+              "name": "support.function.tasks.projectsLoaded.gradle"
+            },
+            {
+              "match": "\\bremoveListener\\b",
+              "name": "support.function.tasks.removeListener.gradle"
+            },
+            {
+              "match": "\\bremoveProjectEvaluationListener\\b",
+              "name": "support.function.tasks.removeProjectEvaluationListener.gradle"
+            },
+            {
+              "match": "\\bsettingsEvaluated\\b",
+              "name": "support.function.tasks.settingsEvaluated.gradle"
+            },
+            {
+              "match": "\\buseLogger\\b",
+              "name": "support.function.tasks.useLogger.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Settings)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Settings.gradle"
+            }
+          },
+          "contentName": "tasks.body.Settings.source.gradle",
+          "end": "}",
+          "name": "Settings.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bgradle\\b",
+              "name": "support.function.tasks.gradle.gradle"
+            },
+            {
+              "match": "\\brootDir\\b",
+              "name": "support.function.tasks.rootDir.gradle"
+            },
+            {
+              "match": "\\brootProject\\b",
+              "name": "support.function.tasks.rootProject.gradle"
+            },
+            {
+              "match": "\\bsettings\\b",
+              "name": "support.function.tasks.settings.gradle"
+            },
+            {
+              "match": "\\bsettingsDir\\b",
+              "name": "support.function.tasks.settingsDir.gradle"
+            },
+            {
+              "match": "\\bstartParameter\\b",
+              "name": "support.function.tasks.startParameter.gradle"
+            },
+            {
+              "match": "\\bfindProject\\b",
+              "name": "support.function.tasks.findProject.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "match": "\\bincludeFlat\\b",
+              "name": "support.function.tasks.includeFlat.gradle"
+            },
+            {
+              "match": "\\bproject\\b",
+              "name": "support.function.tasks.project.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Script)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Script.gradle"
+            }
+          },
+          "contentName": "tasks.body.Script.source.gradle",
+          "end": "}",
+          "name": "Script.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bbuildscript\\b",
+              "name": "support.function.tasks.buildscript.gradle"
+            },
+            {
+              "match": "\\blogger\\b",
+              "name": "support.function.tasks.logger.gradle"
+            },
+            {
+              "match": "\\blogging\\b",
+              "name": "support.function.tasks.logging.gradle"
+            },
+            {
+              "match": "\\bresources\\b",
+              "name": "support.function.tasks.resources.gradle"
+            },
+            {
+              "match": "\\bapply\\b",
+              "name": "support.function.tasks.apply.gradle"
+            },
+            {
+              "match": "\\bcopy\\b",
+              "name": "support.function.tasks.copy.gradle"
+            },
+            {
+              "match": "\\bcopySpec\\b",
+              "name": "support.function.tasks.copySpec.gradle"
+            },
+            {
+              "match": "\\bdelete\\b",
+              "name": "support.function.tasks.delete.gradle"
+            },
+            {
+              "match": "\\bexec\\b",
+              "name": "support.function.tasks.exec.gradle"
+            },
+            {
+              "match": "\\bfile\\b",
+              "name": "support.function.tasks.file.gradle"
+            },
+            {
+              "match": "\\bfileTree\\b",
+              "name": "support.function.tasks.fileTree.gradle"
+            },
+            {
+              "match": "\\bfiles\\b",
+              "name": "support.function.tasks.files.gradle"
+            },
+            {
+              "match": "\\bjavaexec\\b",
+              "name": "support.function.tasks.javaexec.gradle"
+            },
+            {
+              "match": "\\bmkdir\\b",
+              "name": "support.function.tasks.mkdir.gradle"
+            },
+            {
+              "match": "\\brelativePath\\b",
+              "name": "support.function.tasks.relativePath.gradle"
+            },
+            {
+              "match": "\\btarTree\\b",
+              "name": "support.function.tasks.tarTree.gradle"
+            },
+            {
+              "match": "\\buri\\b",
+              "name": "support.function.tasks.uri.gradle"
+            },
+            {
+              "match": "\\bzipTree\\b",
+              "name": "support.function.tasks.zipTree.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(SourceSet)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.SourceSet.gradle"
+            }
+          },
+          "contentName": "tasks.body.SourceSet.source.gradle",
+          "end": "}",
+          "name": "SourceSet.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\ballJava\\b",
+              "name": "support.function.tasks.allJava.gradle"
+            },
+            {
+              "match": "\\ballSource\\b",
+              "name": "support.function.tasks.allSource.gradle"
+            },
+            {
+              "match": "\\bcompileClasspath\\b",
+              "name": "support.function.tasks.compileClasspath.gradle"
+            },
+            {
+              "match": "\\bjava\\b",
+              "name": "support.function.tasks.java.gradle"
+            },
+            {
+              "match": "\\bname\\b",
+              "name": "support.function.tasks.name.gradle"
+            },
+            {
+              "match": "\\boutput\\b",
+              "name": "support.function.tasks.output.gradle"
+            },
+            {
+              "match": "\\bresources\\b",
+              "name": "support.function.tasks.resources.gradle"
+            },
+            {
+              "match": "\\bruntimeClasspath\\b",
+              "name": "support.function.tasks.runtimeClasspath.gradle"
+            },
+            {
+              "match": "\\bantlr\\b",
+              "name": "support.function.tasks.antlr.gradle"
+            },
+            {
+              "match": "\\ballGroovy\\b",
+              "name": "support.function.tasks.allGroovy.gradle"
+            },
+            {
+              "match": "\\bgroovy\\b",
+              "name": "support.function.tasks.groovy.gradle"
+            },
+            {
+              "match": "\\ballScala\\b",
+              "name": "support.function.tasks.allScala.gradle"
+            },
+            {
+              "match": "\\bscala\\b",
+              "name": "support.function.tasks.scala.gradle"
+            },
+            {
+              "match": "\\bcompiledBy\\b",
+              "name": "support.function.tasks.compiledBy.gradle"
+            },
+            {
+              "match": "\\bgetCompileTaskName\\b",
+              "name": "support.function.tasks.getCompileTaskName.gradle"
+            },
+            {
+              "match": "\\bgetTaskName\\b",
+              "name": "support.function.tasks.getTaskName.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(SourceSetOutput)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.SourceSetOutput.gradle"
+            }
+          },
+          "contentName": "tasks.body.SourceSetOutput.source.gradle",
+          "end": "}",
+          "name": "SourceSetOutput.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bclassesDir\\b",
+              "name": "support.function.tasks.classesDir.gradle"
+            },
+            {
+              "match": "\\bresourcesDir\\b",
+              "name": "support.function.tasks.resourcesDir.gradle"
+            },
+            {
+              "match": "\\bdir\\b",
+              "name": "support.function.tasks.dir.gradle"
+            },
+            {
+              "match": "\\bgetDirs\\b",
+              "name": "support.function.tasks.getDirs.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(IncrementalTaskInputs)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.IncrementalTaskInputs.gradle"
+            }
+          },
+          "contentName": "tasks.body.IncrementalTaskInputs.source.gradle",
+          "end": "}",
+          "name": "IncrementalTaskInputs.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bincremental\\b",
+              "name": "support.function.tasks.incremental.gradle"
+            },
+            {
+              "match": "\\boutOfDate\\b",
+              "name": "support.function.tasks.outOfDate.gradle"
+            },
+            {
+              "match": "\\bremoved\\b",
+              "name": "support.function.tasks.removed.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Configuration)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Configuration.gradle"
+            }
+          },
+          "contentName": "tasks.body.Configuration.source.gradle",
+          "end": "}",
+          "name": "Configuration.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\ballArtifacts\\b",
+              "name": "support.function.tasks.allArtifacts.gradle"
+            },
+            {
+              "match": "\\ballDependencies\\b",
+              "name": "support.function.tasks.allDependencies.gradle"
+            },
+            {
+              "match": "\\bartifacts\\b",
+              "name": "support.function.tasks.artifacts.gradle"
+            },
+            {
+              "match": "\\bbuildDependencies\\b",
+              "name": "support.function.tasks.buildDependencies.gradle"
+            },
+            {
+              "match": "\\bdependencies\\b",
+              "name": "support.function.tasks.dependencies.gradle"
+            },
+            {
+              "match": "\\bdescription\\b",
+              "name": "support.function.tasks.description.gradle"
+            },
+            {
+              "match": "\\bexcludeRules\\b",
+              "name": "support.function.tasks.excludeRules.gradle"
+            },
+            {
+              "match": "\\bextendsFrom\\b",
+              "name": "support.function.tasks.extendsFrom.gradle"
+            },
+            {
+              "match": "\\bhierarchy\\b",
+              "name": "support.function.tasks.hierarchy.gradle"
+            },
+            {
+              "match": "\\bincoming\\b",
+              "name": "support.function.tasks.incoming.gradle"
+            },
+            {
+              "match": "\\bname\\b",
+              "name": "support.function.tasks.name.gradle"
+            },
+            {
+              "match": "\\bresolutionStrategy\\b",
+              "name": "support.function.tasks.resolutionStrategy.gradle"
+            },
+            {
+              "match": "\\bresolvedConfiguration\\b",
+              "name": "support.function.tasks.resolvedConfiguration.gradle"
+            },
+            {
+              "match": "\\bstate\\b",
+              "name": "support.function.tasks.state.gradle"
+            },
+            {
+              "match": "\\btransitive\\b",
+              "name": "support.function.tasks.transitive.gradle"
+            },
+            {
+              "match": "\\bvisible\\b",
+              "name": "support.function.tasks.visible.gradle"
+            },
+            {
+              "match": "\\bcopy\\b",
+              "name": "support.function.tasks.copy.gradle"
+            },
+            {
+              "match": "\\bcopyRecursive\\b",
+              "name": "support.function.tasks.copyRecursive.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\bfileCollection\\b",
+              "name": "support.function.tasks.fileCollection.gradle"
+            },
+            {
+              "match": "\\bfiles\\b",
+              "name": "support.function.tasks.files.gradle"
+            },
+            {
+              "match": "\\bgetTaskDependencyFromProjectDependency\\b",
+              "name": "support.function.tasks.getTaskDependencyFromProjectDependency.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(ResolutionStrategy)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.ResolutionStrategy.gradle"
+            }
+          },
+          "contentName": "tasks.body.ResolutionStrategy.source.gradle",
+          "end": "}",
+          "name": "ResolutionStrategy.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bforcedModules\\b",
+              "name": "support.function.tasks.forcedModules.gradle"
+            },
+            {
+              "match": "\\bcacheChangingModulesFor\\b",
+              "name": "support.function.tasks.cacheChangingModulesFor.gradle"
+            },
+            {
+              "match": "\\bcacheDynamicVersionsFor\\b",
+              "name": "support.function.tasks.cacheDynamicVersionsFor.gradle"
+            },
+            {
+              "match": "\\beachDependency\\b",
+              "name": "support.function.tasks.eachDependency.gradle"
+            },
+            {
+              "match": "\\bfailOnVersionConflict\\b",
+              "name": "support.function.tasks.failOnVersionConflict.gradle"
+            },
+            {
+              "match": "\\bforce\\b",
+              "name": "support.function.tasks.force.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(ConventionProperty)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.ConventionProperty.gradle"
+            }
+          },
+          "contentName": "tasks.body.ConventionProperty.source.gradle",
+          "end": "}",
+          "name": "ConventionProperty.task.source.gradle",
+          "patterns": [
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(ExtensionAware)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.ExtensionAware.gradle"
+            }
+          },
+          "contentName": "tasks.body.ExtensionAware.source.gradle",
+          "end": "}",
+          "name": "ExtensionAware.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bextensions\\b",
+              "name": "support.function.tasks.extensions.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(ExtraPropertiesExtension)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.ExtraPropertiesExtension.gradle"
+            }
+          },
+          "contentName": "tasks.body.ExtraPropertiesExtension.source.gradle",
+          "end": "}",
+          "name": "ExtraPropertiesExtension.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bproperties\\b",
+              "name": "support.function.tasks.properties.gradle"
+            },
+            {
+              "match": "\\bget\\b",
+              "name": "support.function.tasks.get.gradle"
+            },
+            {
+              "match": "\\bhas\\b",
+              "name": "support.function.tasks.has.gradle"
+            },
+            {
+              "match": "\\bset\\b",
+              "name": "support.function.tasks.set.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(PublishingExtension)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.PublishingExtension.gradle"
+            }
+          },
+          "contentName": "tasks.body.PublishingExtension.source.gradle",
+          "end": "}",
+          "name": "PublishingExtension.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bpublications\\b",
+              "name": "support.function.tasks.publications.gradle"
+            },
+            {
+              "match": "\\brepositories\\b",
+              "name": "support.function.tasks.repositories.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Report)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Report.gradle"
+            }
+          },
+          "contentName": "tasks.body.Report.source.gradle",
+          "end": "}",
+          "name": "Report.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bdestination\\b",
+              "name": "support.function.tasks.destination.gradle"
+            },
+            {
+              "match": "\\bdisplayName\\b",
+              "name": "support.function.tasks.displayName.gradle"
+            },
+            {
+              "match": "\\benabled\\b",
+              "name": "support.function.tasks.enabled.gradle"
+            },
+            {
+              "match": "\\bname\\b",
+              "name": "support.function.tasks.name.gradle"
+            },
+            {
+              "match": "\\boutputType\\b",
+              "name": "support.function.tasks.outputType.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Reporting)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Reporting.gradle"
+            }
+          },
+          "contentName": "tasks.body.Reporting.source.gradle",
+          "end": "}",
+          "name": "Reporting.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\breports\\b",
+              "name": "support.function.tasks.reports.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(ReportContainer)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.ReportContainer.gradle"
+            }
+          },
+          "contentName": "tasks.body.ReportContainer.source.gradle",
+          "end": "}",
+          "name": "ReportContainer.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\benabled\\b",
+              "name": "support.function.tasks.enabled.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(ReportingExtension)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.ReportingExtension.gradle"
+            }
+          },
+          "contentName": "tasks.body.ReportingExtension.source.gradle",
+          "end": "}",
+          "name": "ReportingExtension.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bbaseDir\\b",
+              "name": "support.function.tasks.baseDir.gradle"
+            },
+            {
+              "match": "\\bfile\\b",
+              "name": "support.function.tasks.file.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(IvyPublication)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.IvyPublication.gradle"
+            }
+          },
+          "contentName": "tasks.body.IvyPublication.source.gradle",
+          "end": "}",
+          "name": "IvyPublication.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bartifacts\\b",
+              "name": "support.function.tasks.artifacts.gradle"
+            },
+            {
+              "match": "\\bconfigurations\\b",
+              "name": "support.function.tasks.configurations.gradle"
+            },
+            {
+              "match": "\\bdescriptor\\b",
+              "name": "support.function.tasks.descriptor.gradle"
+            },
+            {
+              "match": "\\bmodule\\b",
+              "name": "support.function.tasks.module.gradle"
+            },
+            {
+              "match": "\\borganisation\\b",
+              "name": "support.function.tasks.organisation.gradle"
+            },
+            {
+              "match": "\\brevision\\b",
+              "name": "support.function.tasks.revision.gradle"
+            },
+            {
+              "match": "\\bartifact\\b",
+              "name": "support.function.tasks.artifact.gradle"
+            },
+            {
+              "match": "\\bfrom\\b",
+              "name": "support.function.tasks.from.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(IvyArtifact)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.IvyArtifact.gradle"
+            }
+          },
+          "contentName": "tasks.body.IvyArtifact.source.gradle",
+          "end": "}",
+          "name": "IvyArtifact.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bclassifier\\b",
+              "name": "support.function.tasks.classifier.gradle"
+            },
+            {
+              "match": "\\bconf\\b",
+              "name": "support.function.tasks.conf.gradle"
+            },
+            {
+              "match": "\\bextension\\b",
+              "name": "support.function.tasks.extension.gradle"
+            },
+            {
+              "match": "\\bfile\\b",
+              "name": "support.function.tasks.file.gradle"
+            },
+            {
+              "match": "\\bname\\b",
+              "name": "support.function.tasks.name.gradle"
+            },
+            {
+              "match": "\\btype\\b",
+              "name": "support.function.tasks.type.gradle"
+            },
+            {
+              "match": "\\bbuiltBy\\b",
+              "name": "support.function.tasks.builtBy.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(IvyArtifactSet)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.IvyArtifactSet.gradle"
+            }
+          },
+          "contentName": "tasks.body.IvyArtifactSet.source.gradle",
+          "end": "}",
+          "name": "IvyArtifactSet.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bartifact\\b",
+              "name": "support.function.tasks.artifact.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(IvyModuleDescriptor)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.IvyModuleDescriptor.gradle"
+            }
+          },
+          "contentName": "tasks.body.IvyModuleDescriptor.source.gradle",
+          "end": "}",
+          "name": "IvyModuleDescriptor.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bwithXml\\b",
+              "name": "support.function.tasks.withXml.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(MavenPublication)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.MavenPublication.gradle"
+            }
+          },
+          "contentName": "tasks.body.MavenPublication.source.gradle",
+          "end": "}",
+          "name": "MavenPublication.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bartifactId\\b",
+              "name": "support.function.tasks.artifactId.gradle"
+            },
+            {
+              "match": "\\bartifacts\\b",
+              "name": "support.function.tasks.artifacts.gradle"
+            },
+            {
+              "match": "\\bgroupId\\b",
+              "name": "support.function.tasks.groupId.gradle"
+            },
+            {
+              "match": "\\bpom\\b",
+              "name": "support.function.tasks.pom.gradle"
+            },
+            {
+              "match": "\\bversion\\b",
+              "name": "support.function.tasks.version.gradle"
+            },
+            {
+              "match": "\\bartifact\\b",
+              "name": "support.function.tasks.artifact.gradle"
+            },
+            {
+              "match": "\\bfrom\\b",
+              "name": "support.function.tasks.from.gradle"
+            },
+            {
+              "match": "\\bsetArtifacts\\b",
+              "name": "support.function.tasks.setArtifacts.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(MavenArtifact)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.MavenArtifact.gradle"
+            }
+          },
+          "contentName": "tasks.body.MavenArtifact.source.gradle",
+          "end": "}",
+          "name": "MavenArtifact.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bclassifier\\b",
+              "name": "support.function.tasks.classifier.gradle"
+            },
+            {
+              "match": "\\bextension\\b",
+              "name": "support.function.tasks.extension.gradle"
+            },
+            {
+              "match": "\\bfile\\b",
+              "name": "support.function.tasks.file.gradle"
+            },
+            {
+              "match": "\\bbuiltBy\\b",
+              "name": "support.function.tasks.builtBy.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(MavenArtifactSet)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.MavenArtifactSet.gradle"
+            }
+          },
+          "contentName": "tasks.body.MavenArtifactSet.source.gradle",
+          "end": "}",
+          "name": "MavenArtifactSet.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bartifact\\b",
+              "name": "support.function.tasks.artifact.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(MavenPom)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.MavenPom.gradle"
+            }
+          },
+          "contentName": "tasks.body.MavenPom.source.gradle",
+          "end": "}",
+          "name": "MavenPom.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bwithXml\\b",
+              "name": "support.function.tasks.withXml.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(ConfigurationContainer)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.ConfigurationContainer.gradle"
+            }
+          },
+          "contentName": "tasks.body.ConfigurationContainer.source.gradle",
+          "end": "}",
+          "name": "ConfigurationContainer.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\badd\\b",
+              "name": "support.function.tasks.add.gradle"
+            },
+            {
+              "match": "\\bdetachedConfiguration\\b",
+              "name": "support.function.tasks.detachedConfiguration.gradle"
+            },
+            {
+              "match": "\\bgetAt\\b",
+              "name": "support.function.tasks.getAt.gradle"
+            },
+            {
+              "match": "\\bgetByName\\b",
+              "name": "support.function.tasks.getByName.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(RepositoryHandler)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.RepositoryHandler.gradle"
+            }
+          },
+          "contentName": "tasks.body.RepositoryHandler.source.gradle",
+          "end": "}",
+          "name": "RepositoryHandler.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bflatDir\\b",
+              "name": "support.function.tasks.flatDir.gradle"
+            },
+            {
+              "match": "\\bivy\\b",
+              "name": "support.function.tasks.ivy.gradle"
+            },
+            {
+              "match": "\\bjcenter\\b",
+              "name": "support.function.tasks.jcenter.gradle"
+            },
+            {
+              "match": "\\bmaven\\b",
+              "name": "support.function.tasks.maven.gradle"
+            },
+            {
+              "match": "\\bmavenCentral\\b",
+              "name": "support.function.tasks.mavenCentral.gradle"
+            },
+            {
+              "match": "\\bmavenLocal\\b",
+              "name": "support.function.tasks.mavenLocal.gradle"
+            },
+            {
+              "match": "\\bmavenRepo\\b",
+              "name": "support.function.tasks.mavenRepo.gradle"
+            },
+            {
+              "match": "\\bmavenDeployer\\b",
+              "name": "support.function.tasks.mavenDeployer.gradle"
+            },
+            {
+              "match": "\\bmavenInstaller\\b",
+              "name": "support.function.tasks.mavenInstaller.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(DependencyHandler)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.DependencyHandler.gradle"
+            }
+          },
+          "contentName": "tasks.body.DependencyHandler.source.gradle",
+          "end": "}",
+          "name": "DependencyHandler.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bcomponents\\b",
+              "name": "support.function.tasks.components.gradle"
+            },
+            {
+              "match": "\\badd\\b",
+              "name": "support.function.tasks.add.gradle"
+            },
+            {
+              "match": "\\bcreate\\b",
+              "name": "support.function.tasks.create.gradle"
+            },
+            {
+              "match": "\\bgradleApi\\b",
+              "name": "support.function.tasks.gradleApi.gradle"
+            },
+            {
+              "match": "\\blocalGroovy\\b",
+              "name": "support.function.tasks.localGroovy.gradle"
+            },
+            {
+              "match": "\\bmodule\\b",
+              "name": "support.function.tasks.module.gradle"
+            },
+            {
+              "match": "\\bproject\\b",
+              "name": "support.function.tasks.project.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(ArtifactHandler)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.ArtifactHandler.gradle"
+            }
+          },
+          "contentName": "tasks.body.ArtifactHandler.source.gradle",
+          "end": "}",
+          "name": "ArtifactHandler.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\badd\\b",
+              "name": "support.function.tasks.add.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(TaskReportTask)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.TaskReportTask.gradle"
+            }
+          },
+          "contentName": "tasks.body.TaskReportTask.source.gradle",
+          "end": "}",
+          "name": "TaskReportTask.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\boutputFile\\b",
+              "name": "support.function.tasks.outputFile.gradle"
+            },
+            {
+              "match": "\\bprojects\\b",
+              "name": "support.function.tasks.projects.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(ProjectReportTask)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.ProjectReportTask.gradle"
+            }
+          },
+          "contentName": "tasks.body.ProjectReportTask.source.gradle",
+          "end": "}",
+          "name": "ProjectReportTask.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\boutputFile\\b",
+              "name": "support.function.tasks.outputFile.gradle"
+            },
+            {
+              "match": "\\bprojects\\b",
+              "name": "support.function.tasks.projects.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(DependencyReportTask)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.DependencyReportTask.gradle"
+            }
+          },
+          "contentName": "tasks.body.DependencyReportTask.source.gradle",
+          "end": "}",
+          "name": "DependencyReportTask.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bconfigurations\\b",
+              "name": "support.function.tasks.configurations.gradle"
+            },
+            {
+              "match": "\\boutputFile\\b",
+              "name": "support.function.tasks.outputFile.gradle"
+            },
+            {
+              "match": "\\bprojects\\b",
+              "name": "support.function.tasks.projects.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(DependencyInsightReportTask)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.DependencyInsightReportTask.gradle"
+            }
+          },
+          "contentName": "tasks.body.DependencyInsightReportTask.source.gradle",
+          "end": "}",
+          "name": "DependencyInsightReportTask.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bconfiguration\\b",
+              "name": "support.function.tasks.configuration.gradle"
+            },
+            {
+              "match": "\\bdependencySpec\\b",
+              "name": "support.function.tasks.dependencySpec.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(PropertyReportTask)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.PropertyReportTask.gradle"
+            }
+          },
+          "contentName": "tasks.body.PropertyReportTask.source.gradle",
+          "end": "}",
+          "name": "PropertyReportTask.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\boutputFile\\b",
+              "name": "support.function.tasks.outputFile.gradle"
+            },
+            {
+              "match": "\\bprojects\\b",
+              "name": "support.function.tasks.projects.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(AntlrTask)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.AntlrTask.gradle"
+            }
+          },
+          "contentName": "tasks.body.AntlrTask.source.gradle",
+          "end": "}",
+          "name": "AntlrTask.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bantlrClasspath\\b",
+              "name": "support.function.tasks.antlrClasspath.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\boutputDirectory\\b",
+              "name": "support.function.tasks.outputDirectory.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\btrace\\b",
+              "name": "support.function.tasks.trace.gradle"
+            },
+            {
+              "match": "\\btraceLexer\\b",
+              "name": "support.function.tasks.traceLexer.gradle"
+            },
+            {
+              "match": "\\btraceParser\\b",
+              "name": "support.function.tasks.traceParser.gradle"
+            },
+            {
+              "match": "\\btraceTreeWalker\\b",
+              "name": "support.function.tasks.traceTreeWalker.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Checkstyle)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Checkstyle.gradle"
+            }
+          },
+          "contentName": "tasks.body.Checkstyle.source.gradle",
+          "end": "}",
+          "name": "Checkstyle.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bcheckstyleClasspath\\b",
+              "name": "support.function.tasks.checkstyleClasspath.gradle"
+            },
+            {
+              "match": "\\bclasspath\\b",
+              "name": "support.function.tasks.classpath.gradle"
+            },
+            {
+              "match": "\\bconfigFile\\b",
+              "name": "support.function.tasks.configFile.gradle"
+            },
+            {
+              "match": "\\bconfigProperties\\b",
+              "name": "support.function.tasks.configProperties.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bignoreFailures\\b",
+              "name": "support.function.tasks.ignoreFailures.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\breports\\b",
+              "name": "support.function.tasks.reports.gradle"
+            },
+            {
+              "match": "\\bshowViolations\\b",
+              "name": "support.function.tasks.showViolations.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(CodeNarc)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.CodeNarc.gradle"
+            }
+          },
+          "contentName": "tasks.body.CodeNarc.source.gradle",
+          "end": "}",
+          "name": "CodeNarc.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bcodenarcClasspath\\b",
+              "name": "support.function.tasks.codenarcClasspath.gradle"
+            },
+            {
+              "match": "\\bconfigFile\\b",
+              "name": "support.function.tasks.configFile.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bignoreFailures\\b",
+              "name": "support.function.tasks.ignoreFailures.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\bmaxPriority1Violations\\b",
+              "name": "support.function.tasks.maxPriority1Violations.gradle"
+            },
+            {
+              "match": "\\bmaxPriority2Violations\\b",
+              "name": "support.function.tasks.maxPriority2Violations.gradle"
+            },
+            {
+              "match": "\\bmaxPriority3Violations\\b",
+              "name": "support.function.tasks.maxPriority3Violations.gradle"
+            },
+            {
+              "match": "\\breports\\b",
+              "name": "support.function.tasks.reports.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(CompareGradleBuilds)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.CompareGradleBuilds.gradle"
+            }
+          },
+          "contentName": "tasks.body.CompareGradleBuilds.source.gradle",
+          "end": "}",
+          "name": "CompareGradleBuilds.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bignoreFailures\\b",
+              "name": "support.function.tasks.ignoreFailures.gradle"
+            },
+            {
+              "match": "\\breportDir\\b",
+              "name": "support.function.tasks.reportDir.gradle"
+            },
+            {
+              "match": "\\bsourceBuild\\b",
+              "name": "support.function.tasks.sourceBuild.gradle"
+            },
+            {
+              "match": "\\btargetBuild\\b",
+              "name": "support.function.tasks.targetBuild.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Copy)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Copy.gradle"
+            }
+          },
+          "contentName": "tasks.body.Copy.source.gradle",
+          "end": "}",
+          "name": "Copy.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bcaseSensitive\\b",
+              "name": "support.function.tasks.caseSensitive.gradle"
+            },
+            {
+              "match": "\\bdestinationDir\\b",
+              "name": "support.function.tasks.destinationDir.gradle"
+            },
+            {
+              "match": "\\bdirMode\\b",
+              "name": "support.function.tasks.dirMode.gradle"
+            },
+            {
+              "match": "\\bduplicatesStrategy\\b",
+              "name": "support.function.tasks.duplicatesStrategy.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bfileMode\\b",
+              "name": "support.function.tasks.fileMode.gradle"
+            },
+            {
+              "match": "\\bincludeEmptyDirs\\b",
+              "name": "support.function.tasks.includeEmptyDirs.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\beachFile\\b",
+              "name": "support.function.tasks.eachFile.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\bexpand\\b",
+              "name": "support.function.tasks.expand.gradle"
+            },
+            {
+              "match": "\\bfilesMatching\\b",
+              "name": "support.function.tasks.filesMatching.gradle"
+            },
+            {
+              "match": "\\bfilesNotMatching\\b",
+              "name": "support.function.tasks.filesNotMatching.gradle"
+            },
+            {
+              "match": "\\bfilter\\b",
+              "name": "support.function.tasks.filter.gradle"
+            },
+            {
+              "match": "\\bfrom\\b",
+              "name": "support.function.tasks.from.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "match": "\\binto\\b",
+              "name": "support.function.tasks.into.gradle"
+            },
+            {
+              "match": "\\brename\\b",
+              "name": "support.function.tasks.rename.gradle"
+            },
+            {
+              "match": "\\bwith\\b",
+              "name": "support.function.tasks.with.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(CreateStartScripts)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.CreateStartScripts.gradle"
+            }
+          },
+          "contentName": "tasks.body.CreateStartScripts.source.gradle",
+          "end": "}",
+          "name": "CreateStartScripts.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bapplicationName\\b",
+              "name": "support.function.tasks.applicationName.gradle"
+            },
+            {
+              "match": "\\bclasspath\\b",
+              "name": "support.function.tasks.classpath.gradle"
+            },
+            {
+              "match": "\\bdefaultJvmOpts\\b",
+              "name": "support.function.tasks.defaultJvmOpts.gradle"
+            },
+            {
+              "match": "\\bmainClassName\\b",
+              "name": "support.function.tasks.mainClassName.gradle"
+            },
+            {
+              "match": "\\boptsEnvironmentVar\\b",
+              "name": "support.function.tasks.optsEnvironmentVar.gradle"
+            },
+            {
+              "match": "\\boutputDir\\b",
+              "name": "support.function.tasks.outputDir.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Delete)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Delete.gradle"
+            }
+          },
+          "contentName": "tasks.body.Delete.source.gradle",
+          "end": "}",
+          "name": "Delete.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bdelete\\b",
+              "name": "support.function.tasks.delete.gradle"
+            },
+            {
+              "match": "\\btargetFiles\\b",
+              "name": "support.function.tasks.targetFiles.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Directory)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Directory.gradle"
+            }
+          },
+          "contentName": "tasks.body.Directory.source.gradle",
+          "end": "}",
+          "name": "Directory.task.source.gradle",
+          "patterns": [
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Exec)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Exec.gradle"
+            }
+          },
+          "contentName": "tasks.body.Exec.source.gradle",
+          "end": "}",
+          "name": "Exec.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bargs\\b",
+              "name": "support.function.tasks.args.gradle"
+            },
+            {
+              "match": "\\bcommandLine\\b",
+              "name": "support.function.tasks.commandLine.gradle"
+            },
+            {
+              "match": "\\benvironment\\b",
+              "name": "support.function.tasks.environment.gradle"
+            },
+            {
+              "match": "\\berrorOutput\\b",
+              "name": "support.function.tasks.errorOutput.gradle"
+            },
+            {
+              "match": "\\bexecResult\\b",
+              "name": "support.function.tasks.execResult.gradle"
+            },
+            {
+              "match": "\\bexecutable\\b",
+              "name": "support.function.tasks.executable.gradle"
+            },
+            {
+              "match": "\\bignoreExitValue\\b",
+              "name": "support.function.tasks.ignoreExitValue.gradle"
+            },
+            {
+              "match": "\\bstandardInput\\b",
+              "name": "support.function.tasks.standardInput.gradle"
+            },
+            {
+              "match": "\\bstandardOutput\\b",
+              "name": "support.function.tasks.standardOutput.gradle"
+            },
+            {
+              "match": "\\bworkingDir\\b",
+              "name": "support.function.tasks.workingDir.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(FindBugs)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.FindBugs.gradle"
+            }
+          },
+          "contentName": "tasks.body.FindBugs.source.gradle",
+          "end": "}",
+          "name": "FindBugs.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bclasses\\b",
+              "name": "support.function.tasks.classes.gradle"
+            },
+            {
+              "match": "\\bclasspath\\b",
+              "name": "support.function.tasks.classpath.gradle"
+            },
+            {
+              "match": "\\beffort\\b",
+              "name": "support.function.tasks.effort.gradle"
+            },
+            {
+              "match": "\\bexcludeFilter\\b",
+              "name": "support.function.tasks.excludeFilter.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bfindbugsClasspath\\b",
+              "name": "support.function.tasks.findbugsClasspath.gradle"
+            },
+            {
+              "match": "\\bignoreFailures\\b",
+              "name": "support.function.tasks.ignoreFailures.gradle"
+            },
+            {
+              "match": "\\bincludeFilter\\b",
+              "name": "support.function.tasks.includeFilter.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\bmaxHeapSize\\b",
+              "name": "support.function.tasks.maxHeapSize.gradle"
+            },
+            {
+              "match": "\\bomitVisitors\\b",
+              "name": "support.function.tasks.omitVisitors.gradle"
+            },
+            {
+              "match": "\\bpluginClasspath\\b",
+              "name": "support.function.tasks.pluginClasspath.gradle"
+            },
+            {
+              "match": "\\breportLevel\\b",
+              "name": "support.function.tasks.reportLevel.gradle"
+            },
+            {
+              "match": "\\breports\\b",
+              "name": "support.function.tasks.reports.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\bvisitors\\b",
+              "name": "support.function.tasks.visitors.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(GenerateIvyDescriptor)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.GenerateIvyDescriptor.gradle"
+            }
+          },
+          "contentName": "tasks.body.GenerateIvyDescriptor.source.gradle",
+          "end": "}",
+          "name": "GenerateIvyDescriptor.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bdescriptor\\b",
+              "name": "support.function.tasks.descriptor.gradle"
+            },
+            {
+              "match": "\\bdestination\\b",
+              "name": "support.function.tasks.destination.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(GenerateMavenPom)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.GenerateMavenPom.gradle"
+            }
+          },
+          "contentName": "tasks.body.GenerateMavenPom.source.gradle",
+          "end": "}",
+          "name": "GenerateMavenPom.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bdestination\\b",
+              "name": "support.function.tasks.destination.gradle"
+            },
+            {
+              "match": "\\bpom\\b",
+              "name": "support.function.tasks.pom.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(GenerateBuildDashboard)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.GenerateBuildDashboard.gradle"
+            }
+          },
+          "contentName": "tasks.body.GenerateBuildDashboard.source.gradle",
+          "end": "}",
+          "name": "GenerateBuildDashboard.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\breports\\b",
+              "name": "support.function.tasks.reports.gradle"
+            },
+            {
+              "match": "\\baggregate\\b",
+              "name": "support.function.tasks.aggregate.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(GradleBuild)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.GradleBuild.gradle"
+            }
+          },
+          "contentName": "tasks.body.GradleBuild.source.gradle",
+          "end": "}",
+          "name": "GradleBuild.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bbuildFile\\b",
+              "name": "support.function.tasks.buildFile.gradle"
+            },
+            {
+              "match": "\\bdir\\b",
+              "name": "support.function.tasks.dir.gradle"
+            },
+            {
+              "match": "\\bstartParameter\\b",
+              "name": "support.function.tasks.startParameter.gradle"
+            },
+            {
+              "match": "\\btasks\\b",
+              "name": "support.function.tasks.tasks.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(GroovyCompile)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.GroovyCompile.gradle"
+            }
+          },
+          "contentName": "tasks.body.GroovyCompile.source.gradle",
+          "end": "}",
+          "name": "GroovyCompile.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bclasspath\\b",
+              "name": "support.function.tasks.classpath.gradle"
+            },
+            {
+              "match": "\\bdestinationDir\\b",
+              "name": "support.function.tasks.destinationDir.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bgroovyClasspath\\b",
+              "name": "support.function.tasks.groovyClasspath.gradle"
+            },
+            {
+              "match": "\\bgroovyOptions\\b",
+              "name": "support.function.tasks.groovyOptions.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\boptions\\b",
+              "name": "support.function.tasks.options.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\bsourceCompatibility\\b",
+              "name": "support.function.tasks.sourceCompatibility.gradle"
+            },
+            {
+              "match": "\\btargetCompatibility\\b",
+              "name": "support.function.tasks.targetCompatibility.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Groovydoc)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Groovydoc.gradle"
+            }
+          },
+          "contentName": "tasks.body.Groovydoc.source.gradle",
+          "end": "}",
+          "name": "Groovydoc.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bclasspath\\b",
+              "name": "support.function.tasks.classpath.gradle"
+            },
+            {
+              "match": "\\bdestinationDir\\b",
+              "name": "support.function.tasks.destinationDir.gradle"
+            },
+            {
+              "match": "\\bdocTitle\\b",
+              "name": "support.function.tasks.docTitle.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bfooter\\b",
+              "name": "support.function.tasks.footer.gradle"
+            },
+            {
+              "match": "\\bgroovyClasspath\\b",
+              "name": "support.function.tasks.groovyClasspath.gradle"
+            },
+            {
+              "match": "\\bheader\\b",
+              "name": "support.function.tasks.header.gradle"
+            },
+            {
+              "match": "\\bincludePrivate\\b",
+              "name": "support.function.tasks.includePrivate.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\blinks\\b",
+              "name": "support.function.tasks.links.gradle"
+            },
+            {
+              "match": "\\boverview\\b",
+              "name": "support.function.tasks.overview.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\buse\\b",
+              "name": "support.function.tasks.use.gradle"
+            },
+            {
+              "match": "\\bwindowTitle\\b",
+              "name": "support.function.tasks.windowTitle.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "match": "\\blink\\b",
+              "name": "support.function.tasks.link.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(HtmlDependencyReportTask)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.HtmlDependencyReportTask.gradle"
+            }
+          },
+          "contentName": "tasks.body.HtmlDependencyReportTask.source.gradle",
+          "end": "}",
+          "name": "HtmlDependencyReportTask.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bprojects\\b",
+              "name": "support.function.tasks.projects.gradle"
+            },
+            {
+              "match": "\\breports\\b",
+              "name": "support.function.tasks.reports.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Jar)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Jar.gradle"
+            }
+          },
+          "contentName": "tasks.body.Jar.source.gradle",
+          "end": "}",
+          "name": "Jar.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bappendix\\b",
+              "name": "support.function.tasks.appendix.gradle"
+            },
+            {
+              "match": "\\barchiveName\\b",
+              "name": "support.function.tasks.archiveName.gradle"
+            },
+            {
+              "match": "\\barchivePath\\b",
+              "name": "support.function.tasks.archivePath.gradle"
+            },
+            {
+              "match": "\\bbaseName\\b",
+              "name": "support.function.tasks.baseName.gradle"
+            },
+            {
+              "match": "\\bcaseSensitive\\b",
+              "name": "support.function.tasks.caseSensitive.gradle"
+            },
+            {
+              "match": "\\bclassifier\\b",
+              "name": "support.function.tasks.classifier.gradle"
+            },
+            {
+              "match": "\\bdestinationDir\\b",
+              "name": "support.function.tasks.destinationDir.gradle"
+            },
+            {
+              "match": "\\bdirMode\\b",
+              "name": "support.function.tasks.dirMode.gradle"
+            },
+            {
+              "match": "\\bduplicatesStrategy\\b",
+              "name": "support.function.tasks.duplicatesStrategy.gradle"
+            },
+            {
+              "match": "\\bentryCompression\\b",
+              "name": "support.function.tasks.entryCompression.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bextension\\b",
+              "name": "support.function.tasks.extension.gradle"
+            },
+            {
+              "match": "\\bfileMode\\b",
+              "name": "support.function.tasks.fileMode.gradle"
+            },
+            {
+              "match": "\\bincludeEmptyDirs\\b",
+              "name": "support.function.tasks.includeEmptyDirs.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\bmanifest\\b",
+              "name": "support.function.tasks.manifest.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\bversion\\b",
+              "name": "support.function.tasks.version.gradle"
+            },
+            {
+              "match": "\\beachFile\\b",
+              "name": "support.function.tasks.eachFile.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\bexpand\\b",
+              "name": "support.function.tasks.expand.gradle"
+            },
+            {
+              "match": "\\bfilesMatching\\b",
+              "name": "support.function.tasks.filesMatching.gradle"
+            },
+            {
+              "match": "\\bfilesNotMatching\\b",
+              "name": "support.function.tasks.filesNotMatching.gradle"
+            },
+            {
+              "match": "\\bfilter\\b",
+              "name": "support.function.tasks.filter.gradle"
+            },
+            {
+              "match": "\\bfrom\\b",
+              "name": "support.function.tasks.from.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "match": "\\binto\\b",
+              "name": "support.function.tasks.into.gradle"
+            },
+            {
+              "match": "\\bmetaInf\\b",
+              "name": "support.function.tasks.metaInf.gradle"
+            },
+            {
+              "match": "\\brename\\b",
+              "name": "support.function.tasks.rename.gradle"
+            },
+            {
+              "match": "\\bwith\\b",
+              "name": "support.function.tasks.with.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(JavaCompile)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.JavaCompile.gradle"
+            }
+          },
+          "contentName": "tasks.body.JavaCompile.source.gradle",
+          "end": "}",
+          "name": "JavaCompile.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bclasspath\\b",
+              "name": "support.function.tasks.classpath.gradle"
+            },
+            {
+              "match": "\\bdestinationDir\\b",
+              "name": "support.function.tasks.destinationDir.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\boptions\\b",
+              "name": "support.function.tasks.options.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\bsourceCompatibility\\b",
+              "name": "support.function.tasks.sourceCompatibility.gradle"
+            },
+            {
+              "match": "\\btargetCompatibility\\b",
+              "name": "support.function.tasks.targetCompatibility.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Javadoc)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Javadoc.gradle"
+            }
+          },
+          "contentName": "tasks.body.Javadoc.source.gradle",
+          "end": "}",
+          "name": "Javadoc.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bclasspath\\b",
+              "name": "support.function.tasks.classpath.gradle"
+            },
+            {
+              "match": "\\bdestinationDir\\b",
+              "name": "support.function.tasks.destinationDir.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bexecutable\\b",
+              "name": "support.function.tasks.executable.gradle"
+            },
+            {
+              "match": "\\bfailOnError\\b",
+              "name": "support.function.tasks.failOnError.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\bmaxMemory\\b",
+              "name": "support.function.tasks.maxMemory.gradle"
+            },
+            {
+              "match": "\\boptions\\b",
+              "name": "support.function.tasks.options.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\btitle\\b",
+              "name": "support.function.tasks.title.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(JavaExec)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.JavaExec.gradle"
+            }
+          },
+          "contentName": "tasks.body.JavaExec.source.gradle",
+          "end": "}",
+          "name": "JavaExec.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\ballJvmArgs\\b",
+              "name": "support.function.tasks.allJvmArgs.gradle"
+            },
+            {
+              "match": "\\bargs\\b",
+              "name": "support.function.tasks.args.gradle"
+            },
+            {
+              "match": "\\bbootstrapClasspath\\b",
+              "name": "support.function.tasks.bootstrapClasspath.gradle"
+            },
+            {
+              "match": "\\bclasspath\\b",
+              "name": "support.function.tasks.classpath.gradle"
+            },
+            {
+              "match": "\\bcommandLine\\b",
+              "name": "support.function.tasks.commandLine.gradle"
+            },
+            {
+              "match": "\\bdebug\\b",
+              "name": "support.function.tasks.debug.gradle"
+            },
+            {
+              "match": "\\benableAssertions\\b",
+              "name": "support.function.tasks.enableAssertions.gradle"
+            },
+            {
+              "match": "\\benvironment\\b",
+              "name": "support.function.tasks.environment.gradle"
+            },
+            {
+              "match": "\\berrorOutput\\b",
+              "name": "support.function.tasks.errorOutput.gradle"
+            },
+            {
+              "match": "\\bexecutable\\b",
+              "name": "support.function.tasks.executable.gradle"
+            },
+            {
+              "match": "\\bignoreExitValue\\b",
+              "name": "support.function.tasks.ignoreExitValue.gradle"
+            },
+            {
+              "match": "\\bjvmArgs\\b",
+              "name": "support.function.tasks.jvmArgs.gradle"
+            },
+            {
+              "match": "\\bmain\\b",
+              "name": "support.function.tasks.main.gradle"
+            },
+            {
+              "match": "\\bmaxHeapSize\\b",
+              "name": "support.function.tasks.maxHeapSize.gradle"
+            },
+            {
+              "match": "\\bstandardInput\\b",
+              "name": "support.function.tasks.standardInput.gradle"
+            },
+            {
+              "match": "\\bstandardOutput\\b",
+              "name": "support.function.tasks.standardOutput.gradle"
+            },
+            {
+              "match": "\\bsystemProperties\\b",
+              "name": "support.function.tasks.systemProperties.gradle"
+            },
+            {
+              "match": "\\bworkingDir\\b",
+              "name": "support.function.tasks.workingDir.gradle"
+            },
+            {
+              "match": "\\bcopyTo\\b",
+              "name": "support.function.tasks.copyTo.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(JDepend)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.JDepend.gradle"
+            }
+          },
+          "contentName": "tasks.body.JDepend.source.gradle",
+          "end": "}",
+          "name": "JDepend.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bclassesDir\\b",
+              "name": "support.function.tasks.classesDir.gradle"
+            },
+            {
+              "match": "\\bjdependClasspath\\b",
+              "name": "support.function.tasks.jdependClasspath.gradle"
+            },
+            {
+              "match": "\\breports\\b",
+              "name": "support.function.tasks.reports.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(JettyRun)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.JettyRun.gradle"
+            }
+          },
+          "contentName": "tasks.body.JettyRun.source.gradle",
+          "end": "}",
+          "name": "JettyRun.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\badditionalRuntimeJars\\b",
+              "name": "support.function.tasks.additionalRuntimeJars.gradle"
+            },
+            {
+              "match": "\\bclasspath\\b",
+              "name": "support.function.tasks.classpath.gradle"
+            },
+            {
+              "match": "\\bcontextPath\\b",
+              "name": "support.function.tasks.contextPath.gradle"
+            },
+            {
+              "match": "\\bdaemon\\b",
+              "name": "support.function.tasks.daemon.gradle"
+            },
+            {
+              "match": "\\bhttpPort\\b",
+              "name": "support.function.tasks.httpPort.gradle"
+            },
+            {
+              "match": "\\bjettyConfig\\b",
+              "name": "support.function.tasks.jettyConfig.gradle"
+            },
+            {
+              "match": "\\breload\\b",
+              "name": "support.function.tasks.reload.gradle"
+            },
+            {
+              "match": "\\bscanIntervalSeconds\\b",
+              "name": "support.function.tasks.scanIntervalSeconds.gradle"
+            },
+            {
+              "match": "\\bstopKey\\b",
+              "name": "support.function.tasks.stopKey.gradle"
+            },
+            {
+              "match": "\\bstopPort\\b",
+              "name": "support.function.tasks.stopPort.gradle"
+            },
+            {
+              "match": "\\bwebAppSourceDirectory\\b",
+              "name": "support.function.tasks.webAppSourceDirectory.gradle"
+            },
+            {
+              "match": "\\bwebXml\\b",
+              "name": "support.function.tasks.webXml.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(JettyRunWar)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.JettyRunWar.gradle"
+            }
+          },
+          "contentName": "tasks.body.JettyRunWar.source.gradle",
+          "end": "}",
+          "name": "JettyRunWar.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\badditionalRuntimeJars\\b",
+              "name": "support.function.tasks.additionalRuntimeJars.gradle"
+            },
+            {
+              "match": "\\bcontextPath\\b",
+              "name": "support.function.tasks.contextPath.gradle"
+            },
+            {
+              "match": "\\bdaemon\\b",
+              "name": "support.function.tasks.daemon.gradle"
+            },
+            {
+              "match": "\\bhttpPort\\b",
+              "name": "support.function.tasks.httpPort.gradle"
+            },
+            {
+              "match": "\\bjettyConfig\\b",
+              "name": "support.function.tasks.jettyConfig.gradle"
+            },
+            {
+              "match": "\\breload\\b",
+              "name": "support.function.tasks.reload.gradle"
+            },
+            {
+              "match": "\\bscanIntervalSeconds\\b",
+              "name": "support.function.tasks.scanIntervalSeconds.gradle"
+            },
+            {
+              "match": "\\bstopKey\\b",
+              "name": "support.function.tasks.stopKey.gradle"
+            },
+            {
+              "match": "\\bstopPort\\b",
+              "name": "support.function.tasks.stopPort.gradle"
+            },
+            {
+              "match": "\\bwebApp\\b",
+              "name": "support.function.tasks.webApp.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(JettyStop)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.JettyStop.gradle"
+            }
+          },
+          "contentName": "tasks.body.JettyStop.source.gradle",
+          "end": "}",
+          "name": "JettyStop.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bstopKey\\b",
+              "name": "support.function.tasks.stopKey.gradle"
+            },
+            {
+              "match": "\\bstopPort\\b",
+              "name": "support.function.tasks.stopPort.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Pmd)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Pmd.gradle"
+            }
+          },
+          "contentName": "tasks.body.Pmd.source.gradle",
+          "end": "}",
+          "name": "Pmd.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bignoreFailures\\b",
+              "name": "support.function.tasks.ignoreFailures.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\bpmdClasspath\\b",
+              "name": "support.function.tasks.pmdClasspath.gradle"
+            },
+            {
+              "match": "\\breports\\b",
+              "name": "support.function.tasks.reports.gradle"
+            },
+            {
+              "match": "\\bruleSetFiles\\b",
+              "name": "support.function.tasks.ruleSetFiles.gradle"
+            },
+            {
+              "match": "\\bruleSets\\b",
+              "name": "support.function.tasks.ruleSets.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\btargetJdk\\b",
+              "name": "support.function.tasks.targetJdk.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(PublishToIvyRepository)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.PublishToIvyRepository.gradle"
+            }
+          },
+          "contentName": "tasks.body.PublishToIvyRepository.source.gradle",
+          "end": "}",
+          "name": "PublishToIvyRepository.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bpublication\\b",
+              "name": "support.function.tasks.publication.gradle"
+            },
+            {
+              "match": "\\brepository\\b",
+              "name": "support.function.tasks.repository.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(PublishToMavenRepository)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.PublishToMavenRepository.gradle"
+            }
+          },
+          "contentName": "tasks.body.PublishToMavenRepository.source.gradle",
+          "end": "}",
+          "name": "PublishToMavenRepository.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bpublication\\b",
+              "name": "support.function.tasks.publication.gradle"
+            },
+            {
+              "match": "\\brepository\\b",
+              "name": "support.function.tasks.repository.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(ScalaCompile)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.ScalaCompile.gradle"
+            }
+          },
+          "contentName": "tasks.body.ScalaCompile.source.gradle",
+          "end": "}",
+          "name": "ScalaCompile.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bclasspath\\b",
+              "name": "support.function.tasks.classpath.gradle"
+            },
+            {
+              "match": "\\bdestinationDir\\b",
+              "name": "support.function.tasks.destinationDir.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\boptions\\b",
+              "name": "support.function.tasks.options.gradle"
+            },
+            {
+              "match": "\\bscalaClasspath\\b",
+              "name": "support.function.tasks.scalaClasspath.gradle"
+            },
+            {
+              "match": "\\bscalaCompileOptions\\b",
+              "name": "support.function.tasks.scalaCompileOptions.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\bsourceCompatibility\\b",
+              "name": "support.function.tasks.sourceCompatibility.gradle"
+            },
+            {
+              "match": "\\btargetCompatibility\\b",
+              "name": "support.function.tasks.targetCompatibility.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(ScalaDoc)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.ScalaDoc.gradle"
+            }
+          },
+          "contentName": "tasks.body.ScalaDoc.source.gradle",
+          "end": "}",
+          "name": "ScalaDoc.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bclasspath\\b",
+              "name": "support.function.tasks.classpath.gradle"
+            },
+            {
+              "match": "\\bdestinationDir\\b",
+              "name": "support.function.tasks.destinationDir.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\bscalaClasspath\\b",
+              "name": "support.function.tasks.scalaClasspath.gradle"
+            },
+            {
+              "match": "\\bscalaDocOptions\\b",
+              "name": "support.function.tasks.scalaDocOptions.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\btitle\\b",
+              "name": "support.function.tasks.title.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(SonarAnalyze)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.SonarAnalyze.gradle"
+            }
+          },
+          "contentName": "tasks.body.SonarAnalyze.source.gradle",
+          "end": "}",
+          "name": "SonarAnalyze.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\brootModel\\b",
+              "name": "support.function.tasks.rootModel.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Sync)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Sync.gradle"
+            }
+          },
+          "contentName": "tasks.body.Sync.source.gradle",
+          "end": "}",
+          "name": "Sync.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bcaseSensitive\\b",
+              "name": "support.function.tasks.caseSensitive.gradle"
+            },
+            {
+              "match": "\\bdestinationDir\\b",
+              "name": "support.function.tasks.destinationDir.gradle"
+            },
+            {
+              "match": "\\bdirMode\\b",
+              "name": "support.function.tasks.dirMode.gradle"
+            },
+            {
+              "match": "\\bduplicatesStrategy\\b",
+              "name": "support.function.tasks.duplicatesStrategy.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bfileMode\\b",
+              "name": "support.function.tasks.fileMode.gradle"
+            },
+            {
+              "match": "\\bincludeEmptyDirs\\b",
+              "name": "support.function.tasks.includeEmptyDirs.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\beachFile\\b",
+              "name": "support.function.tasks.eachFile.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\bexpand\\b",
+              "name": "support.function.tasks.expand.gradle"
+            },
+            {
+              "match": "\\bfilesMatching\\b",
+              "name": "support.function.tasks.filesMatching.gradle"
+            },
+            {
+              "match": "\\bfilesNotMatching\\b",
+              "name": "support.function.tasks.filesNotMatching.gradle"
+            },
+            {
+              "match": "\\bfilter\\b",
+              "name": "support.function.tasks.filter.gradle"
+            },
+            {
+              "match": "\\bfrom\\b",
+              "name": "support.function.tasks.from.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "match": "\\binto\\b",
+              "name": "support.function.tasks.into.gradle"
+            },
+            {
+              "match": "\\brename\\b",
+              "name": "support.function.tasks.rename.gradle"
+            },
+            {
+              "match": "\\bwith\\b",
+              "name": "support.function.tasks.with.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Tar)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Tar.gradle"
+            }
+          },
+          "contentName": "tasks.body.Tar.source.gradle",
+          "end": "}",
+          "name": "Tar.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bappendix\\b",
+              "name": "support.function.tasks.appendix.gradle"
+            },
+            {
+              "match": "\\barchiveName\\b",
+              "name": "support.function.tasks.archiveName.gradle"
+            },
+            {
+              "match": "\\barchivePath\\b",
+              "name": "support.function.tasks.archivePath.gradle"
+            },
+            {
+              "match": "\\bbaseName\\b",
+              "name": "support.function.tasks.baseName.gradle"
+            },
+            {
+              "match": "\\bcaseSensitive\\b",
+              "name": "support.function.tasks.caseSensitive.gradle"
+            },
+            {
+              "match": "\\bclassifier\\b",
+              "name": "support.function.tasks.classifier.gradle"
+            },
+            {
+              "match": "\\bcompression\\b",
+              "name": "support.function.tasks.compression.gradle"
+            },
+            {
+              "match": "\\bdestinationDir\\b",
+              "name": "support.function.tasks.destinationDir.gradle"
+            },
+            {
+              "match": "\\bdirMode\\b",
+              "name": "support.function.tasks.dirMode.gradle"
+            },
+            {
+              "match": "\\bduplicatesStrategy\\b",
+              "name": "support.function.tasks.duplicatesStrategy.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bextension\\b",
+              "name": "support.function.tasks.extension.gradle"
+            },
+            {
+              "match": "\\bfileMode\\b",
+              "name": "support.function.tasks.fileMode.gradle"
+            },
+            {
+              "match": "\\bincludeEmptyDirs\\b",
+              "name": "support.function.tasks.includeEmptyDirs.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\bversion\\b",
+              "name": "support.function.tasks.version.gradle"
+            },
+            {
+              "match": "\\beachFile\\b",
+              "name": "support.function.tasks.eachFile.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\bexpand\\b",
+              "name": "support.function.tasks.expand.gradle"
+            },
+            {
+              "match": "\\bfilesMatching\\b",
+              "name": "support.function.tasks.filesMatching.gradle"
+            },
+            {
+              "match": "\\bfilesNotMatching\\b",
+              "name": "support.function.tasks.filesNotMatching.gradle"
+            },
+            {
+              "match": "\\bfilter\\b",
+              "name": "support.function.tasks.filter.gradle"
+            },
+            {
+              "match": "\\bfrom\\b",
+              "name": "support.function.tasks.from.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "match": "\\binto\\b",
+              "name": "support.function.tasks.into.gradle"
+            },
+            {
+              "match": "\\brename\\b",
+              "name": "support.function.tasks.rename.gradle"
+            },
+            {
+              "match": "\\bwith\\b",
+              "name": "support.function.tasks.with.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Test)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Test.gradle"
+            }
+          },
+          "contentName": "tasks.body.Test.source.gradle",
+          "end": "}",
+          "name": "Test.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\ballJvmArgs\\b",
+              "name": "support.function.tasks.allJvmArgs.gradle"
+            },
+            {
+              "match": "\\bbinResultsDir\\b",
+              "name": "support.function.tasks.binResultsDir.gradle"
+            },
+            {
+              "match": "\\bbootstrapClasspath\\b",
+              "name": "support.function.tasks.bootstrapClasspath.gradle"
+            },
+            {
+              "match": "\\bclasspath\\b",
+              "name": "support.function.tasks.classpath.gradle"
+            },
+            {
+              "match": "\\bdebug\\b",
+              "name": "support.function.tasks.debug.gradle"
+            },
+            {
+              "match": "\\benableAssertions\\b",
+              "name": "support.function.tasks.enableAssertions.gradle"
+            },
+            {
+              "match": "\\benvironment\\b",
+              "name": "support.function.tasks.environment.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bexecutable\\b",
+              "name": "support.function.tasks.executable.gradle"
+            },
+            {
+              "match": "\\bforkEvery\\b",
+              "name": "support.function.tasks.forkEvery.gradle"
+            },
+            {
+              "match": "\\bignoreFailures\\b",
+              "name": "support.function.tasks.ignoreFailures.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\bjvmArgs\\b",
+              "name": "support.function.tasks.jvmArgs.gradle"
+            },
+            {
+              "match": "\\bmaxHeapSize\\b",
+              "name": "support.function.tasks.maxHeapSize.gradle"
+            },
+            {
+              "match": "\\bmaxParallelForks\\b",
+              "name": "support.function.tasks.maxParallelForks.gradle"
+            },
+            {
+              "match": "\\bminHeapSize\\b",
+              "name": "support.function.tasks.minHeapSize.gradle"
+            },
+            {
+              "match": "\\boptions\\b",
+              "name": "support.function.tasks.options.gradle"
+            },
+            {
+              "match": "\\breports\\b",
+              "name": "support.function.tasks.reports.gradle"
+            },
+            {
+              "match": "\\bscanForTestClasses\\b",
+              "name": "support.function.tasks.scanForTestClasses.gradle"
+            },
+            {
+              "match": "\\bsystemProperties\\b",
+              "name": "support.function.tasks.systemProperties.gradle"
+            },
+            {
+              "match": "\\btestClassesDir\\b",
+              "name": "support.function.tasks.testClassesDir.gradle"
+            },
+            {
+              "match": "\\btestLogging\\b",
+              "name": "support.function.tasks.testLogging.gradle"
+            },
+            {
+              "match": "\\btestReport\\b",
+              "name": "support.function.tasks.testReport.gradle"
+            },
+            {
+              "match": "\\btestReportDir\\b",
+              "name": "support.function.tasks.testReportDir.gradle"
+            },
+            {
+              "match": "\\btestResultsDir\\b",
+              "name": "support.function.tasks.testResultsDir.gradle"
+            },
+            {
+              "match": "\\btestSrcDirs\\b",
+              "name": "support.function.tasks.testSrcDirs.gradle"
+            },
+            {
+              "match": "\\bworkingDir\\b",
+              "name": "support.function.tasks.workingDir.gradle"
+            },
+            {
+              "match": "\\bjacoco\\b",
+              "name": "support.function.tasks.jacoco.gradle"
+            },
+            {
+              "match": "\\baddTestListener\\b",
+              "name": "support.function.tasks.addTestListener.gradle"
+            },
+            {
+              "match": "\\baddTestOutputListener\\b",
+              "name": "support.function.tasks.addTestOutputListener.gradle"
+            },
+            {
+              "match": "\\bafterSuite\\b",
+              "name": "support.function.tasks.afterSuite.gradle"
+            },
+            {
+              "match": "\\bafterTest\\b",
+              "name": "support.function.tasks.afterTest.gradle"
+            },
+            {
+              "match": "\\bbeforeSuite\\b",
+              "name": "support.function.tasks.beforeSuite.gradle"
+            },
+            {
+              "match": "\\bbeforeTest\\b",
+              "name": "support.function.tasks.beforeTest.gradle"
+            },
+            {
+              "match": "\\bcopyTo\\b",
+              "name": "support.function.tasks.copyTo.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "match": "\\bonOutput\\b",
+              "name": "support.function.tasks.onOutput.gradle"
+            },
+            {
+              "match": "\\bremoveTestListener\\b",
+              "name": "support.function.tasks.removeTestListener.gradle"
+            },
+            {
+              "match": "\\bremoveTestOutputListener\\b",
+              "name": "support.function.tasks.removeTestOutputListener.gradle"
+            },
+            {
+              "match": "\\buseJUnit\\b",
+              "name": "support.function.tasks.useJUnit.gradle"
+            },
+            {
+              "match": "\\buseTestNG\\b",
+              "name": "support.function.tasks.useTestNG.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(TestReport)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.TestReport.gradle"
+            }
+          },
+          "contentName": "tasks.body.TestReport.source.gradle",
+          "end": "}",
+          "name": "TestReport.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bdestinationDir\\b",
+              "name": "support.function.tasks.destinationDir.gradle"
+            },
+            {
+              "match": "\\btestResultDirs\\b",
+              "name": "support.function.tasks.testResultDirs.gradle"
+            },
+            {
+              "match": "\\breportOn\\b",
+              "name": "support.function.tasks.reportOn.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Upload)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Upload.gradle"
+            }
+          },
+          "contentName": "tasks.body.Upload.source.gradle",
+          "end": "}",
+          "name": "Upload.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bartifacts\\b",
+              "name": "support.function.tasks.artifacts.gradle"
+            },
+            {
+              "match": "\\bconfiguration\\b",
+              "name": "support.function.tasks.configuration.gradle"
+            },
+            {
+              "match": "\\brepositories\\b",
+              "name": "support.function.tasks.repositories.gradle"
+            },
+            {
+              "match": "\\buploadDescriptor\\b",
+              "name": "support.function.tasks.uploadDescriptor.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(War)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.War.gradle"
+            }
+          },
+          "contentName": "tasks.body.War.source.gradle",
+          "end": "}",
+          "name": "War.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bappendix\\b",
+              "name": "support.function.tasks.appendix.gradle"
+            },
+            {
+              "match": "\\barchiveName\\b",
+              "name": "support.function.tasks.archiveName.gradle"
+            },
+            {
+              "match": "\\barchivePath\\b",
+              "name": "support.function.tasks.archivePath.gradle"
+            },
+            {
+              "match": "\\bbaseName\\b",
+              "name": "support.function.tasks.baseName.gradle"
+            },
+            {
+              "match": "\\bcaseSensitive\\b",
+              "name": "support.function.tasks.caseSensitive.gradle"
+            },
+            {
+              "match": "\\bclassifier\\b",
+              "name": "support.function.tasks.classifier.gradle"
+            },
+            {
+              "match": "\\bclasspath\\b",
+              "name": "support.function.tasks.classpath.gradle"
+            },
+            {
+              "match": "\\bdestinationDir\\b",
+              "name": "support.function.tasks.destinationDir.gradle"
+            },
+            {
+              "match": "\\bdirMode\\b",
+              "name": "support.function.tasks.dirMode.gradle"
+            },
+            {
+              "match": "\\bduplicatesStrategy\\b",
+              "name": "support.function.tasks.duplicatesStrategy.gradle"
+            },
+            {
+              "match": "\\bentryCompression\\b",
+              "name": "support.function.tasks.entryCompression.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bextension\\b",
+              "name": "support.function.tasks.extension.gradle"
+            },
+            {
+              "match": "\\bfileMode\\b",
+              "name": "support.function.tasks.fileMode.gradle"
+            },
+            {
+              "match": "\\bincludeEmptyDirs\\b",
+              "name": "support.function.tasks.includeEmptyDirs.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\bmanifest\\b",
+              "name": "support.function.tasks.manifest.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\bversion\\b",
+              "name": "support.function.tasks.version.gradle"
+            },
+            {
+              "match": "\\bwebXml\\b",
+              "name": "support.function.tasks.webXml.gradle"
+            },
+            {
+              "match": "\\beachFile\\b",
+              "name": "support.function.tasks.eachFile.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\bexpand\\b",
+              "name": "support.function.tasks.expand.gradle"
+            },
+            {
+              "match": "\\bfilesMatching\\b",
+              "name": "support.function.tasks.filesMatching.gradle"
+            },
+            {
+              "match": "\\bfilesNotMatching\\b",
+              "name": "support.function.tasks.filesNotMatching.gradle"
+            },
+            {
+              "match": "\\bfilter\\b",
+              "name": "support.function.tasks.filter.gradle"
+            },
+            {
+              "match": "\\bfrom\\b",
+              "name": "support.function.tasks.from.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "match": "\\binto\\b",
+              "name": "support.function.tasks.into.gradle"
+            },
+            {
+              "match": "\\bmetaInf\\b",
+              "name": "support.function.tasks.metaInf.gradle"
+            },
+            {
+              "match": "\\brename\\b",
+              "name": "support.function.tasks.rename.gradle"
+            },
+            {
+              "match": "\\bwebInf\\b",
+              "name": "support.function.tasks.webInf.gradle"
+            },
+            {
+              "match": "\\bwith\\b",
+              "name": "support.function.tasks.with.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Wrapper)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Wrapper.gradle"
+            }
+          },
+          "contentName": "tasks.body.Wrapper.source.gradle",
+          "end": "}",
+          "name": "Wrapper.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\barchiveBase\\b",
+              "name": "support.function.tasks.archiveBase.gradle"
+            },
+            {
+              "match": "\\barchivePath\\b",
+              "name": "support.function.tasks.archivePath.gradle"
+            },
+            {
+              "match": "\\bdistributionBase\\b",
+              "name": "support.function.tasks.distributionBase.gradle"
+            },
+            {
+              "match": "\\bdistributionPath\\b",
+              "name": "support.function.tasks.distributionPath.gradle"
+            },
+            {
+              "match": "\\bdistributionUrl\\b",
+              "name": "support.function.tasks.distributionUrl.gradle"
+            },
+            {
+              "match": "\\bgradleVersion\\b",
+              "name": "support.function.tasks.gradleVersion.gradle"
+            },
+            {
+              "match": "\\bjarFile\\b",
+              "name": "support.function.tasks.jarFile.gradle"
+            },
+            {
+              "match": "\\bpropertiesFile\\b",
+              "name": "support.function.tasks.propertiesFile.gradle"
+            },
+            {
+              "match": "\\bscriptFile\\b",
+              "name": "support.function.tasks.scriptFile.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        },
+        {
+          "begin": "(type):\\s*(Zip)",
+          "beginCaptures": {
+            "1": {
+              "name": "support.function.task.gradle"
+            },
+            "2": {
+              "name": "variable.parameter.Zip.gradle"
+            }
+          },
+          "contentName": "tasks.body.Zip.source.gradle",
+          "end": "}",
+          "name": "Zip.task.source.gradle",
+          "patterns": [
+            {
+              "match": "\\bappendix\\b",
+              "name": "support.function.tasks.appendix.gradle"
+            },
+            {
+              "match": "\\barchiveName\\b",
+              "name": "support.function.tasks.archiveName.gradle"
+            },
+            {
+              "match": "\\barchivePath\\b",
+              "name": "support.function.tasks.archivePath.gradle"
+            },
+            {
+              "match": "\\bbaseName\\b",
+              "name": "support.function.tasks.baseName.gradle"
+            },
+            {
+              "match": "\\bcaseSensitive\\b",
+              "name": "support.function.tasks.caseSensitive.gradle"
+            },
+            {
+              "match": "\\bclassifier\\b",
+              "name": "support.function.tasks.classifier.gradle"
+            },
+            {
+              "match": "\\bdestinationDir\\b",
+              "name": "support.function.tasks.destinationDir.gradle"
+            },
+            {
+              "match": "\\bdirMode\\b",
+              "name": "support.function.tasks.dirMode.gradle"
+            },
+            {
+              "match": "\\bduplicatesStrategy\\b",
+              "name": "support.function.tasks.duplicatesStrategy.gradle"
+            },
+            {
+              "match": "\\bentryCompression\\b",
+              "name": "support.function.tasks.entryCompression.gradle"
+            },
+            {
+              "match": "\\bexcludes\\b",
+              "name": "support.function.tasks.excludes.gradle"
+            },
+            {
+              "match": "\\bextension\\b",
+              "name": "support.function.tasks.extension.gradle"
+            },
+            {
+              "match": "\\bfileMode\\b",
+              "name": "support.function.tasks.fileMode.gradle"
+            },
+            {
+              "match": "\\bincludeEmptyDirs\\b",
+              "name": "support.function.tasks.includeEmptyDirs.gradle"
+            },
+            {
+              "match": "\\bincludes\\b",
+              "name": "support.function.tasks.includes.gradle"
+            },
+            {
+              "match": "\\bsource\\b",
+              "name": "support.function.tasks.source.gradle"
+            },
+            {
+              "match": "\\bversion\\b",
+              "name": "support.function.tasks.version.gradle"
+            },
+            {
+              "match": "\\beachFile\\b",
+              "name": "support.function.tasks.eachFile.gradle"
+            },
+            {
+              "match": "\\bexclude\\b",
+              "name": "support.function.tasks.exclude.gradle"
+            },
+            {
+              "match": "\\bexpand\\b",
+              "name": "support.function.tasks.expand.gradle"
+            },
+            {
+              "match": "\\bfilesMatching\\b",
+              "name": "support.function.tasks.filesMatching.gradle"
+            },
+            {
+              "match": "\\bfilesNotMatching\\b",
+              "name": "support.function.tasks.filesNotMatching.gradle"
+            },
+            {
+              "match": "\\bfilter\\b",
+              "name": "support.function.tasks.filter.gradle"
+            },
+            {
+              "match": "\\bfrom\\b",
+              "name": "support.function.tasks.from.gradle"
+            },
+            {
+              "match": "\\binclude\\b",
+              "name": "support.function.tasks.include.gradle"
+            },
+            {
+              "match": "\\binto\\b",
+              "name": "support.function.tasks.into.gradle"
+            },
+            {
+              "match": "\\brename\\b",
+              "name": "support.function.tasks.rename.gradle"
+            },
+            {
+              "match": "\\bwith\\b",
+              "name": "support.function.tasks.with.gradle"
+            },
+            {
+              "include": "#parent-task-patterns"
+            },
+            {
+              "include": "#project-patterns"
+            },
+            {
+              "include": "source.groovy"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "scopeName": "source.gradle",
+  "uuid": "b5741d4f-485d-4bca-9a5b-6a1ec2a5a272"
+}
