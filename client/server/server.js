@@ -13,11 +13,11 @@ const advisorGeneral_1 = require("./advisorGeneral");
 const advisorTask_1 = require("./advisorTask");
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection = vscode_languageserver_1.createConnection(new vscode_languageserver_1.IPCMessageReader(process), new vscode_languageserver_1.IPCMessageWriter(process));
-// Create a simple text document manager. The text document manager
-// supports full document sync only
+// Create a simple text document manager. 
+// The text document manager supports full document sync only.
 let documents = new vscode_languageserver_1.TextDocuments();
 // Make the text document manager listen on the connection
-// for open, change and close text document events
+// for open, change and close text document events.
 documents.listen(connection);
 // After the server has started the client sends an initilize request. The server receives
 // in the passed params the rootPath of the workspace plus the client capabilites. 
@@ -139,7 +139,7 @@ connection.onDidChangeWatchedFiles((_change) => {
 // This handler provides the initial list of the completion items.
 connection.onCompletion((_textDocumentPosition) => {
     console.log();
-    // Basic infomation
+    // Basic infomation of the document and cursor's position
     let textDocument = documents.get(_textDocumentPosition.textDocument.uri);
     var fileName = path.basename(_textDocumentPosition.textDocument.uri);
     let pos = _textDocumentPosition.position;
@@ -160,7 +160,7 @@ connection.onCompletion((_textDocumentPosition) => {
         let curMethod = parser.parseClosureMethod(prefix);
         // On entity with dot, hint the entity's properties and methods
         if (doc.charAt(offset - 1) == '.') {
-            console.log("[[" + curMethod.method + "]] dot");
+            console.log("[[" + curMethod.method + "]] dot...");
             if (curMethod.method == "project") {
                 return advisorBase_1.getDelegateKeywords(fileName);
             }
@@ -199,7 +199,7 @@ connection.onCompletion((_textDocumentPosition) => {
         return [];
     let retval = [];
     if (method.method == "") {
-        console.log("=== Root keywords for current closure ===");
+        console.log("=== Root keywords ===");
         retval = advisorRoot_1.getRootKeywords(fileName, pluginConf);
     }
     else {

@@ -19,11 +19,11 @@ import {getTaskCreationOptions, getTaskTypes, getTaskKeywords} from './advisorTa
 // Create a connection for the server. The connection uses Node's IPC as a transport
 let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
 
-// Create a simple text document manager. The text document manager
-// supports full document sync only
+// Create a simple text document manager. 
+// The text document manager supports full document sync only.
 let documents: TextDocuments = new TextDocuments();
 // Make the text document manager listen on the connection
-// for open, change and close text document events
+// for open, change and close text document events.
 documents.listen(connection);
 
 // After the server has started the client sends an initilize request. The server receives
@@ -53,11 +53,11 @@ documents.onDidChangeContent((change) => {
 
 // The settings interface describe the server relevant settings part
 interface Settings {
-	settings: ExampleSettings;
+	settings: GradleServerSettings;
 }
 
 // These are the example settings we defined in the client's package.json file
-interface ExampleSettings {
+interface GradleServerSettings {
 	maxNumberOfProblems: number;
 }
 
@@ -169,7 +169,7 @@ connection.onDidChangeWatchedFiles((_change) => {
 connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
 	console.log();
 
-	// Basic infomation
+	// Basic infomation of the document and cursor's position
 	let textDocument : TextDocument = documents.get(_textDocumentPosition.textDocument.uri);
 	var fileName = path.basename(_textDocumentPosition.textDocument.uri);
 
@@ -197,8 +197,7 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 
 		// On entity with dot, hint the entity's properties and methods
 		if (doc.charAt(offset-1) == '.') {
-			console.log("[[" + curMethod.method + "]] dot");
-
+			console.log("[[" + curMethod.method + "]] dot...");
 			if (curMethod.method == "project") {
 				return getDelegateKeywords(fileName);
 			} else {
@@ -244,7 +243,7 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 		return [];
 	let retval = [];
 	if (method.method == "") {
-		console.log("=== Root keywords for current closure ===");
+		console.log("=== Root keywords ===");
 		retval = getRootKeywords(fileName, pluginConf);
 
 	} else {

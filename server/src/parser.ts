@@ -1,10 +1,9 @@
 /**
- * This parser provides methods to parse the context of a closure,
- * where it serves as the last parameter in a method.
+ * This parser provides methods to parse the context of a script block.
  * 
  * The whole line containing method before the left curly bracket
- * is recorded as a string called "methodStr" here as an intermediate output,
- * awaits for next step's parsing into interface "Method".
+ * is referred to as a string called "methodStr", here as an intermediate output
+ * awaiting for next step's parsing into interface "Method".
  * 
  * ================================================================
  * Situations that are handled:
@@ -76,13 +75,13 @@ interface Method {
 }
 
 /**
- * Get current closure's heading and content
+ * Get current script block's heading and content
  * 
  * @param doc the TextDocument that is being edited
  * @param offset the zero-based index of the cursor's position
  */
 export function getCurrentClosure(doc: string, offset: number) : Closure {
-    /* Find the opening curly bracket of current closure */
+    /* Find the opening curly bracket of current script block */
     let stack = [];
     let i = offset - 1;
     let newLine = true, inline = true;
@@ -108,7 +107,7 @@ export function getCurrentClosure(doc: string, offset: number) : Closure {
         }
     }
 
-    /* Find the heading of this closure */
+    /* Find the heading of this script block */
     let heading = "", methodStartPos = 0;
     let start = i - 1, end = i - 1;
     let inWords = false;
@@ -136,7 +135,7 @@ export function getCurrentClosure(doc: string, offset: number) : Closure {
     heading = doc.substring(start, end + 1).trim();
     methodStartPos = start - 1;
 
-    /* Find the closing curly bracket of current closure */
+    /* Find the closing curly bracket of current script block */
     stack = [];
     let j = offset;
     for (; j < doc.length; j++) {
@@ -163,9 +162,9 @@ export function getCurrentClosure(doc: string, offset: number) : Closure {
 
 
 /**
- * Parse the method info from the line before closure.
+ * Parse the method info from the line before script block's closure.
  * 
- * @param methodStr the intermediate output of closure's parsing
+ * @param methodStr the intermediate output of script block's parsing
  */
 export function parseClosureMethod(methodStr: string) : Method {
     // Initiate methodName as undefined for later condition checks
@@ -215,18 +214,6 @@ export function parseClosureMethod(methodStr: string) : Method {
             methodStr = methodStr.substring(firstEqualIdx + 1).trim();
             
         // Extract the method name before brackets
-            // let leftBracketIdx = methodStr.lastIndexOf("(");
-            // let lastDotIdx = methodStr.lastIndexOf(".");
-            
-            // if (leftBracketIdx != -1 && leftBracketIdx > lastDotIdx + 1)
-            //     methodName = methodStr.substring(0, leftBracketIdx).trim();
-            // else
-            //     methodName = methodStr.trim();
-
-            // if (lastDotIdx != -1)
-            //     methodName = methodName.substring(lastDotIdx + 1);
-            
-        // Extract the method name before brackets
         let leftBracketIdx = methodStr.indexOf("(");
         if (leftBracketIdx > 0)
             methodName = methodStr.substring(0, leftBracketIdx).trim();
@@ -266,6 +253,7 @@ export function parseClosureMethod(methodStr: string) : Method {
 }
 
 /**
+ * Parse a constructor's parameters
  * 
  * @param paramStr 
  * @param method 
@@ -303,7 +291,6 @@ function parseConstructorParams(paramStr: string, method: Method) {
         let value = inQuote ? paramStr.substring(i + 1, j - 1) : paramStr.substring(i, j);
 
         // Put to dict
-        //console.log(key + " => " + value);
         method[key] = value;
 
         // Loop
