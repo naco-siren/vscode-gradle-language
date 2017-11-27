@@ -72,27 +72,90 @@ connection.onDidChangeConfiguration((change) => {
 	documents.all().forEach(validateTextDocument);
 });
 
+
+let pluginConfs : {[uri: string]: PluginConf} = {}
 function validateTextDocument(textDocument: TextDocument): void {
-	let diagnostics: Diagnostic[] = [];
+	// Validation results
+	let scriptBlocks : {[method : string] : number[]} = {}
+	let pluginConf: PluginConf = {};
+
+	// Process the lines one by one
 	let lines = textDocument.getText().split(/\r?\n/g);
-	let problems = 0;
-	for (var i = 0; i < lines.length && problems < maxNumberOfProblems; i++) {
+	for (var i = 0; i < lines.length; i++) {
 		let line = lines[i];
-		let index = line.indexOf('typescript');
-		if (index >= 0) {
+
+		// First, check if the line is the method name of a 1-level script block
+		let isBuildScript = false;
+		if (isBuildScript == false) {	
+			if (line.charAt(0) != ' ' && line.charAt(line.length - 1) == '{') {
+				// Right trim and check if the line contains characters only
+				let line3 = line.substring(0, line.length - 1).replace(/\s+$/,"");;
+				if (/^[a-zA-Z]+$/.test(line3) == true) {
+					isBuildScript = true;
+
+					// Check if already used in the document
+					if (scriptBlocks[line3] == undefined) {
+						scriptBlocks[line3] = [i];
+					} else {
+						scriptBlocks[line3].push(i);
+					}
+				}
+			}
+		}
+
+		// On failure, collect plugins
+		if (isBuildScript == false) {	
+			let line2 = line.trim();
+
+			// Prune 'apply\s*plugin\s*:\s*'
+			let applyIdx = line2.indexOf('apply');
+			if (applyIdx < 0) continue;
+			line2 = line2.substring(applyIdx + 6);
+
+			let pluginIdx = line2.indexOf('plugin');
+			if (pluginIdx < 0) continue;
+			line2 = line2.substring(pluginIdx + 6);
+
+			let colonIdx = line2.indexOf(':');
+			if (colonIdx < 0) continue;
+
+			// Check plugin type
+			if (line2.indexOf('java') >= 0) {
+				pluginConf['java'] = true;
+			} else if (line2.indexOf('com.android.application') >= 0) {
+				pluginConf['com.android.application'] = true;
+			}
+		}
+	}
+
+	// Update current document's plugin configurations
+	pluginConfs[textDocument.uri] = pluginConf;
+
+	// Send the computed diagnostics to VSCode.
+	let diagnostics: Diagnostic[] = [];
+	let problems = 0;
+	for (let scriptBlock in scriptBlocks) {
+		if (problems >= maxNumberOfProblems) break;
+	
+		// Fetch the line indices of each script block method
+		let lineIdxs = scriptBlocks[scriptBlock];
+		if (lineIdxs.length < 2)
+			continue;
+
+		// Push them into the Diagnostics 
+		for (var i = 0; i < lineIdxs.length && problems < maxNumberOfProblems; i++) {
 			problems++;
 			diagnostics.push({
 				severity: DiagnosticSeverity.Warning,
 				range: {
-					start: { line: i, character: index },
-					end: { line: i, character: index + 10 }
+					start: { line: lineIdxs[i], character: 0 },
+					end: { line: lineIdxs[i], character: 0 + scriptBlock.length }
 				},
-				message: `${line.substr(index, 10)} should be spelled TypeScript`,
-				source: 'ex'
+				message: `\"${scriptBlock}\" has already been used in this build script.`,
+				source: 'Gradle'
 			});
 		}
 	}
-	// Send the computed diagnostics to VSCode.
 	connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
 }
 
@@ -105,49 +168,27 @@ connection.onDidChangeWatchedFiles((_change) => {
 // This handler provides the initial list of the completion items.
 connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
 	console.log();
+
+	// Basic infomation
 	let textDocument : TextDocument = documents.get(_textDocumentPosition.textDocument.uri);
 	var fileName = path.basename(_textDocumentPosition.textDocument.uri);
 
 	let pos = _textDocumentPosition.position;
 	let offset = textDocument.offsetAt(pos);
-	let doc = textDocument.getText();
 
+	let doc = textDocument.getText();
 	let lines = doc.split(/\r?\n/g);
 	let line = lines[_textDocumentPosition.position.line];
 
 	// First, collect plugins used for root closure
-	let pluginConf: PluginConf = {};
-	for (var i = 0; i < lines.length; i++) {
-		let line = lines[i];
-
-		// Prune 'apply\s*plugin\s*:\s*'
-		let applyIdx = line.indexOf('apply');
-		if (applyIdx < 0) continue;
-		line = line.substring(applyIdx + 6);
-
-		let pluginIdx = line.indexOf('plugin');
-		if (pluginIdx < 0) continue;
-		line = line.substring(pluginIdx + 6);
-
-		let colonIdx = line.indexOf(':');
-		if (colonIdx < 0) continue;
-
-		// Confirm plugin type
-		if (line.indexOf('java') >= 0)
-			pluginConf['java'] = true;
-
-		if (line.indexOf('java-library') >= 0)
-			pluginConf['java-library'] = true;
-
-		if (line.indexOf('com.android.application') >= 0)
-			pluginConf['com.android.application'] = true;
-	}
+	let pluginConf: PluginConf = pluginConfs[_textDocumentPosition.textDocument.uri];
+	console.log(pluginConf);
 
 	// Second, get current closure and parse its method
 	let closure = parser.getCurrentClosure(doc, offset);
 	let method = parser.parseClosureMethod(closure.methodStr);
 	console.log("[" + method.method + "], new line: " + (closure.newLine ? "yes" : "no"));
-	
+
 
 	// Situation 1: Found existing code in current line
 	if (closure.newLine == false) {
@@ -189,7 +230,6 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 				
 				// Return parameters for apply
 				return getDefaultKeywords(curMethod.method);
-				// return items;
 			}
 		}
 
@@ -243,13 +283,6 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 // This handler resolve additional information for the item selected in
 // the completion list.
 connection.onCompletionResolve((item: CompletionItem): CompletionItem => {
-	if (item.data === 1) {
-		item.detail = 'TypeScript details',
-			item.documentation = 'TypeScript documentation'
-	} else if (item.data === 2) {
-		item.detail = 'JavaScript details',
-			item.documentation = 'JavaScript documentation'
-	}
 	return item;
 });
 

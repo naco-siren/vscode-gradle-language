@@ -9,6 +9,8 @@
   "fileTypes": [
     "gradle"
   ],
+  "foldingStartMarker": "(\\{\\s*$|^\\s*// \\{\\{\\{)",
+  "foldingStopMarker": "^\\s*(\\}|// \\}\\}\\}$)",
   "name": "Gradle",
   "patterns": [
     {

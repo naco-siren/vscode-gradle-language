@@ -13,18 +13,13 @@ export function getKeywords(method: string, pluginConf: PluginConf) : Completion
 
     // Add Java plugin's keywords
     if (pluginConf['java']) {
-        console.log("> Plugin 'java' detected!")
+        // console.log("> Plugin 'java' detected!")
         keywords = keywords.concat(getJavaKeywords(method));
     } 
     
-    // Add Java-Library plugin's keywords
-    if (pluginConf['java-library']) {
-        console.log("> Plugin 'java-library' detected!")
-    }
-    
     // Add Android plugin's keywords
     if (pluginConf['com.android.application']) {
-        console.log("> Plugin 'com.android.application' detected!")
+        // console.log("> Plugin 'com.android.application' detected!")
         keywords = keywords.concat(getAndroidKeywords(method));
     }
 
