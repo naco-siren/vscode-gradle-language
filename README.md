@@ -1,8 +1,8 @@
 # vscode-gradle-language
-An extension to provide Gradle language support for Visual Studio Code.
+An extension to provide Gradle language support for Visual Studio Code, including advanced functionalities like __Syntax Highlighting__, __Keyword Auto-completion Proposals__ and __Duplication Validation__.
 
 ## Stucture
-The extension observes all '.gradle' documents and uses the server to provide validation and auto-completion proposals (IntelliSense).
+The extension observes all `.gradle` documents and uses the server to provide validation and auto-completion proposals (IntelliSense).
 
 The code for the extension is in the 'client' folder, which uses the 'vscode-languageclient' node module to launch the language server.
 
@@ -10,32 +10,90 @@ The language server is located in the 'server' folder.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+### Syntax Highlighting
 
-For example if there is an image subfolder under your extension project workspace:
+* The extension converts the [sublime-gradle](https://github.com/kingofmalkier/sublime-gradle)'s TextMate grammar configuration for Gradle language.
 
-\!\[feature X\]\(images/feature-x.png\)
+![feature A-1](images/feature-A-1.png)
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+### Keyword Auto-completion Proposals (IntelliSense)
+
+The extension automatically detects the Java and Android plugin used in the Gradle scripts, then propose keywords smartly in different situations depending on the position of the cursor:
+    
+* Inside a line with existing code:
+
+    * At the start of a word:
+        
+        * Particularly, after the `apply` method, propose the parameters for plugin application.
+        
+        ![feature B-1-1-1](images/feature-B-1-1-1.png)
+
+        * In a Task Container's constructor:
+
+            * At the start of a parameter, propose Task Container's constructor parameters.
+            
+            ![feature B-1-1-2-1](images/feature-B-1-1-2-1.png)
+
+            * Particularly, after the `type` parameter, propose Task's default types.
+
+            ![feature B-1-1-2-2](images/feature-B-1-1-2-2.png)
+
+        * Elsewhere, propose the Delegate Object together with its properties and methods.
+        
+        ![feature B-1-1-3](images/feature-B-1-1-3.png)
+
+    * After an entity's dot inside a line with existing code, propose the properties and methods of this entity.
+    
+    ![feature B-1-2](images/feature-B-1-2.png)
+
+
+* At the start of a new line:
+
+    * On the root level of the build script, propose the properties and methods of the current script's Delegate Object.
+    
+    ![feature B-2-1](images/feature-B-2-1.png)
+
+    * Particularly, in a `TaskContainer`, analyze the task's type and propose the properties and methods according to this type.
+    
+    ![feature B-2-2](images/feature-B-2-2.png)
+
+    * In a script block of `NamedDomainObjectContainer`, such as `BuildTypes`, `ProductFlavors`, `SigningConfigs` and `AndroidSourceSets`, __DO NOT__ override default keywords and let the user decide the name for each item.
+    
+    ![feature B-2-3](images/feature-B-2-3.png)
+
+    * In a configure closure of an item within a `NamedDomainObjectContainer`, propose the properties and methods of this container's element type.
+    
+    ![feature B-2-4](images/feature-B-2-4.png)
+
+    * In a script block of a general property or method, propose the properties and methods of this script block.
+
+    ![feature B-2-5](images/feature-B-2-5.png)
+    
+### Duplication Validation
+
+* The extension automatically validates the script under editing and warns the user about duplicated script blocks.
+
+![feature C-1](images/feature-C-1.png)
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+* Download and install [Visual Studio Code](https://code.visualstudio.com/download).
+* Download and install [Node.js](https://nodejs.org/zh-cn/download/).
+
 
 ## How to run locally
-* `npm install` to initialize the extension and the server
-* `npm run compile` to compile the extension and the server
-* open this folder in VS Code. In the Debug viewlet, run 'Launch Client' from drop-down to launch the extension and attach to the extension.
-* create a file `test.txt`, and type `typescript`. You should see a validation error.
-* to debug the server use the 'Attach to Server' launch config.
-* set breakpoints in the client or the server.
+* Pull the repo and `cd` to the root directory.
+* Run `npm install` to initialize the extension and the server
+* Run `npm run compile` to compile the extension and the server
+* Open the root folder in Visual Studio Code, then set the `Preferences -> Color Theme` to `Dark+ (default dark)`.
+* In the Debug viewlet, run `Launch Client` from drop-down menu (or press `F5`) to launch the extension and attach to the extension.
+* Create and open a file `build.gradle` and type `'app'` into it. You should see keywords proposed including `'apply'`.
+* To debug the server, use the `Attach to Server` launch config and set breakpoints in the client or the server.
 
 
 ## Extension Settings
 
 Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
 
 This extension contributes the following settings:
 
@@ -44,39 +102,11 @@ This extension contributes the following settings:
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+* Syntax highlighting cannot mark task constructor with parameters in parentheses, i.e. `task foo(type: Bar) {...}` 
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
 ### 1.0.0
 
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
------------------------------------------------------------------------------------------------------------
-
-## Working with Markdown
-
-**Note:** You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on OSX or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+CMD+V` on OSX or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux) or `Cmd+Space` (OSX) to see a list of Markdown snippets
-
-### For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
-
+Initial release.
 

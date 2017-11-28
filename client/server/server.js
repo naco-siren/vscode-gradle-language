@@ -24,6 +24,7 @@ documents.listen(connection);
 let workspaceRoot;
 connection.onInitialize((params) => {
     workspaceRoot = params.rootPath;
+    console.log(workspaceRoot);
     return {
         capabilities: {
             // Tell the client that the server works in FULL text document sync mode
@@ -208,11 +209,11 @@ connection.onCompletion((_textDocumentPosition) => {
         // Handle Task keywords based on its type
         let taskType = method['type'];
         if (method.method == 'task' && taskType != undefined) {
-            console.log("=== Keywords for type: " + taskType + " ===");
+            console.log("=== Plus keywords for type: " + taskType + " ===");
             retval = retval.concat(advisorTask_1.getTaskKeywords(taskType));
         }
     }
-    if (retval.length == 0 || retval.length != 1 || retval[0] != undefined) {
+    if (retval != undefined) {
         return retval;
     }
     // Situation 3: If method not in mapping, try parent closure's method 
@@ -223,13 +224,14 @@ connection.onCompletion((_textDocumentPosition) => {
     console.log();
     if (parentMethod.method == undefined)
         return [];
-    if (parentMethod.method != "") {
+    if (parentMethod.method != "")
         retval = advisorGeneral_1.getNestedKeywords(parentMethod.method, pluginConf);
-    }
-    if (retval.length > 0)
+    if (retval != undefined && retval.length > 0) {
         return retval;
-    else
+    }
+    else {
         return [];
+    }
 });
 // This handler resolve additional information for the item selected in
 // the completion list.

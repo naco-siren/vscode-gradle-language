@@ -9,18 +9,29 @@ const vscode_languageserver_1 = require("vscode-languageserver");
 function getKeywords(method, pluginConf) {
     // Initialize the default keywords as Script's keywords
     let keywords = [];
-    keywords = keywords.concat(getDefaultKeywords(method));
+    let defaultKeywords = getDefaultKeywords(method);
+    if (defaultKeywords != undefined)
+        keywords = defaultKeywords;
     // Add Java plugin's keywords
+    let javaKeywords = undefined;
     if (pluginConf['java']) {
         // console.log("> Plugin 'java' detected!")
-        keywords = keywords.concat(getJavaKeywords(method));
+        javaKeywords = getJavaKeywords(method);
+        if (javaKeywords != undefined)
+            keywords = keywords.concat(javaKeywords);
     }
     // Add Android plugin's keywords
+    let androidKeywords = undefined;
     if (pluginConf['com.android.application']) {
         // console.log("> Plugin 'com.android.application' detected!")
-        keywords = keywords.concat(getAndroidKeywords(method));
+        androidKeywords = getAndroidKeywords(method);
+        if (androidKeywords != undefined)
+            keywords = keywords.concat(androidKeywords);
     }
-    return keywords;
+    if (keywords.length == 0 && javaKeywords == undefined && androidKeywords == undefined)
+        return undefined;
+    else
+        return keywords;
 }
 exports.getKeywords = getKeywords;
 /**
@@ -176,7 +187,7 @@ function getDefaultKeywords(method) {
                 documentation: 'Returns the value of the given property of this task. This method locates a property as follows:'
             },
             {
-                label: 'setProperty(name, value)',
+                label: 'setProperty',
                 kind: vscode_languageserver_1.CompletionItemKind.Method,
                 documentation: 'Sets a property of this task. This method searches for a property with the given name in the following locations, and sets the property on the first location where it finds the property.'
             }
@@ -1071,11 +1082,7 @@ function getJavaKeywords(method) {
             }
         ]
     };
-    let retval = map[method];
-    if (retval == undefined)
-        return [];
-    else
-        return retval;
+    return map[method];
 }
 /**
  * Android plugin's keywords
@@ -1680,7 +1687,7 @@ function getAndroidKeywords(method) {
             }
         ],
         // Add a custom repository
-        'Repository': [
+        'repository': [
             {
                 label: 'credentials',
                 kind: vscode_languageserver_1.CompletionItemKind.Property
@@ -1976,6 +1983,8 @@ function getAndroidKeywords(method) {
         ],
         // Encapsulates all product flavors properties for this project.
         'productFlavors': [],
+        // Encapsulates signing configurations that you can apply to BuildType and ProductFlavor configurations.
+        'signingConfigs': [],
         // DSL object for configuring APK Splits options.
         'splits': [
             {

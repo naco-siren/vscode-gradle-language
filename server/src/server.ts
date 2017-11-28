@@ -31,6 +31,7 @@ documents.listen(connection);
 let workspaceRoot: string;
 connection.onInitialize((params): InitializeResult => {
 	workspaceRoot = params.rootPath;
+	console.log(workspaceRoot);
 	return {
 		capabilities: {
 			// Tell the client that the server works in FULL text document sync mode
@@ -249,15 +250,15 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	} else {
 		console.log("=== Keywords for current closure ===");
 		retval = getKeywords(method.method, pluginConf);
-
+		
 		// Handle Task keywords based on its type
-		let taskType = method['type']
+		let taskType = method['type'];
 		if (method.method == 'task' && taskType != undefined) {
-			console.log("=== Keywords for type: " + taskType + " ===");
+			console.log("=== Plus keywords for type: " + taskType + " ===");
 			retval = retval.concat(getTaskKeywords(taskType));
 		} 
 	}
-	if (retval.length == 0 || retval.length != 1 || retval[0] != undefined) {
+	if (retval != undefined) {
 		return retval;
 	} 
 
@@ -267,16 +268,16 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	let parentMethod = parser.parseClosureMethod(parentClosure.methodStr);
 	console.log("[" + parentMethod.method + "], new line: " + (parentClosure.newLine ? "yes" : "no"));
 	console.log();
-
 	if (parentMethod.method == undefined)
 		return [];
-	if (parentMethod.method != "") {
+	if (parentMethod.method != "") 
 		retval = getNestedKeywords(parentMethod.method, pluginConf);
-	}
-	if (retval.length > 0)
+	
+	if (retval != undefined && retval.length > 0) {
 		return retval;
-	else
+	} else {
 		return [];
+	}	
 });
 
 // This handler resolve additional information for the item selected in

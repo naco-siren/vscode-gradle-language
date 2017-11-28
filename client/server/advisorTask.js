@@ -2554,10 +2554,10 @@ function getTaskKeywords(type) {
             }
         ]
     };
-    let keywords = getTaskDefaultKeywords();
-    let retval = map[type];
-    if (retval != undefined)
-        keywords = keywords.concat(retval);
+    let retval = getTaskDefaultKeywords();
+    let keywords = map[type];
+    if (keywords != undefined)
+        retval = retval.concat(keywords);
     return retval;
 }
 exports.getTaskKeywords = getTaskKeywords;
