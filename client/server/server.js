@@ -54,23 +54,25 @@ connection.onDidChangeConfiguration((change) => {
     documents.all().forEach(validateTextDocument);
 });
 let pluginConfs = {};
+let taskNames = {};
 function validateTextDocument(textDocument) {
     // Validation results
     let scriptBlocks = {};
     let pluginConf = {};
+    taskNames[textDocument.uri] = {};
     // Process the lines one by one
     let lines = textDocument.getText().split(/\r?\n/g);
     for (var i = 0; i < lines.length; i++) {
         let line = lines[i];
         // First, check if the line is the method name of a 1-level script block
-        let isBuildScript = false;
-        if (isBuildScript == false) {
+        let parseComplete = false;
+        if (parseComplete == false) {
             if (line.charAt(0) != ' ' && line.charAt(line.length - 1) == '{') {
                 // Right trim and check if the line contains characters only
                 let line3 = line.substring(0, line.length - 1).replace(/\s+$/, "");
                 ;
                 if (/^[a-zA-Z]+$/.test(line3) == true) {
-                    isBuildScript = true;
+                    parseComplete = true;
                     // Check if already used in the document
                     if (scriptBlocks[line3] == undefined) {
                         scriptBlocks[line3] = [i];
@@ -81,8 +83,19 @@ function validateTextDocument(textDocument) {
                 }
             }
         }
+        // On failure, check if the line is the first line of a task definition
+        if (parseComplete == false) {
+            if (line.charAt(line.length - 1) == '{') {
+                let method = parser.parseClosureMethod(line);
+                if (method.method == 'task') {
+                    let taskName = method['name'];
+                    taskNames[textDocument.uri][taskName] = method;
+                    parseComplete = true;
+                }
+            }
+        }
         // On failure, collect plugins
-        if (isBuildScript == false) {
+        if (parseComplete == false) {
             let line2 = line.trim();
             // Prune 'apply\s*plugin\s*:\s*'
             let applyIdx = line2.indexOf('apply');
@@ -105,6 +118,7 @@ function validateTextDocument(textDocument) {
             }
         }
     }
+    console.log(taskNames[textDocument.uri]);
     // Update current document's plugin configurations
     pluginConfs[textDocument.uri] = pluginConf;
     // Send the computed diagnostics to VSCode.
@@ -152,7 +166,9 @@ connection.onCompletion((_textDocumentPosition) => {
     let pluginConf = pluginConfs[_textDocumentPosition.textDocument.uri];
     console.log(pluginConf);
     // Second, get current closure and parse its method
+    console.log(">>>>>>> getCurrentClosure() >>>>>>");
     let closure = parser.getCurrentClosure(doc, offset);
+    console.log(">>>>>>> parseClosureMethod() >>>>>>");
     let method = parser.parseClosureMethod(closure.methodStr);
     console.log("[" + method.method + "], new line: " + (closure.newLine ? "yes" : "no"));
     // Situation 1: Found existing code in current line

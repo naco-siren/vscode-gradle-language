@@ -10,6 +10,7 @@ import {
 } from 'vscode-languageserver';
 
 import * as parser from './parser'
+import {Method} from './parser'
 
 import {PluginConf, getDelegateKeywords} from './advisorBase'
 import {getRootKeywords} from './advisorRoot'
@@ -74,11 +75,13 @@ connection.onDidChangeConfiguration((change) => {
 });
 
 
-let pluginConfs : {[uri: string]: PluginConf} = {}
+let pluginConfs : {[uri: string]: PluginConf} = {};
+let taskNames : {[uri: string]: {[name: string]: Method}} = {};
 function validateTextDocument(textDocument: TextDocument): void {
 	// Validation results
 	let scriptBlocks : {[method : string] : number[]} = {}
 	let pluginConf: PluginConf = {};
+	taskNames[textDocument.uri] = {};
 
 	// Process the lines one by one
 	let lines = textDocument.getText().split(/\r?\n/g);
@@ -86,13 +89,13 @@ function validateTextDocument(textDocument: TextDocument): void {
 		let line = lines[i];
 
 		// First, check if the line is the method name of a 1-level script block
-		let isBuildScript = false;
-		if (isBuildScript == false) {	
+		let parseComplete = false;
+		if (parseComplete == false) {	
 			if (line.charAt(0) != ' ' && line.charAt(line.length - 1) == '{') {
 				// Right trim and check if the line contains characters only
 				let line3 = line.substring(0, line.length - 1).replace(/\s+$/,"");;
 				if (/^[a-zA-Z]+$/.test(line3) == true) {
-					isBuildScript = true;
+					parseComplete = true;
 
 					// Check if already used in the document
 					if (scriptBlocks[line3] == undefined) {
@@ -104,8 +107,20 @@ function validateTextDocument(textDocument: TextDocument): void {
 			}
 		}
 
+		// On failure, check if the line is the first line of a task definition
+		if (parseComplete == false) {
+			if (line.charAt(line.length - 1) == '{') {
+				let method = parser.parseClosureMethod(line);
+				if (method.method == 'task') {
+					let taskName = method['name'];
+					taskNames[textDocument.uri][taskName] = method;
+					parseComplete = true;
+				}
+			}
+		}
+
 		// On failure, collect plugins
-		if (isBuildScript == false) {	
+		if (parseComplete == false) {	
 			let line2 = line.trim();
 
 			// Prune 'apply\s*plugin\s*:\s*'
@@ -128,7 +143,8 @@ function validateTextDocument(textDocument: TextDocument): void {
 			}
 		}
 	}
-
+	console.log(taskNames[textDocument.uri]);
+	
 	// Update current document's plugin configurations
 	pluginConfs[textDocument.uri] = pluginConf;
 
@@ -186,7 +202,9 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 	console.log(pluginConf);
 
 	// Second, get current closure and parse its method
+	console.log(">>>>>>> getCurrentClosure() >>>>>>");
 	let closure = parser.getCurrentClosure(doc, offset);
+	console.log(">>>>>>> parseClosureMethod() >>>>>>");
 	let method = parser.parseClosureMethod(closure.methodStr);
 	console.log("[" + method.method + "], new line: " + (closure.newLine ? "yes" : "no"));
 

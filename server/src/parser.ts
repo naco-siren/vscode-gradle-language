@@ -69,7 +69,7 @@ interface Closure {
     methodStartPos: number
 }
 
-interface Method {
+export interface Method {
     method : string;
     [param: string]: string;
 }
@@ -178,23 +178,29 @@ export function parseClosureMethod(methodStr: string) : Method {
     let firstBlankIdx = methodStr.indexOf(" ");
     if (methodStr.substring(0, firstBlankIdx) == "task") {
         methodName = "task";
-        
-        // Check if parameters are specified in the brackets
+        console.log(">>>>>");
+        // Extract task name after "task", crop the paramters if exist
         let paramStr = methodStr.substring(firstBlankIdx + 1).trim();
         let leftBracketIdx = paramStr.indexOf("("), rightBracketIdx = paramStr.indexOf(")"); 
-
-        // Parse task's name
-        let taskName = leftBracketIdx == -1 ? paramStr.trim() : paramStr.substr(0, leftBracketIdx).trim();
+        let firstCurlyBracketIdx = paramStr.indexOf("{");
+        let taskName = leftBracketIdx == -1 ? paramStr.substr(0, firstCurlyBracketIdx).trim() : paramStr.substr(0, leftBracketIdx).trim();
+        
+        // Handle legacies
+        if (taskName.endsWith("<<")) {
+            taskName = taskName.substr(0, taskName.length - 2).trim();
+        }
+        
+        // Remove single / double quotes if exist
         let [l, r] = [taskName.charAt(0), taskName.charAt(taskName.length-1)];
         if ( (l == '\"' && r == '\"') || (l == '\'' && r == '\'') ) 
             taskName = taskName.substring(1, taskName.length - 1);
-
+        
         // Create Method object
         method = {
             method: "task"
         };
         method["name"] = taskName;
-
+        
         // Parse Task constructor's parameters
         if (leftBracketIdx > 0 && rightBracketIdx > leftBracketIdx) {
             let paramsStr = paramStr.substring(leftBracketIdx + 1, rightBracketIdx).trim();
@@ -259,16 +265,16 @@ export function parseClosureMethod(methodStr: string) : Method {
  * @param method 
  */
 function parseConstructorParams(paramStr: string, method: Method) {
-    let i = 0, j = 0;
-    while (i < paramStr.length) {
+    let i = 0, j = 0, len = paramStr.length;
+    while (i < len) {
         // Tokenize key
-        for (j = i; paramStr.charAt(j) != ':'; j++);
+        for (j = i; j < len && paramStr.charAt(j) != ':'; j++);
         let key = paramStr.substring(i, j).trim();
         
         // Tokenize value
-        for (i = j + 1; paramStr.charAt(i) == ' ' || paramStr.charAt(i) == '\t'; i++);
+        for (i = j + 1; i < len && paramStr.charAt(i) == ' ' || paramStr.charAt(i) == '\t'; i++);
         let inQuote = false; j = i;
-        while (j < paramStr.length) {
+        while (j < len) {
             let ch = paramStr.charAt(j);
             if (inQuote) {
                 if (ch == '\'' || ch == '\"') {
@@ -289,9 +295,11 @@ function parseConstructorParams(paramStr: string, method: Method) {
             }
         }
         let value = inQuote ? paramStr.substring(i + 1, j - 1) : paramStr.substring(i, j);
+        value = value.trim();
 
-        // Put to dict
-        method[key] = value;
+        // Put to dict if legal
+        if (key.length > 0 && value.length > 0)
+            method[key] = value;
 
         // Loop
         i = j + 1;
