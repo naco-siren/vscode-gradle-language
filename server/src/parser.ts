@@ -178,7 +178,7 @@ export function parseClosureMethod(methodStr: string) : Method {
     let firstBlankIdx = methodStr.indexOf(" ");
     if (methodStr.substring(0, firstBlankIdx) == "task") {
         methodName = "task";
-        console.log(">>>>>");
+        
         // Extract task name after "task", crop the paramters if exist
         let paramStr = methodStr.substring(firstBlankIdx + 1).trim();
         let leftBracketIdx = paramStr.indexOf("("), rightBracketIdx = paramStr.indexOf(")"); 

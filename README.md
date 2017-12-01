@@ -38,6 +38,14 @@ The extension automatically detects the Java and Android plugin used in the Grad
 
             ![feature B-1-1-2-2](images/feature-B-1-1-2-2.png)
 
+            * Particularly, after the `dependsOn` parameter, propose other Tasks names.
+
+            ![feature B-1-1-2-3](images/feature-B-1-1-2-3.png)
+
+            * Particularly, after the `TaskDependency` methods (i.e. `dependsOn`, `finalizedBy`, `mustRunAfter` and `shouldRunAfter`), propose other Tasks names.
+
+            ![feature B-1-1-2-4](images/feature-B-1-1-2-4.png)
+
         * Elsewhere, propose the Delegate Object together with its properties and methods.
         
         ![feature B-1-1-3](images/feature-B-1-1-3.png)

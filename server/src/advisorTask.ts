@@ -1,7 +1,36 @@
 import {CompletionItem, CompletionItemKind} from 'vscode-languageserver';
+import {Method} from './parser'
 
 /**
- * TaskContainer.create()'s parameters
+ * Method names that specify ordering between tasks.
+ */
+export function getTaskDependencies() : Set<string> {
+    let retval = new Set<string>();
+    retval.add("dependsOn");
+    retval.add("finalizedBy");
+    retval.add("mustRunAfter");
+    retval.add("shouldRunAfter");
+    return retval;
+}
+
+/**
+ * Existing Tasks' names.
+ */
+export function getTaskNames(tasks : {[name: string]: Method}, exclude: string) : CompletionItem[] {
+    let retval = [];
+    for (let taskName in tasks) {
+        if (exclude != undefined && taskName != exclude) {
+            retval.push({
+                label: taskName,
+                kind: CompletionItemKind.Reference
+            });
+        }
+    }
+    return retval;
+}
+
+/**
+ * TaskContainer.create()'s parameters.
  */
 export function getTaskCreationOptions() : CompletionItem[] {
     return [
@@ -51,7 +80,7 @@ export function getTaskCreationOptions() : CompletionItem[] {
 }
 
 /**
- * Core type Task's types
+ * Core type Task's types.
  */
 export function getTaskTypes() : CompletionItem[] {
    return [
@@ -299,7 +328,7 @@ export function getTaskDefaultKeywords() : CompletionItem[] {
 }
 
 /**
- * Keywords for different types of Tasks
+ * Keywords for different types of Tasks.
  * @param type 
  */
 export function getTaskKeywords(type: string) : CompletionItem[] {

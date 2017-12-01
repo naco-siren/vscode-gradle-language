@@ -54,12 +54,12 @@ connection.onDidChangeConfiguration((change) => {
     documents.all().forEach(validateTextDocument);
 });
 let pluginConfs = {};
-let taskNames = {};
+let tasks = {};
 function validateTextDocument(textDocument) {
     // Validation results
     let scriptBlocks = {};
     let pluginConf = {};
-    taskNames[textDocument.uri] = {};
+    tasks[textDocument.uri] = {};
     // Process the lines one by one
     let lines = textDocument.getText().split(/\r?\n/g);
     for (var i = 0; i < lines.length; i++) {
@@ -89,7 +89,7 @@ function validateTextDocument(textDocument) {
                 let method = parser.parseClosureMethod(line);
                 if (method.method == 'task') {
                     let taskName = method['name'];
-                    taskNames[textDocument.uri][taskName] = method;
+                    tasks[textDocument.uri][taskName] = method;
                     parseComplete = true;
                 }
             }
@@ -118,7 +118,7 @@ function validateTextDocument(textDocument) {
             }
         }
     }
-    console.log(taskNames[textDocument.uri]);
+    //console.log(tasks[textDocument.uri]);
     // Update current document's plugin configurations
     pluginConfs[textDocument.uri] = pluginConf;
     // Send the computed diagnostics to VSCode.
@@ -152,23 +152,23 @@ connection.onDidChangeWatchedFiles((_change) => {
     connection.console.log('We recevied an file change event');
 });
 // This handler provides the initial list of the completion items.
+let TASK_DEPENDENCY_NAMES = advisorTask_1.getTaskDependencies();
 connection.onCompletion((_textDocumentPosition) => {
     console.log();
     // Basic infomation of the document and cursor's position
-    let textDocument = documents.get(_textDocumentPosition.textDocument.uri);
-    var fileName = path.basename(_textDocumentPosition.textDocument.uri);
+    let uri = _textDocumentPosition.textDocument.uri;
+    let textDocument = documents.get(uri);
+    var fileName = path.basename(uri);
     let pos = _textDocumentPosition.position;
     let offset = textDocument.offsetAt(pos);
     let doc = textDocument.getText();
     let lines = doc.split(/\r?\n/g);
     let line = lines[_textDocumentPosition.position.line];
     // First, collect plugins used for root closure
-    let pluginConf = pluginConfs[_textDocumentPosition.textDocument.uri];
+    let pluginConf = pluginConfs[uri];
     console.log(pluginConf);
     // Second, get current closure and parse its method
-    console.log(">>>>>>> getCurrentClosure() >>>>>>");
     let closure = parser.getCurrentClosure(doc, offset);
-    console.log(">>>>>>> parseClosureMethod() >>>>>>");
     let method = parser.parseClosureMethod(closure.methodStr);
     console.log("[" + method.method + "], new line: " + (closure.newLine ? "yes" : "no"));
     // Situation 1: Found existing code in current line
@@ -191,13 +191,27 @@ connection.onCompletion((_textDocumentPosition) => {
             console.log("[[" + curMethod.method + "]]");
             // TaskContainer creation
             if (curMethod.method == "task") {
-                console.log("=== Keywords for Task constructor ===");
-                // Return Task types if after "type: "
-                if (line.substring(0, _textDocumentPosition.position.character - 1).trim().endsWith("type:"))
-                    return advisorTask_1.getTaskTypes();
-                // Return Task creation option keywords after '(' or ','
-                if (parser.shouldHintParam(line, _textDocumentPosition.position.character))
+                // Return TaskContainer parameter names after '(' or ','
+                if (parser.shouldHintParam(line, _textDocumentPosition.position.character)) {
+                    console.log("=== Task constructor parameter ===");
                     return advisorTask_1.getTaskCreationOptions();
+                }
+                // Propose values for several popular TaskContainer parameters
+                let line2 = line.substring(0, _textDocumentPosition.position.character - 1).trim();
+                if (line2.charAt(line2.length - 1) == ':') {
+                    // Parse paramter's name
+                    let paramName = line2.substring(Math.max(line2.lastIndexOf("("), line2.lastIndexOf(",")) + 1, line2.length - 1).trim();
+                    console.log("!!! " + paramName);
+                    // Return Task types if after "type: "
+                    if (paramName == "type")
+                        return advisorTask_1.getTaskTypes();
+                    // Return other tasks' names after "dependsOn" 
+                    if (paramName == "dependsOn") {
+                        let curTaskName = curMethod["name"];
+                        console.log("=== Task names besides " + curTaskName + " ===");
+                        return advisorTask_1.getTaskNames(tasks[uri], curTaskName);
+                    }
+                }
                 // Return nothing by default
                 return [];
             }
@@ -207,7 +221,15 @@ connection.onCompletion((_textDocumentPosition) => {
                 return advisorGeneral_1.getDefaultKeywords(curMethod.method);
             }
         }
-        // hint delegate or delegate's properties & methods
+        // In Task, handle several popular cases
+        if (method.method == 'task') {
+            if (TASK_DEPENDENCY_NAMES.has(curMethod.method)) {
+                let curTaskName = method["name"];
+                console.log("=== Task names besides " + curTaskName + " ===");
+                return advisorTask_1.getTaskNames(tasks[uri], curTaskName);
+            }
+        }
+        // Propose delegate or delegate's properties & methods
         console.log("=== Keywords for current delegate ===");
         return advisorBase_1.getDelegateKeywords(fileName);
     }

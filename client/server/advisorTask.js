@@ -2,7 +2,35 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_languageserver_1 = require("vscode-languageserver");
 /**
- * TaskContainer.create()'s parameters
+ * Method names that specify ordering between tasks.
+ */
+function getTaskDependencies() {
+    let retval = new Set();
+    retval.add("dependsOn");
+    retval.add("finalizedBy");
+    retval.add("mustRunAfter");
+    retval.add("shouldRunAfter");
+    return retval;
+}
+exports.getTaskDependencies = getTaskDependencies;
+/**
+ * Existing Tasks' names.
+ */
+function getTaskNames(tasks, exclude) {
+    let retval = [];
+    for (let taskName in tasks) {
+        if (exclude != undefined && taskName != exclude) {
+            retval.push({
+                label: taskName,
+                kind: vscode_languageserver_1.CompletionItemKind.Reference
+            });
+        }
+    }
+    return retval;
+}
+exports.getTaskNames = getTaskNames;
+/**
+ * TaskContainer.create()'s parameters.
  */
 function getTaskCreationOptions() {
     return [
@@ -52,7 +80,7 @@ function getTaskCreationOptions() {
 }
 exports.getTaskCreationOptions = getTaskCreationOptions;
 /**
- * Core type Task's types
+ * Core type Task's types.
  */
 function getTaskTypes() {
     return [
@@ -298,7 +326,7 @@ function getTaskDefaultKeywords() {
 }
 exports.getTaskDefaultKeywords = getTaskDefaultKeywords;
 /**
- * Keywords for different types of Tasks
+ * Keywords for different types of Tasks.
  * @param type
  */
 function getTaskKeywords(type) {
