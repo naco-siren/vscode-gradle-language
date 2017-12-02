@@ -110,11 +110,19 @@ This extension contributes the following settings:
 
 ## Known Issues
 
-* Syntax highlighting cannot mark task constructor with parameters in parentheses, i.e. `task foo(type: Bar) {...}` 
+* Syntax highlighting doesn't always work consistently with task constructor with parameters in parentheses, i.e. `task foo(type: Bar) {...}` 
 
 ## Release Notes
 
-### 1.0.0
+### 0.2.0
+Added Task Dependency proposals.
+Fixed some bugs in Task parser.
+
+### 0.1.3
+
+Republished after installing node modules and compiling server source codes.
+
+### 0.1.0
 
 Initial release.
 

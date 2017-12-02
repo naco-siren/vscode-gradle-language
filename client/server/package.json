@@ -1,15 +1,17 @@
 {
 	"name": "gradle-language",
 	"description": "Gradle language server.",
-	"version": "0.0.1",
-	"author": "Han Yin",
+	"author": {
+		"name": "Naco Siren",
+		"url": "https://github.com/naco-siren"
+	},
 	"license": "MIT",
 	"engines": {
 		"node": "*"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/nacosiren"
+		"url": "https://github.com/naco-siren/vscode-gradle-language"
 	},
 	"dependencies": {
 		"vscode": "^1.1.5",

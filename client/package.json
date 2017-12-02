@@ -1,13 +1,18 @@
 {
 	"name": "gradle-language",
-	"description": "VSCode part of Gradle language server",
-	"author": "Han Yin",
+	"description": "Add Gradle language support for Visual Studio Code",
+	"author": {
+		"name": "Naco Siren",
+		"url": "https://github.com/naco-siren"
+	},
 	"license": "MIT",
-	"version": "0.0.1",
-	"publisher": "Han Yin",
+	"version": "0.2.0",
+	"publisher": "naco-siren",
+	"icon": "gradle_icon.png",
+	"readme": "README.md",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/nacosiren"
+		"url": "https://github.com/naco-siren/vscode-gradle-language"
 	},
 	"engines": {
 		"vscode": "^1.16.0"
