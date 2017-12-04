@@ -12,14 +12,44 @@ import * as assert from 'assert';
 //import * as vscode from 'vscode';
 //import * as myExtension from '../src/extension';
 
-//import * as parser from '../../server/src/parser';
+import * as parser from '../../server/src/parser';
 
-// Defines a Mocha test suite to group tests of similar kind together
-suite("Extension Tests", () => {
+// Defines a Mocha test suite for server/parser
+suite("Parser Tests", () => {
+    
     // Defines a Mocha unit test
-    test("Something 1", () => {
-        assert.equal(-1, [1, 2, 3].indexOf(5));
-        assert.equal(1, [1, 2, 3].indexOf(2));
+    test("Testing parseClosureMethod(methodStr: string)", () => {
+        // A simple Task definition
+        let taskMethod1 = parser.parseClosureMethod("task taskA {");
+        assert.equal(taskMethod1.method, "task");
+        assert.equal(taskMethod1["name"], "taskA");
+
+        // A complex Task definition
+        let taskMethod2 = parser.parseClosureMethod("task \"task2\" (type: Zip, dependsOn: 'task1') {");
+        assert.equal(taskMethod2.method, "task");
+        assert.equal(taskMethod2["name"], "task2");
+        assert.equal(taskMethod2["type"], "Zip");
+        assert.equal(taskMethod2["dependsOn"], "task1");
+
+        // An incomplete complex Task definition
+        let taskMethod3 = parser.parseClosureMethod("task \"task2\" (type: Zip, depe) {");
+        assert.equal(taskMethod3.method, "task");
+        assert.equal(taskMethod3["name"], "task2");
+        assert.equal(taskMethod3["type"], "Zip");
+        assert.equal(taskMethod3["dependsOn"], undefined);
+
+        // A legacy Task definition
+        let taskMethod4 = parser.parseClosureMethod("task cleanAntlr << {");
+        assert.equal(taskMethod4.method, "task");
+        assert.equal(taskMethod4["name"], "cleanAntlr");
+
+        // A complex Groovy method call ended with a closure
+        let groovyMethod = parser.parseClosureMethod("collection.collect { relativePath(it) }.sort().each {");
+        assert.equal(groovyMethod.method, "collect");
+
+        // A simple Project method
+        let projectMethod1 = parser.parseClosureMethod("repositories {");
+        assert.equal(projectMethod1.method, "repositories");
     });
 });
 

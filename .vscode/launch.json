@@ -36,12 +36,12 @@
             "runtimeExecutable": "${execPath}",
             "args": [
                 "--extensionDevelopmentPath=${workspaceRoot}",
-                "--extensionTestsPath=${workspaceRoot}/test/out/unitTests"
+                "--extensionTestsPath=${workspaceRoot}/test/out/test/unitTests"
             ],
             "stopOnEntry": false,
             "sourceMaps": true,
             "outFiles": [
-                "${workspaceRoot}/test/out/**/*.js"
+                "${workspaceRoot}/test/out/test/**/*.js"
 			],
 			"preLaunchTask": "compile:test"
         }
