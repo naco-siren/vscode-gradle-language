@@ -17,7 +17,7 @@ task task1 (type: Zip) {
 }
 
 task "task2" (type: Zip, dependsOn: 'task1') {
-
+    
 }
 
 /* 

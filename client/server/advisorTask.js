@@ -321,6 +321,26 @@ function getTaskDefaultKeywords() {
             label: 'source',
             kind: vscode_languageserver_1.CompletionItemKind.Property,
             documentation: 'The source for this task, after the include and exclude patterns have been applied. Ignores source files which do not exist.'
+        },
+        {
+            label: 'dependsOn',
+            kind: vscode_languageserver_1.CompletionItemKind.Property,
+            documentation: 'Adds the given dependencies to this task. '
+        },
+        {
+            label: 'finalizedBy',
+            kind: vscode_languageserver_1.CompletionItemKind.Property,
+            documentation: 'Adds the given finalizer tasks for this task.'
+        },
+        {
+            label: 'mustRunAfter',
+            kind: vscode_languageserver_1.CompletionItemKind.Property,
+            documentation: 'Specifies that this task must run after all of the supplied tasks.'
+        },
+        {
+            label: 'shouldRunAfter',
+            kind: vscode_languageserver_1.CompletionItemKind.Property,
+            documentation: 'Specifies that this task should run after all of the supplied tasks.'
         }
     ];
 }

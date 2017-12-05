@@ -62,11 +62,6 @@ function getDefaultKeywords(method) {
                 documentation: 'The Convention object for this task. A Plugin can use the convention object to contribute properties and methods to this task.'
             },
             {
-                label: 'dependsOn',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'The dependencies of this task.'
-            },
-            {
                 label: 'description',
                 kind: vscode_languageserver_1.CompletionItemKind.Property,
                 documentation: 'The description of this task.'
@@ -92,11 +87,6 @@ function getDefaultKeywords(method) {
                 documentation: 'The container of extensions.'
             },
             {
-                label: 'finalizedBy',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Returns tasks that finalize this task.'
-            },
-            {
                 label: 'group',
                 kind: vscode_languageserver_1.CompletionItemKind.Property,
                 documentation: 'The task group which this task belongs to. The task group is used in reports and user interfaces to group related tasks together when presenting a list of tasks to the user.'
@@ -115,11 +105,6 @@ function getDefaultKeywords(method) {
                 label: 'logging',
                 kind: vscode_languageserver_1.CompletionItemKind.Property,
                 documentation: 'The LoggingManager which can be used to receive logging and to control the standard output/error capture for this task. By default, System.out is redirected to the Gradle logging system at the QUIET log level, and System.err is redirected at the ERROR log level.'
-            },
-            {
-                label: 'mustRunAfter',
-                kind: vscode_languageserver_1.CompletionItemKind.Property,
-                documentation: 'Returns tasks that this task must run after.'
             },
             {
                 label: 'name',

@@ -73,11 +73,6 @@ export function getDefaultKeywords(method: string) : CompletionItem[] {
                 documentation: 'The Convention object for this task. A Plugin can use the convention object to contribute properties and methods to this task.'
             },
             {
-                label: 'dependsOn',
-                kind: CompletionItemKind.Property,
-                documentation: 'The dependencies of this task.'
-            },
-            {
                 label: 'description',
                 kind: CompletionItemKind.Property,
                 documentation: 'The description of this task.'
@@ -102,11 +97,6 @@ export function getDefaultKeywords(method: string) : CompletionItem[] {
                 kind: CompletionItemKind.Property,
                 documentation: 'The container of extensions.'
             },
-            {   
-                label: 'finalizedBy',
-                kind: CompletionItemKind.Property,
-                documentation: 'Returns tasks that finalize this task.'
-            },
             {
                 label: 'group',
                 kind: CompletionItemKind.Property,
@@ -126,11 +116,6 @@ export function getDefaultKeywords(method: string) : CompletionItem[] {
                 label: 'logging',
                 kind: CompletionItemKind.Property,
                 documentation: 'The LoggingManager which can be used to receive logging and to control the standard output/error capture for this task. By default, System.out is redirected to the Gradle logging system at the QUIET log level, and System.err is redirected at the ERROR log level.'
-            },
-            {   
-                label: 'mustRunAfter',
-                kind: CompletionItemKind.Property,
-                documentation: 'Returns tasks that this task must run after.'
             },
             {   
                 label: 'name',

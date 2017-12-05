@@ -86,7 +86,7 @@ function validateTextDocument(textDocument) {
         // On failure, check if the line is the first line of a task definition
         if (parseComplete == false) {
             if (line.charAt(line.length - 1) == '{') {
-                let method = parser.parseClosureMethod(line);
+                let method = parser.parseClosureMethod(line.substring(0, line.length - 1));
                 if (method.method == 'task') {
                     let taskName = method['name'];
                     tasks[textDocument.uri][taskName] = method;
@@ -246,7 +246,7 @@ connection.onCompletion((_textDocumentPosition) => {
         retval = advisorGeneral_1.getKeywords(method.method, pluginConf);
         // Handle Task keywords based on its type
         let taskType = method['type'];
-        if (method.method == 'task' && taskType != undefined) {
+        if (method.method == 'task') {
             console.log("=== Plus keywords for type: " + taskType + " ===");
             retval = retval.concat(advisorTask_1.getTaskKeywords(taskType));
         }

@@ -42,14 +42,10 @@ suite("Parser Tests", () => {
         let taskMethod4 = parser.parseClosureMethod("task cleanAntlr << {");
         assert.equal(taskMethod4.method, "task");
         assert.equal(taskMethod4["name"], "cleanAntlr");
-
-        // A complex Groovy method call ended with a closure
-        let groovyMethod = parser.parseClosureMethod("collection.collect { relativePath(it) }.sort().each {");
-        assert.equal(groovyMethod.method, "collect");
-
-        // A simple Project method
-        let projectMethod1 = parser.parseClosureMethod("repositories {");
-        assert.equal(projectMethod1.method, "repositories");
+        
+        // An ordinary method
+        let unfinishedMethod = parser.parseClosureMethod("      minSdkVersion ");
+        assert.equal(unfinishedMethod.method, "minSdkVersion");
     });
 });
 
