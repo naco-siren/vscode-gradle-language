@@ -264,7 +264,7 @@ export function parseClosureMethod(methodStr: string) : Method {
  * @param paramStr 
  * @param method 
  */
-function parseConstructorParams(paramStr: string, method: Method) {
+export function parseConstructorParams(paramStr: string, method: Method) {
     let i = 0, j = 0, len = paramStr.length;
     while (i < len) {
         // Tokenize key

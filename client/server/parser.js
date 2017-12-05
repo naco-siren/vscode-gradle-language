@@ -290,6 +290,7 @@ function parseConstructorParams(paramStr, method) {
         i = j + 1;
     }
 }
+exports.parseConstructorParams = parseConstructorParams;
 /**
  * Check if a constructor's cursor is at the beginning of a parameter.
  * @param line

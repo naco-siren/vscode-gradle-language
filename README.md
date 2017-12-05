@@ -1,12 +1,19 @@
 # vscode-gradle-language
+
+## Introduction
+
 An extension to provide Gradle language support for Visual Studio Code, including advanced functionalities like __Syntax Highlighting__, __Keyword Auto-completion Proposals__ and __Duplication Validation__.
+
+Homepage: [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=naco-siren.gradle-language)
 
 ## Stucture
 The extension observes all `.gradle` documents and uses the server to provide validation and auto-completion proposals (IntelliSense).
 
-The code for the extension is in the 'client' folder, which uses the 'vscode-languageclient' node module to launch the language server.
+The code for the _extension_ is in the `client` folder, which uses the `vscode-languageclient` node module to launch the language server.
 
-The language server is located in the 'server' folder. 
+The _language server_ is located in the `server` folder.
+
+The _tests_ are located in the `test` folder.
 
 ## Features
 
@@ -83,36 +90,38 @@ The extension automatically detects the Java and Android plugin used in the Grad
 
 ![feature C-1](images/feature-C-1.png)
 
-## Requirements
+## Tutorial
+
+### Requirements
 
 * Download and install [Visual Studio Code](https://code.visualstudio.com/download).
 * Download and install [Node.js](https://nodejs.org/zh-cn/download/).
 
 
-## How to run locally
+### How to launch the extension
 * Pull the repo and `cd` to the root directory.
-* Run `npm install` to initialize the extension and the server
-* Run `npm run compile` to compile the extension and the server
+* Run `npm install` to initialize the extension and the server.
+* Run `npm run compile` in the terminal to compile the extension and the server.
 * Open the root folder in Visual Studio Code, then set the `Preferences -> Color Theme` to `Dark+ (default dark)`.
 * In the Debug viewlet, run `Launch Client` from drop-down menu (or press `F5`) to launch the extension and attach to the extension.
 * Create and open a file `build.gradle` and type `'app'` into it. You should see keywords proposed including `'apply'`.
-* To debug the server, use the `Attach to Server` launch config and set breakpoints in the client or the server.
 
+### How to debug the server
+* In the Debug viewlet, run `Attach to Server` launch config and set breakpoints in the client or the server.
 
-## Extension Settings
+### How to run the tests
+* In the Debug viewlet, run `Launch Unit Tests` from drop-down menu to run the unit tests.
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
 
 ## Known Issues
 
-* Syntax highlighting doesn't always work consistently with task constructor with parameters in parentheses, i.e. `task foo(type: Bar) {...}` 
+* Syntax highlighting doesn't always work consistently with task constructor with parameters in parentheses, i.e. `task foo(type: Bar) {...}` and `task foo {...}` 
 
 ## Release Notes
+
+### 0.2.2
+Added unit tests.
+Fixed some minor bugs.
 
 ### 0.2.0
 Added Task Dependency proposals.

@@ -17,7 +17,7 @@ import * as parser from '../../server/src/parser';
 // Defines a Mocha test suite for server/parser
 suite("Parser Tests", () => {
     
-    // Defines a Mocha unit test
+    // Defines a Mocha unit test for parseClosureMethod(methodStr: string)
     test("Testing parseClosureMethod(methodStr: string)", () => {
         // A simple Task definition
         let taskMethod1 = parser.parseClosureMethod("task taskA {");
@@ -46,6 +46,32 @@ suite("Parser Tests", () => {
         // An ordinary method
         let unfinishedMethod = parser.parseClosureMethod("      minSdkVersion ");
         assert.equal(unfinishedMethod.method, "minSdkVersion");
+    });
+
+    // Defines a Mocha unit test for parseConstructorParams(paramStr: string, method: Method)
+    test("Testing parseConstructorParams(paramStr: string, method: Method)", () => {
+        // Empty parameters for a TaskContainer constructor
+        let method1: parser.Method = {method: "task"};
+        parser.parseConstructorParams("  ", method1);
+        let keysCount = 0;
+        for(let key in method1) {
+            if (key != "method")
+                keysCount++;
+        } 
+        assert.equal(keysCount, 0);
+
+        // Parameters without and with single quotes, double quotes for a TaskContainer constructor
+        let method2: parser.Method = {method: "task"};
+        parser.parseConstructorParams("type: Zip, dependsOn: 'task1', description: \"Some test.\"", method2);
+        assert.equal(method2['dependsOn'], "task1");
+        assert.equal(method2['type'], "Zip");
+        assert.equal(method2['description'], "Some test.");
+
+        // Incomplete parameters for a TaskContainer constructor
+        let method3: parser.Method = {method: "task"};
+        parser.parseConstructorParams("type: Zip, depen", method3);
+        assert.equal(method3['type'], "Zip");
+        assert.equal(method3['depen'], undefined);
     });
 });
 
