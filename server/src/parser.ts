@@ -313,7 +313,7 @@ export function parseConstructorParams(paramStr: string, method: Method) {
  * @param charIdx 
  */
 export function shouldHintParam(line: string, charIdx: number) : boolean {
-    let i = charIdx - 2;
+    let i = charIdx;
     for (; i >= 0; i--) {
         switch(line.charAt(i)) {
             case ' ':

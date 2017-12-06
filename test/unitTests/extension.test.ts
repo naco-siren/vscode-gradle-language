@@ -73,5 +73,23 @@ suite("Parser Tests", () => {
         assert.equal(method3['type'], "Zip");
         assert.equal(method3['depen'], undefined);
     });
+
+    // Defines a Mocha unit test for shouldHintParam(line: string, charIdx: number)
+    test("Testing shouldHintParam(line: string, charIdx: number)", () => {
+        let line1 = "task \"task2\" (type: Zip, dependsOn: 'task1') ";
+
+        // True at left bracket
+        assert.equal(parser.shouldHintParam(line1, 13), true);
+        assert.equal(parser.shouldHintParam(line1, 14), false);
+        
+        // False at colon or word after colon
+        assert.equal(parser.shouldHintParam(line1, 18), false);
+        assert.equal(parser.shouldHintParam(line1, 19), false);
+        assert.equal(parser.shouldHintParam(line1, 20), false);
+
+        // True at comma or word after comma
+        assert.equal(parser.shouldHintParam(line1, 23), true);
+        assert.equal(parser.shouldHintParam(line1, 24), true);
+    });
 });
 

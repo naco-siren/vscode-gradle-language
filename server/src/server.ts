@@ -232,7 +232,7 @@ connection.onCompletion((_textDocumentPosition: TextDocumentPositionParams): Com
 			if (curMethod.method == "task") {
 				
 				// Return TaskContainer parameter names after '(' or ','
-				if (parser.shouldHintParam(line, _textDocumentPosition.position.character)) {
+				if (parser.shouldHintParam(line, _textDocumentPosition.position.character - 2)) {
 					console.log("=== Task constructor parameter ===");
 					return getTaskCreationOptions();
 				} 
