@@ -183,8 +183,8 @@ export function parseClosureMethod(methodStr: string) : Method {
         let paramStr = methodStr.substring(firstBlankIdx + 1).trim();
         let leftBracketIdx = paramStr.indexOf("("), rightBracketIdx = paramStr.indexOf(")"); 
         let firstCurlyBracketIdx = paramStr.indexOf("{");
-        let taskName = leftBracketIdx == -1 ? paramStr.substr(0, firstCurlyBracketIdx).trim() : paramStr.substr(0, leftBracketIdx).trim();
-        
+        let taskName = leftBracketIdx == -1 ? (firstCurlyBracketIdx == -1 ? paramStr.trim() : paramStr.substr(0, firstCurlyBracketIdx).trim()) : paramStr.substr(0, leftBracketIdx).trim();
+
         // Handle legacies
         if (taskName.endsWith("<<")) {
             taskName = taskName.substr(0, taskName.length - 2).trim();
@@ -218,7 +218,7 @@ export function parseClosureMethod(methodStr: string) : Method {
         let firstEqualIdx = methodStr.indexOf("=");
         if (firstEqualIdx != -1) 
             methodStr = methodStr.substring(firstEqualIdx + 1).trim();
-            
+        
         // Extract the method name before brackets
         let leftBracketIdx = methodStr.indexOf("(");
         if (leftBracketIdx > 0)
