@@ -119,6 +119,10 @@ The extension automatically detects the Java and Android plugin used in the Grad
 
 ## Release Notes
 
+### 0.2.3
+Updated the display name.
+Fixed a bug that fails to parse task constructor's name without parameters.
+
 ### 0.2.2
 Added unit tests.
 Fixed some minor bugs.
