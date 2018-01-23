@@ -1,12 +1,13 @@
 {
 	"name": "gradle-language",
+	"displayName": "Gradle Language Support",
 	"description": "Add Gradle language support for Visual Studio Code",
 	"author": {
 		"name": "Naco Siren",
 		"url": "https://github.com/naco-siren"
 	},
 	"license": "MIT",
-	"version": "0.2.0",
+	"version": "0.2.3",
 	"publisher": "naco-siren",
 	"icon": "gradle_icon.png",
 	"readme": "README.md",
