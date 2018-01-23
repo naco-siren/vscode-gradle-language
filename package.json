@@ -1,6 +1,6 @@
 {
 	"name": "gradle-language",
-	"displayName": "gradle-language",
+	"displayName": "Gradle Language Support",
 	"description": "Add gradle language support for Visual Studio Code",
 	"version": "0.2.2",
 	"author": {
