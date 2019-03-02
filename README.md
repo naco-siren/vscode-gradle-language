@@ -6,7 +6,7 @@ An extension to provide Gradle language support for Visual Studio Code, includin
 
 Homepage: [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=naco-siren.gradle-language)
 
-## Stucture
+## Structure
 The extension observes all `.gradle` documents and uses the server to provide validation and auto-completion proposals (IntelliSense).
 
 The code for the _extension_ is in the `client` folder, which uses the `vscode-languageclient` node module to launch the language server.
