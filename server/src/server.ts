@@ -97,11 +97,14 @@ function validateTextDocument(textDocument: TextDocument): void {
 				if (/^[a-zA-Z]+$/.test(line3) == true) {
 					parseComplete = true;
 
-					// Check if already used in the document
-					if (scriptBlocks[line3] == undefined) {
-						scriptBlocks[line3] = [i];
-					} else {
-						scriptBlocks[line3].push(i);
+					// Check for keywords
+					if(line3 != "else" && line3 != "static") {
+						// Check if already used in the document
+						if (scriptBlocks[line3] == undefined) {
+							scriptBlocks[line3] = [i];
+						} else {
+							scriptBlocks[line3].push(i);
+						}
 					}
 				}
 			}
