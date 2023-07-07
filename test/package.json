@@ -15,7 +15,7 @@
 		"url": "https://github.com/naco-siren/vscode-gradle-language"
 	},
 	"dependencies": {
-		"vscode": "^1.1.5"
+		"vscode": "^1.1.37"
 	},
 	"scripts": {
 		"compile": "tsc -p ./"
